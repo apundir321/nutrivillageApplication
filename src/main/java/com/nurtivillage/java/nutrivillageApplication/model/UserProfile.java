@@ -1,4 +1,4 @@
-package comnurtivillage.java.nutrivillageApplication.model;
+package com.nurtivillage.java.nutrivillageApplication.model;
 
 import java.time.LocalDateTime;
 import java.util.Date;

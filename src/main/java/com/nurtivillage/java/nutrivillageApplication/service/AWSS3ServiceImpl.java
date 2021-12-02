@@ -24,9 +24,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
 import com.nurtivillage.java.nutrivillageApplication.error.GenericException;
-
-import comnurtivillage.java.nutrivillageApplication.model.User;
-import comnurtivillage.java.nutrivillageApplication.model.UserProfile;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
+import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 
 
 @Service

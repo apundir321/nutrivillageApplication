@@ -7,12 +7,11 @@ import java.util.Optional;
 
 import com.nurtivillage.java.nutrivillageApplication.dto.UserDto;
 import com.nurtivillage.java.nutrivillageApplication.error.UserAlreadyExistException;
-
-import comnurtivillage.java.nutrivillageApplication.model.NewLocationToken;
-import comnurtivillage.java.nutrivillageApplication.model.PasswordResetToken;
-import comnurtivillage.java.nutrivillageApplication.model.User;
-import comnurtivillage.java.nutrivillageApplication.model.UserProfile;
-import comnurtivillage.java.nutrivillageApplication.model.VerificationToken;
+import com.nurtivillage.java.nutrivillageApplication.model.NewLocationToken;
+import com.nurtivillage.java.nutrivillageApplication.model.PasswordResetToken;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
+import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
+import com.nurtivillage.java.nutrivillageApplication.model.VerificationToken;
 
 public interface IUserService {
 

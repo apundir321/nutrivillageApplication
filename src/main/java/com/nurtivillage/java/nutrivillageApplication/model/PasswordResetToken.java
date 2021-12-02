@@ -1,4 +1,4 @@
-package comnurtivillage.java.nutrivillageApplication.model;
+package com.nurtivillage.java.nutrivillageApplication.model;
 
 import java.util.Calendar;
 import java.util.Date;

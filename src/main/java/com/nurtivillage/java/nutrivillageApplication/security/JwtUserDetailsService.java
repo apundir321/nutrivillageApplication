@@ -16,8 +16,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
-
-import comnurtivillage.java.nutrivillageApplication.model.Role;
+import com.nurtivillage.java.nutrivillageApplication.model.Role;
 
 
 @Service
@@ -29,7 +28,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		comnurtivillage.java.nutrivillageApplication.model.User user = userDao.findByEmail(username);
+		com.nurtivillage.java.nutrivillageApplication.model.User user = userDao.findByEmail(username);
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found with username: " + username);
 		}

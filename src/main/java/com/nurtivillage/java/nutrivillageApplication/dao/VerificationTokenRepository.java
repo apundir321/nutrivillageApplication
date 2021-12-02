@@ -3,12 +3,12 @@ package com.nurtivillage.java.nutrivillageApplication.dao;
 import java.util.Date;
 import java.util.stream.Stream;
 
+import com.nurtivillage.java.nutrivillageApplication.model.User;
+import com.nurtivillage.java.nutrivillageApplication.model.VerificationToken;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-
-import comnurtivillage.java.nutrivillageApplication.model.User;
-import comnurtivillage.java.nutrivillageApplication.model.VerificationToken;
 
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
 

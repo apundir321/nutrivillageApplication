@@ -10,10 +10,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.registration.OnRegistrationCompleteEvent;
 import com.nurtivillage.java.nutrivillageApplication.security.IUserService;
-
-import comnurtivillage.java.nutrivillageApplication.model.User;
 
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {

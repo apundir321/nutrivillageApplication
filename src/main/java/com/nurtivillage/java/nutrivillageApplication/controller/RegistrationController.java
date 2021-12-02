@@ -27,12 +27,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.nurtivillage.java.nutrivillageApplication.model.Privilege;
+import com.nurtivillage.java.nutrivillageApplication.model.Role;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.security.ISecurityUserService;
 import com.nurtivillage.java.nutrivillageApplication.security.IUserService;
-
-import comnurtivillage.java.nutrivillageApplication.model.Privilege;
-import comnurtivillage.java.nutrivillageApplication.model.Role;
-import comnurtivillage.java.nutrivillageApplication.model.User;
 
 @Controller
 public class RegistrationController {

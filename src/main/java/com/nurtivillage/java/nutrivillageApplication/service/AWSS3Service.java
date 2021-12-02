@@ -2,9 +2,9 @@ package com.nurtivillage.java.nutrivillageApplication.service;
 
 import java.io.ByteArrayOutputStream;
 
-import org.springframework.web.multipart.MultipartFile;
+import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 
-import comnurtivillage.java.nutrivillageApplication.model.UserProfile;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface AWSS3Service {
 

@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserProfileRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
 import com.nurtivillage.java.nutrivillageApplication.error.GenericException;
-
-import comnurtivillage.java.nutrivillageApplication.model.Location;
-import comnurtivillage.java.nutrivillageApplication.model.User;
-import comnurtivillage.java.nutrivillageApplication.model.UserProfile;
+import com.nurtivillage.java.nutrivillageApplication.model.Location;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
+import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 
 @Service
 public class UserProfileService {

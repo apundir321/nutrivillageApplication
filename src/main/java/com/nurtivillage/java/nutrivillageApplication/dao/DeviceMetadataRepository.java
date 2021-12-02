@@ -2,9 +2,9 @@ package com.nurtivillage.java.nutrivillageApplication.dao;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.nurtivillage.java.nutrivillageApplication.model.DeviceMetadata;
 
-import comnurtivillage.java.nutrivillageApplication.model.DeviceMetadata;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DeviceMetadataRepository extends JpaRepository<DeviceMetadata, Long> {
 

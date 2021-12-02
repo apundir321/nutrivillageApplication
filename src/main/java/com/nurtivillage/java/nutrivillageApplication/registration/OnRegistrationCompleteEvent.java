@@ -2,9 +2,9 @@ package com.nurtivillage.java.nutrivillageApplication.registration;
 
 import java.util.Locale;
 
-import org.springframework.context.ApplicationEvent;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
 
-import comnurtivillage.java.nutrivillageApplication.model.User;
+import org.springframework.context.ApplicationEvent;
 
 @SuppressWarnings("serial")
 public class OnRegistrationCompleteEvent extends ApplicationEvent {

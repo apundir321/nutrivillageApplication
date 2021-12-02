@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nurtivillage.java.nutrivillageApplication.dao.PasswordResetTokenRepository;
-
-import comnurtivillage.java.nutrivillageApplication.model.PasswordResetToken;
+import com.nurtivillage.java.nutrivillageApplication.model.PasswordResetToken;
 
 @Service
 @Transactional

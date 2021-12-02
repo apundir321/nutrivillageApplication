@@ -25,15 +25,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nurtivillage.java.nutrivillageApplication.dao.RoleRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserProfileRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
+import com.nurtivillage.java.nutrivillageApplication.model.Location;
+import com.nurtivillage.java.nutrivillageApplication.model.Role;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
+import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 import com.nurtivillage.java.nutrivillageApplication.validation.Name;
 
-import comnurtivillage.java.nutrivillageApplication.model.Location;
-import comnurtivillage.java.nutrivillageApplication.model.Role;
-import comnurtivillage.java.nutrivillageApplication.model.User;
-import comnurtivillage.java.nutrivillageApplication.model.UserProfile;
-
 @SpringBootApplication
-public class AstroEnergyApplication {
+public class NutrivillageApplication {
 
 	@Autowired
 	RoleRepository roleRepository;
@@ -51,7 +50,7 @@ public class AstroEnergyApplication {
 	UserProfileRepository userProfileRepository;
 	
 	public static void main(String[] args) {
-		SpringApplication.run(AstroEnergyApplication.class, args);
+		SpringApplication.run(NutrivillageApplication.class, args);
 	}
 	
 

@@ -1,8 +1,8 @@
 package com.nurtivillage.java.nutrivillageApplication.dao;
 
-import org.springframework.data.repository.CrudRepository;
+import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 
-import comnurtivillage.java.nutrivillageApplication.model.UserProfile;
+import org.springframework.data.repository.CrudRepository;
 
 public interface UserProfileRepository extends CrudRepository<UserProfile, Integer> {
 

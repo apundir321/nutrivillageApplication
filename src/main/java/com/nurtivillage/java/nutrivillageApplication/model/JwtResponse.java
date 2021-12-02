@@ -1,4 +1,4 @@
-package comnurtivillage.java.nutrivillageApplication.model;
+package com.nurtivillage.java.nutrivillageApplication.model;
 
 import java.io.Serializable;
 import java.util.List;

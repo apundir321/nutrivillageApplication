@@ -1,8 +1,8 @@
 package com.nurtivillage.java.nutrivillageApplication.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.nurtivillage.java.nutrivillageApplication.model.Privilege;
 
-import comnurtivillage.java.nutrivillageApplication.model.Privilege;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PrivilegeRepository extends JpaRepository<Privilege, Long> {
 

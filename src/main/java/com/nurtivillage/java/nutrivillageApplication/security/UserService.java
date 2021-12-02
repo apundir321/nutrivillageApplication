@@ -27,14 +27,13 @@ import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.VerificationTokenRepository;
 import com.nurtivillage.java.nutrivillageApplication.dto.UserDto;
 import com.nurtivillage.java.nutrivillageApplication.error.UserAlreadyExistException;
-
-import comnurtivillage.java.nutrivillageApplication.model.NewLocationToken;
-import comnurtivillage.java.nutrivillageApplication.model.PasswordResetToken;
-import comnurtivillage.java.nutrivillageApplication.model.Role;
-import comnurtivillage.java.nutrivillageApplication.model.User;
-import comnurtivillage.java.nutrivillageApplication.model.UserLocation;
-import comnurtivillage.java.nutrivillageApplication.model.UserProfile;
-import comnurtivillage.java.nutrivillageApplication.model.VerificationToken;
+import com.nurtivillage.java.nutrivillageApplication.model.NewLocationToken;
+import com.nurtivillage.java.nutrivillageApplication.model.PasswordResetToken;
+import com.nurtivillage.java.nutrivillageApplication.model.Role;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
+import com.nurtivillage.java.nutrivillageApplication.model.UserLocation;
+import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
+import com.nurtivillage.java.nutrivillageApplication.model.VerificationToken;
 
 @Service
 @Transactional

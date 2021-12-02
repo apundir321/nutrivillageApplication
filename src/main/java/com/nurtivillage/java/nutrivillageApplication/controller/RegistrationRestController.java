@@ -29,13 +29,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nurtivillage.java.nutrivillageApplication.dto.PasswordDto;
 import com.nurtivillage.java.nutrivillageApplication.dto.UserDto;
 import com.nurtivillage.java.nutrivillageApplication.error.InvalidOldPasswordException;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
+import com.nurtivillage.java.nutrivillageApplication.model.VerificationToken;
 import com.nurtivillage.java.nutrivillageApplication.registration.OnRegistrationCompleteEvent;
 import com.nurtivillage.java.nutrivillageApplication.security.ISecurityUserService;
 import com.nurtivillage.java.nutrivillageApplication.security.IUserService;
 import com.nurtivillage.java.nutrivillageApplication.util.GenericResponse;
-
-import comnurtivillage.java.nutrivillageApplication.model.User;
-import comnurtivillage.java.nutrivillageApplication.model.VerificationToken;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 36000)

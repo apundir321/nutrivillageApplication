@@ -1,9 +1,9 @@
 package com.nurtivillage.java.nutrivillageApplication.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
+import com.nurtivillage.java.nutrivillageApplication.model.UserLocation;
 
-import comnurtivillage.java.nutrivillageApplication.model.User;
-import comnurtivillage.java.nutrivillageApplication.model.UserLocation;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserLocationRepository extends JpaRepository<UserLocation, Long> {
     UserLocation findByCountryAndUser(String country, User user);

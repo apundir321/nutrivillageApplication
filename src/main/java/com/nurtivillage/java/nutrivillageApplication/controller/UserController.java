@@ -54,15 +54,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nurtivillage.java.nutrivillageApplication.jwt.AccountCredentials;
 import com.nurtivillage.java.nutrivillageApplication.jwt.JwtTokenUtil;
+import com.nurtivillage.java.nutrivillageApplication.model.Location;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
+import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 import com.nurtivillage.java.nutrivillageApplication.security.IUserService;
 import com.nurtivillage.java.nutrivillageApplication.security.JwtUserDetailsService;
 import com.nurtivillage.java.nutrivillageApplication.service.AWSS3Service;
 import com.nurtivillage.java.nutrivillageApplication.service.UserProfileService;
 import com.nurtivillage.java.nutrivillageApplication.util.GenericResponse;
-
-import comnurtivillage.java.nutrivillageApplication.model.Location;
-import comnurtivillage.java.nutrivillageApplication.model.User;
-import comnurtivillage.java.nutrivillageApplication.model.UserProfile;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 36000)
