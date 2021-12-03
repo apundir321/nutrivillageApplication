@@ -20,7 +20,7 @@ public class UserOrder {
     private Long id;
     @Column(nullable = false)
     private double amount;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -35,11 +35,12 @@ public class UserOrder {
     //private order_details
     public UserOrder(){}
 
-    public UserOrder(double amount,User user,Long orderNo){
+    public UserOrder(double amount,User user,Long orderNO,int itemNO,Status status){
         this.amount = amount;
-        this.orderNo = orderNo;
+        this.orderNo = orderNO;
         this.user = user;
-
+        this.itemNO = itemNO;
+        this.status = status;
     }
 
     public double getAmount() {
@@ -56,6 +57,9 @@ public class UserOrder {
     }
     public User getUser() {
         return user;
+    }
+    public int getItemNO(){
+        return itemNO;
     }
 }
 

@@ -12,11 +12,27 @@ public class OrderRequest {
     private List<Product> item;
     private double amount;
     private User user;
-    private Long orderNO;
-    private int itemNO;
+    private List<Long> quantity;
 
     public OrderRequest(){}
 
-    public OrderRequest(List<Product> item,double amount,User user,Long orderNO,int itemNO){}
+    public OrderRequest(List<Product> item,List<Long> quantity,double amount,User user){
+        this.item = item;
+        this.quantity = quantity;
+        this.amount = amount;
+        this.user = user;;
+    }
 
+    public double getAmount() {
+        return amount;
+    }
+    public List<Product> getItem() {
+        return item;
+    }
+    public List<Long> getQuantity() {
+        return quantity;
+    }
+    public User getUser() {
+        return user;
+    }
 }

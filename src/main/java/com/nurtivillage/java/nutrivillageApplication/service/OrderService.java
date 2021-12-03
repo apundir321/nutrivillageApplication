@@ -18,9 +18,9 @@ public class OrderService {
         return userOrder;
     }
 
-    public String createOrder(UserOrder order){
-        orderRepository.save(order);
-        return "order create";
+    public UserOrder createOrder(UserOrder order){
+        UserOrder orderCreate = orderRepository.save(order);
+        return orderCreate;
     }
 
 }

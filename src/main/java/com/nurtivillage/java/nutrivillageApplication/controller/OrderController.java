@@ -2,7 +2,9 @@ package com.nurtivillage.java.nutrivillageApplication.controller;
 
 import java.util.List;
 
+import com.nurtivillage.java.nutrivillageApplication.Request.OrderRequest;
 import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
+import com.nurtivillage.java.nutrivillageApplication.model.Status;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
 import com.nurtivillage.java.nutrivillageApplication.service.ApiResponseService;
 import com.nurtivillage.java.nutrivillageApplication.service.OrderService;
@@ -34,17 +36,18 @@ public class OrderController {
             }
         }
 
-        // @PostMapping("/create")
-        // public ResponseEntity<ApiResponseService> createOrder(@RequestBody String orderDetails){
-        //     try{
-        //         UserOrder order = new UserOder(100.00,2,);
-        //         String order = orderService.createOrder();
-        //         ApiResponseService res = new ApiResponseService("order List",true,orderList);
-        //         return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
-        //     }catch(Exception e){
-        //         System.out.println(e);
-        //         ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
-        //         return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
-        //     }
-        // } 
+        @PostMapping("/create")
+        public ResponseEntity<ApiResponseService> createOrder(@RequestBody OrderRequest orderRequest){
+            try{
+                Long orderNO = (long) 0002;
+                UserOrder order = new UserOrder(orderRequest.getAmount(),orderRequest.getUser(),orderNO,orderRequest.getItem().size(),Status.ordered);
+                UserOrder orderCreate = orderService.createOrder(order);
+                ApiResponseService res = new ApiResponseService("orderStatus",true,List.of(orderCreate.getId()));
+                return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+            }catch(Exception e){
+                System.out.println(e);
+                ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+                return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } 
 }
