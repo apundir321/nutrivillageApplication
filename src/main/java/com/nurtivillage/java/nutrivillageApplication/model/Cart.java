@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Cart {
     @Id
@@ -39,6 +41,7 @@ public class Cart {
     public int getQuantity() {
         return quantity;
     }
+    @JsonIgnore
     public User getUser() {
         return user;
     }
