@@ -67,6 +67,7 @@ public class RegistrationRestController {
     @PostMapping("/user/registration")
     public GenericResponse registerUserAccount(@RequestBody @Valid final UserDto accountDto, final HttpServletRequest request) {
         LOGGER.debug("Registering user account with information: {}", accountDto);
+        
         boolean isRecruiter = request.getParameter("recruiter")==null?false:true;
         final User registered = userService.registerNewUserAccount(accountDto,isRecruiter);
 //        userService.addUserLocation(registered, getClientIP(request));
