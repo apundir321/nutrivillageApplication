@@ -1,6 +1,7 @@
 package com.nurtivillage.java.nutrivillageApplication.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.nurtivillage.java.nutrivillageApplication.dao.ProductRepository;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
@@ -26,6 +27,11 @@ public class ProductService {
     public String DeleteProduct(Long id){
         productRepository.deleteById(id);
         return "delete product";
+    }
+
+    public Optional<Product> ProductInfo(Long id) {
+        Optional<Product> productInfo = productRepository.findById(id);
+        return productInfo;
     }
 
     // public List<Product> highlighterProduct(){

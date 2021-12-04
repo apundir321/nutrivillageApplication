@@ -24,11 +24,12 @@ public class Product {
 
     }
 
-    public Product(String brand,int highlighter,String image,String name){
+    public Product(String brand,int highlighter,String image,String name,String description){
         this.brand = brand;
         this.highligter = highlighter;
         this.image = image;
         this.name = name;
+        this.description = description;
     }
 
 
@@ -46,5 +47,9 @@ public class Product {
     }
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

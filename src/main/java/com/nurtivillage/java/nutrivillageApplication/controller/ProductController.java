@@ -1,6 +1,7 @@
 package com.nurtivillage.java.nutrivillageApplication.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.service.ApiResponseService;
@@ -30,6 +31,19 @@ public class ProductController {
         try{
             List<Product> product = productService.getAllProduct();
             ApiResponseService res = new ApiResponseService("Product List",true,product);
+            return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+        }catch(Exception e){
+            System.out.println(e);
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+            return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/info/{id}")
+    public ResponseEntity<ApiResponseService> ProductInfo(@PathVariable Long id){
+        try{
+            Optional<Product> product = productService.ProductInfo(id);
+            ApiResponseService res = new ApiResponseService("product info",true,List.of(product.get()));
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         }catch(Exception e){
             System.out.println(e);
