@@ -21,16 +21,8 @@ public class Category {
 	private int id;
 	private String name;
 	private String code;
-	@ManyToOne(fetch=FetchType.LAZY,cascade=CascadeType.MERGE)
-	@JoinColumn(name="Parent_Category")
-    private Category parentCategory;
 	
-	public Category getParentCategory() {
-		return parentCategory;
-	}
-	public void setParentCategory(Category parentCategory) {
-		this.parentCategory = parentCategory;
-	}
+
 	public Category() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -55,7 +47,7 @@ public class Category {
 	}
 	@Override
 	public String toString() {
-		return "Category [id=" + id + ", name=" + name + ", code=" + code + ", parentCategory=" + parentCategory + "]";
+		return "Category [id=" + id + ", name=" + name + ", code=" + code + "]";
 	}
     
 	
