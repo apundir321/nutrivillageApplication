@@ -10,5 +10,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface ProductRepository extends JpaRepository<Product,Long>{
 
-    // List<Product> findByHighlighter(@Param("highligter") int h);
+    List<Product> findByDeletedAtIsNull();
 }

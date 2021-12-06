@@ -24,7 +24,6 @@ public ResponseEntity<?> allInventory() {
 	List<Inventory> inv= inventoryService.getAll();
 	 return new ResponseEntity<>(inv, HttpStatus.OK);
 	}catch (Exception e) {
-		// TODO: handle exception
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
@@ -35,7 +34,6 @@ public ResponseEntity<?> addInventory(@RequestBody Inventory inventory) {
 	Inventory inv = inventoryService.addInventory(inventory);
 	 return new ResponseEntity<Inventory>(inv, HttpStatus.OK);
 	}catch (Exception e) {
-		// TODO: handle exception
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

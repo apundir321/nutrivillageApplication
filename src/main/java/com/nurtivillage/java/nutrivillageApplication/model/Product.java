@@ -1,5 +1,8 @@
 package com.nurtivillage.java.nutrivillageApplication.model;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,23 +14,61 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 
 @Entity
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(nullable = false)
     private String name;
     private String brand;
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
 	@JoinColumn(name = "category_id")
     private Category category;
     private String status; 
     private String image;
+	private Date deletedAt;
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false)
+	private Date updateAt;
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false)
+	private Date createdAt;
+	@Transient
+	private List<Review> review;
 	public Long getId() {
 		return id;
 	}
+
+	@Transient
+	private List<Inventory> variant;
+	public List<Inventory> getVariant() {
+		return variant;
+	}
+
+	public void setVariant(List<Inventory> variant) {
+		this.variant = variant;
+	}
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public void setReview(List<Review> review) {
+		this.review = review;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -64,4 +105,31 @@ public class Product {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	public List<Review> getReview(){
+		return review;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public Date getDeletedAt() {
+		return deletedAt;
+	}
+
+	public Date getUpdateAt() {
+		return updateAt;
+	}
+
+	public void setDeletedAt(Date deletedAt) {
+		this.deletedAt = deletedAt;
+	}
+	
+	// public Inventory getInventory() {
+	// 	return inventory;
+	// }
 }
