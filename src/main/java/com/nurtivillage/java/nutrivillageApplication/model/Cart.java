@@ -12,6 +12,9 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 public class Cart {
     @Id
@@ -22,6 +25,7 @@ public class Cart {
     private User user;
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "product_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
     // private Inventory inventory;
     private int quantity;

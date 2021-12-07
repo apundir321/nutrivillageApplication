@@ -3,9 +3,13 @@ package com.nurtivillage.java.nutrivillageApplication.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
+import com.nurtivillage.java.nutrivillageApplication.model.Review;
 import com.nurtivillage.java.nutrivillageApplication.service.ApiResponseService;
+import com.nurtivillage.java.nutrivillageApplication.service.InventoryService;
 import com.nurtivillage.java.nutrivillageApplication.service.ProductService;
+import com.nurtivillage.java.nutrivillageApplication.service.ReviewService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductController {
     @Autowired
     private ProductService productService;
+    @Autowired 
+    private ReviewService reviewService;
+    @Autowired
+    private InventoryService inventoryService;
     @GetMapping("/list")
     public ResponseEntity<ApiResponseService> getAllProduct(){
         try{
@@ -43,6 +51,10 @@ public class ProductController {
     public ResponseEntity<ApiResponseService> ProductInfo(@PathVariable Long id){
         try{
             Optional<Product> product = productService.ProductInfo(id);
+            List<Review> reviews = reviewService.getReview(product.get());
+            List<Inventory> inventory = inventoryService.productInventory(product.get());
+            product.get().setReview(reviews);
+            product.get().setVariant(inventory);
             ApiResponseService res = new ApiResponseService("product info",true,List.of(product.get()));
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         }catch(Exception e){

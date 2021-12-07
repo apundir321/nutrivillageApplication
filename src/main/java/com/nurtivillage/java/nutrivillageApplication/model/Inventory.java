@@ -14,6 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 
 
 @Entity
@@ -24,8 +29,9 @@ public class Inventory {
 	private int quantity;
 	@OneToOne
 	private Variant variant;
-	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
 	@JoinColumn(name="product_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Product product;
 	
 	
@@ -48,6 +54,7 @@ public class Inventory {
 	public void setVariant(Variant variant) {
 		this.variant = variant;
 	}
+	@JsonIgnore
 	public Product getProduct() {
 		return product;
 	}

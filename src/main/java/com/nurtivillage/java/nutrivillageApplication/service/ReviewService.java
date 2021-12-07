@@ -3,6 +3,7 @@ package com.nurtivillage.java.nutrivillageApplication.service;
 import java.util.List;
 
 import com.nurtivillage.java.nutrivillageApplication.dao.ReviewRepository;
+import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Review;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,11 @@ public class ReviewService {
     		throw e;
     	}
     }
-    
+    public List<Review>getReview(Product product){
+        List<Review> review = reviewRepository.findByProduct(product);
+        return review;
+    }
+
+   
     
 }

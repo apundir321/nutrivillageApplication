@@ -10,6 +10,7 @@ import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Variant;
 
+
 @Service
 public class InventoryService {
 	@Autowired 
@@ -26,12 +27,13 @@ public class InventoryService {
 	public Inventory addInventory(Inventory inventory) {
 		try {
 			Inventory inv=inventoryRepo.save(inventory);
-	return inv;
+			return inv;
 		}
 		catch(Exception e) {
 			throw e;
 		}
 	}
+
 	public Inventory getProductInventory(Product product) {
 		try {
 			Inventory inv=inventoryRepo.findByProduct(product);
@@ -49,6 +51,7 @@ public class InventoryService {
 	return inv;
 		}
 		catch(Exception e) {
+
 			throw e;
 		}
 	}

@@ -13,10 +13,10 @@ public class Review {
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)
    private Long id;
-   @OneToOne(cascade = CascadeType.ALL)
+   @OneToOne(cascade = CascadeType.MERGE)
    @JoinColumn(name = "user_id",nullable = false)
    private User user;
-   @OneToOne(cascade = CascadeType.ALL)
+   @OneToOne(cascade = CascadeType.MERGE)
    @JoinColumn(name = "product_id",nullable = false)
    private Product product;
    private String comment;

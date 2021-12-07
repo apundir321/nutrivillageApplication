@@ -1,5 +1,6 @@
 package com.nurtivillage.java.nutrivillageApplication.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,23 +16,51 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public List<Product> getAllProduct(){
-        List<Product> allProduct = productRepository.findAll();
-        return allProduct;
+        try {
+            List<Product> allProduct = productRepository.findByDeletedAtIsNull();
+            return allProduct;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public Product insertProduct(Product product){
-        Product save = productRepository.save(product);
-        return save;
+        try {
+            Product save = productRepository.save(product);
+            return save;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    public String DeleteProduct(Long id){
-        productRepository.deleteById(id);
-        return "delete product";
+    public String DeleteProduct(Long id) throws Exception{
+        try {
+            if(!productRepository.existsById(id)){
+                throw new ExceptionService("product is deleted or not exists");
+            }
+            System.out.println(id);
+            Optional<Product> product = productRepository.findById(id);
+            product.get().setDeletedAt(new Date());
+            productRepository.save(product.get());
+            return "delete product";
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    public Optional<Product> ProductInfo(Long id) {
-        Optional<Product> productInfo = productRepository.findById(id);
-        return productInfo;
+    public Optional<Product> ProductInfo(Long id) throws Exception {
+        try {
+            if(!productRepository.existsById(id)){
+                throw new ExceptionService("product is not exists");
+            }
+            Optional<Product> productInfo = productRepository.findById(id);
+            if(productInfo.get().getDeletedAt() != null){
+                throw new ExceptionService("product is deleted");
+            }
+            return productInfo;            
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     // public List<Product> highlighterProduct(){
