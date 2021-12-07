@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 
 
@@ -21,7 +22,8 @@ public class Inventory {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private int quantity;
-	private int size;
+	@OneToOne
+	private Variant variant;
 	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
 	@JoinColumn(name="product_id")
 	private Product product;
@@ -39,11 +41,12 @@ public class Inventory {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public int getSize() {
-		return size;
+
+	public Variant getVariant() {
+		return variant;
 	}
-	public void setSize(int size) {
-		this.size = size;
+	public void setVariant(Variant variant) {
+		this.variant = variant;
 	}
 	public Product getProduct() {
 		return product;
@@ -53,7 +56,7 @@ public class Inventory {
 	}
 	@Override
 	public String toString() {
-		return "Inventory [id=" + id + ", quantity=" + quantity + ", size=" + size + ", product=" + product + "]";
+		return "Inventory [id=" + id + ", quantity=" + quantity + ", variant=" + variant + ", product=" + product + "]";
 	}
 	public Inventory() {
 		super();

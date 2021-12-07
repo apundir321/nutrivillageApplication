@@ -14,8 +14,23 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
 
     public List<Review>getAllReview(){
-        List<Review> review = reviewRepository.findAll();
-        return review;
+    	try {
+        return reviewRepository.findAll();
     }
+    	catch(Exception e) {
+    	throw e;	
+    	}
+    	}
+  
+    public Review addReview(Review review) {
+    	try {
+    		Review r=reviewRepository.save(review);
+    return r;
+    	}
+    	catch(Exception e) {
+    		throw e;
+    	}
+    }
+    
     
 }

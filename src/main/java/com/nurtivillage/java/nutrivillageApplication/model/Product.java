@@ -1,5 +1,7 @@
 package com.nurtivillage.java.nutrivillageApplication.model;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,26 +12,47 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int pid;
     @Column(nullable = false)
     private String name;
     private String brand;
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
 	@JoinColumn(name = "category_id")
     private Category category;
-    private String status; 
+    private String status;
+	@ManyToMany(fetch=FetchType.LAZY,cascade=CascadeType.MERGE)
+	  @JoinTable(
+		        name = "products_variant",
+		        joinColumns = {
+		            @JoinColumn(name = "pid")
+		        },
+		        inverseJoinColumns = {
+		            @JoinColumn(name = "vid")
+		        }
+		    )
+    private List<Variant> variants;
+    private int price;
     private String image;
-	public Long getId() {
-		return id;
+
+	public int getPrice() {
+		return price;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setPrice(int price) {
+		this.price = price;
+	}
+	public int getPid() {
+		return pid;
+	}
+	public void setPid(int pid) {
+		this.pid = pid;
 	}
 	public String getName() {
 		return name;
@@ -57,8 +80,8 @@ public class Product {
 	}
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", brand=" + brand + ", status=" + status + ", image=" + image
-				+ "]";
+		return "Product [pid=" + pid + ", name=" + name + ", brand=" + brand + ", category=" + category + ", status="
+				+ status + ", variants=" + variants + ", price=" + price + ", image=" + image + "]";
 	}
 	public Product() {
 		super();
