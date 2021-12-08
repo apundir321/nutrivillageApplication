@@ -47,23 +47,7 @@ public class Product {
 		        }
 		    )
     private List<Variant> variants;
-    private int price;
-    private String image;
 
-	private Date deletedAt;
-	@UpdateTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = false)
-	private Date updateAt;
-	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = false)
-	private Date createdAt;
-	@Transient
-	private List<Review> review;
-
-
-	@Transient
 	private List<Inventory> variant;
 	public List<Inventory> getVariant() {
 		return variant;
