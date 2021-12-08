@@ -31,10 +31,15 @@ public class Inventory {
 	private Variant variant;
 	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
 	@JoinColumn(name="product_id")
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Product product;
+	private int price;
 	
-	
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
 	public int getId() {
 		return id;
 	}
@@ -63,7 +68,8 @@ public class Inventory {
 	}
 	@Override
 	public String toString() {
-		return "Inventory [id=" + id + ", quantity=" + quantity + ", variant=" + variant + ", product=" + product + "]";
+		return "Inventory [id=" + id + ", quantity=" + quantity + ", variant=" + variant + ", product=" + product
+				+ ", price=" + price + "]";
 	}
 	public Inventory() {
 		super();

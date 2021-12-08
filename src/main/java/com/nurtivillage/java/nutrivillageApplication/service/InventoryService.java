@@ -43,12 +43,22 @@ public class InventoryService {
 			throw e;
 		}
 	}
+	public Inventory getProductVariantInventory(Product product,Variant variant) {
+		try {
+			Inventory inv=inventoryRepo.findByProductAndVariant(product,variant);
+	return inv;
+		}
+		catch(Exception e) {
+			throw e;
+		}
+	}
 	public Inventory updateInventory(Product product,Variant variant,int q) {
 		try {
-			Inventory inv=inventoryRepo.findByProduct(product);
-			
-			
-	return inv;
+			Inventory inv=inventoryRepo.findByProductAndVariant(product,variant);
+			if(inv.getQuantity()>=q) {
+			inv.setQuantity(inv.getQuantity()-q);
+			inventoryRepo.save(inv);}
+			return inv;
 		}
 		catch(Exception e) {
 
