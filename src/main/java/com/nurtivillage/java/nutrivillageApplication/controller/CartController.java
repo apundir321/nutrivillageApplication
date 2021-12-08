@@ -2,22 +2,26 @@ package com.nurtivillage.java.nutrivillageApplication.controller;
 
 import java.util.List;
 
-import com.nurtivillage.java.nutrivillageApplication.dao.CartRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
+import com.nurtivillage.java.nutrivillageApplication.dto.CartResponseDto;
 import com.nurtivillage.java.nutrivillageApplication.model.Cart;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.service.ApiResponseService;
 import com.nurtivillage.java.nutrivillageApplication.service.CartService;
-
+import com.nurtivillage.java.nutrivillageApplication.service.LoggedInUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,12 +33,13 @@ public class CartController {
     private CartService cartService;
     @Autowired
             private UserRepository userRepository;
-    @GetMapping("/list/{id}")
-    public ResponseEntity<ApiResponseService> getAllCartItem(@PathVariable Long id){
+    @Autowired
+        private LoggedInUserService userService;
+    @GetMapping("/list")
+    public ResponseEntity<ApiResponseService> getAllCartItem(){
         try {
-            
-            // User user = userRepository.findById(id);
-            List<Cart> cartItem = cartService.getCartItem(id);
+            User user = userService.userDetails();
+            List<CartResponseDto> cartItem = cartService.getCartItem(user.getId());
             ApiResponseService res = new ApiResponseService("Cart item",true,cartItem);
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
@@ -46,6 +51,8 @@ public class CartController {
     @PostMapping("/insert")
     public ResponseEntity<ApiResponseService> insertCart(@RequestBody Cart cart){
         try {
+            User user = userService.userDetails();
+            cart.setUser(user);
             Cart cartItem = cartService.insertCart(cart);
             ApiResponseService res = new ApiResponseService("Cart item insert",true,List.of(cart));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
@@ -58,7 +65,9 @@ public class CartController {
     @PostMapping("/edit")
     public ResponseEntity<ApiResponseService> editCart(@RequestBody Cart cart){
         try {
-            Cart cartItem = cartService.insertCart(cart);
+            Cart getCartItem = cartService.cartItemById(cart.getId());
+            getCartItem.setQuantity(cart.getQuantity());
+            Cart cartItem = cartService.insertCart(getCartItem);
             ApiResponseService res = new ApiResponseService("Cart item insert",true,List.of(cart));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
@@ -79,4 +88,18 @@ public class CartController {
         }
     }
 
+    @GetMapping("/clear")
+    public ResponseEntity<ApiResponseService> cartClear(){
+        try {
+            User user = userService.userDetails();
+            String cart = cartService.cartClear(user.getId());
+            System.out.println(cart);
+            List<CartResponseDto> cartItem = cartService.getCartItem(user.getId());
+            ApiResponseService res = new ApiResponseService("cart clear",true,cartItem);
+            return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+        } catch (Exception e) {
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("data"));
+            return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

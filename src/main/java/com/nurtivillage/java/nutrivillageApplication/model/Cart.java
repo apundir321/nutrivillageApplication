@@ -25,7 +25,6 @@ public class Cart {
     private User user;
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "product_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
     // private Inventory inventory;
     private int quantity;
@@ -45,10 +44,19 @@ public class Cart {
     public int getQuantity() {
         return quantity;
     }
-    @JsonIgnore
+    
     public User getUser() {
         return user;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    
 
 
 }
