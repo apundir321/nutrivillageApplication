@@ -22,30 +22,50 @@ public class CartService {
     private UserRepository userRepository;
 
     public List<CartResponseDto>getCartItem(Long id){
-        List<CartResponseDto> cartItem = cartRepository.findByUserId(id);
-        return cartItem;
+        try {
+            List<CartResponseDto> cartItem = cartRepository.findByUserId(id);
+            return cartItem;
+            
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public Cart cartItemById(Long id){
-        Optional<Cart> cartItem = cartRepository.findById(id);
-        return cartItem.get();
+        try {
+            Optional<Cart> cartItem = cartRepository.findById(id);
+            return cartItem.get();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public Cart insertCart(Cart cart){
-        Cart cartItem = cartRepository.save(cart);
-        return cartItem;
+        try {
+            Cart cartItem = cartRepository.save(cart);
+            return cartItem;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public String DeleteCartItem(Long id){
-        cartRepository.deleteById(id);
-        return "delete item form cart";
+        try {
+            cartRepository.deleteById(id);
+            return "delete item form cart";
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Transactional
     public String cartClear(Long id){
-        // Optional<User> user = userRepository.findById(id);
-        cartRepository.deleteByUserId(id);
-        return "hello";
+        try {
+            cartRepository.deleteByUserId(id);
+            return "hello";
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
 }

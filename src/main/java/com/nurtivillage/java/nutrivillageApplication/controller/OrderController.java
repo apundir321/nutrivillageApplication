@@ -67,7 +67,7 @@ public class OrderController {
                 Optional<UserOrder> order = orderService.getOrder(id);
                 List<OrderDetails> orderDetails = orderService.findByUesrOrder(order.get());
                 
-                ApiResponseService res = new ApiResponseService("orderStatus",true,orderDetails);
+                ApiResponseService res = new ApiResponseService("order detail",true,orderDetails);
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
             }catch(Exception e){
                 System.out.println(e);
