@@ -120,6 +120,19 @@ public class ProductController {
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(value="/list/{categoryId}")
+    public ResponseEntity<ApiResponseService> categoryProductLIst(@PathVariable Integer categoryId){
+        try {
+            List<Product> data = productService.categoryProductLIst(categoryId);
+            ApiResponseService res = new ApiResponseService("List of highlighter",true,List.of(data));
+            return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e);
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+            return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     
     // public Res
 }

@@ -68,6 +68,13 @@ public class ProductService {
         return productList;
     }
 
+    public List<Product> categoryProductLIst(Integer categoryId) {
+        List<Product> productList = productRepository.findByCategoryIdAndDeletedAtIsNull(categoryId);
+        return productList;
+    }
+
+
+
     // public List<Product> highlighterProduct(){
         // List<Product> highlighter = productRepository.findByHighlighter(1);
         // return highlighter;

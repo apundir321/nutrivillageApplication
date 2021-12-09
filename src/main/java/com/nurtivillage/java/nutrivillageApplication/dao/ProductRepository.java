@@ -2,6 +2,7 @@ package com.nurtivillage.java.nutrivillageApplication.dao;
 
 import java.util.List;
 
+import com.nurtivillage.java.nutrivillageApplication.model.Category;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,6 @@ public interface ProductRepository extends JpaRepository<Product,Long>{
     List<Product> findByDeletedAtIsNull();
 
     List<Product> findByStatusAndDeletedAtIsNull(int status);
+
+    List<Product> findByCategoryIdAndDeletedAtIsNull(Integer categoryId);
 }
