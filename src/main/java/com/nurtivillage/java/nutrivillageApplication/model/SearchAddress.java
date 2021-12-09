@@ -1,16 +1,6 @@
 package com.nurtivillage.java.nutrivillageApplication.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-
-@Entity
-public class ShippingAddress {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+public class SearchAddress {
 	private String name;
 	private String country;
 	private String street;
@@ -18,24 +8,13 @@ public class ShippingAddress {
 	private String city;
 	private String pincode;
 	private String mobile;
-	@OneToOne
 	private User user;
 	
-	public ShippingAddress() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 	public User getUser() {
 		return user;
 	}
 	public void setUser(User user) {
 		this.user = user;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
 	}
 	public String getName() {
 		return name;
@@ -79,13 +58,6 @@ public class ShippingAddress {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-	@Override
-	public String toString() {
-		return "ShippingAddress [id=" + id + ", name=" + name + ", country=" + country + ", street=" + street
-				+ ", state=" + state + ", city=" + city + ", pincode=" + pincode + ", mobile=" + mobile + ", user="
-				+ user + "]";
-	}
-	
 	
 	
 }

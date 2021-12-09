@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -47,15 +48,10 @@ public class Product {
 		        }
 		    )
     private List<Variant> variants;
-
-	private List<Inventory> variant;
-	public List<Inventory> getVariant() {
-		return variant;
-	}
-
-	public void setVariant(List<Inventory> variant) {
-		this.variant = variant;
-	}
+    @OneToMany
+	private List<Review> review;
+    private String image;
+    
 	public void setCategory(Category category) {
 		this.category = category;
 	}
@@ -92,7 +88,7 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [pid=" + pid + ", name=" + name + ", brand=" + brand + ", category=" + category + ", status="
-				+ status + ", variants=" + variants + ", price=" + price + ", image=" + image + "]";
+				+ status + ", variants=" + variants + ", image=" + image + "]";
 	}
 	public Product() {
 		super();
@@ -106,21 +102,7 @@ public class Product {
 		return category;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
 
-	public Date getDeletedAt() {
-		return deletedAt;
-	}
-
-	public Date getUpdateAt() {
-		return updateAt;
-	}
-
-	public void setDeletedAt(Date deletedAt) {
-		this.deletedAt = deletedAt;
-	}
 	
 	// public Inventory getInventory() {
 	// 	return inventory;

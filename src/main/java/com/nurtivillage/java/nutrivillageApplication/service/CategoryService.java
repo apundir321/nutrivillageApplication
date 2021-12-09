@@ -32,4 +32,14 @@ catch(Exception e) {
 	throw e;
 }
 }
+
+public Category getCategory(String name) {
+	try {
+		Category c=categoryRepository.findByName(name);
+		return c;
+	}
+	catch(Exception e) {
+		throw e;
+	}
+}
 }

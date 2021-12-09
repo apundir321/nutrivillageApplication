@@ -21,12 +21,31 @@ public class Category {
 	private int id;
 	private String name;
 	private String code;
+	private String coverImage;
+	private String image;
 	
 
 	public Category() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public String getCoverImage() {
+		return coverImage;
+	}
+
+	public void setCoverImage(String coverImage) {
+		this.coverImage = coverImage;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -47,7 +66,8 @@ public class Category {
 	}
 	@Override
 	public String toString() {
-		return "Category [id=" + id + ", name=" + name + ", code=" + code + "]";
+		return "Category [id=" + id + ", name=" + name + ", code=" + code + ", coverImage=" + coverImage + ", image="
+				+ image + "]";
 	}
     
 	
