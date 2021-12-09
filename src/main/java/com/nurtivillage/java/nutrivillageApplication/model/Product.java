@@ -58,17 +58,21 @@ public class Product {
 	public Long getId() {
 		return id;
 	}
+	@ManyToMany(fetch=FetchType.LAZY,cascade = CascadeType.MERGE)
+	private List<Variant> variants;
+	// @Transient
+	// private List<Inventory> variant;
 
-	@Transient
-	private List<Inventory> variant1;
-
-	public List<Inventory> getVariant() {
-		return variant1;
+	public List<Variant> getVariant() {
+		return variants;
 	}
 
-	public void setVariant(List<Inventory> variant1) {
-		this.variant1 = variant1;
+	public void setVariants(List<Variant> variants) {
+		this.variants = variants;
 	}
+	// public void setVariant1(List<Inventory> variant1) {
+	// 	this.variant1 = variant1;
+	// }
 	public void setCategory(Category category) {
 		this.category = category;
 	}
