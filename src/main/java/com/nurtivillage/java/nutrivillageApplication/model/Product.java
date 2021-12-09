@@ -60,13 +60,14 @@ public class Product {
 	}
 
 	@Transient
-	private List<Inventory> variant;
+	private List<Inventory> variant1;
+
 	public List<Inventory> getVariant() {
-		return variant;
+		return variant1;
 	}
 
-	public void setVariant(List<Inventory> variant) {
-		this.variant = variant;
+	public void setVariant(List<Inventory> variant1) {
+		this.variant1 = variant1;
 	}
 	public void setCategory(Category category) {
 		this.category = category;
@@ -79,14 +80,6 @@ public class Product {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-
-	public void setReview(List<Review> review) {
-		this.review = review;
-	}
-
 
 	public String getName() {
 		return name;
@@ -114,8 +107,8 @@ public class Product {
 	}
 	@Override
 	public String toString() {
-		return "Product [pid=" + pid + ", name=" + name + ", brand=" + brand + ", category=" + category + ", status="
-				+ status + ", variants=" + variants + ", price=" + price + ", image=" + image + "]";
+		return "Product [id=" + id + ", name=" + name + ", brand=" + brand + ", category=" + category + ", status="
+				+ status + ", image=" + image + "]";
 	}
 	public Product() {
 		super();

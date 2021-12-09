@@ -3,12 +3,9 @@ package com.nurtivillage.java.nutrivillageApplication.controller;
 import java.util.List;
 import java.util.Optional;
 
-<<<<<<< HEAD
 import javax.validation.Valid;
 
 import com.nurtivillage.java.nutrivillageApplication.dto.ProductInsert;
-=======
->>>>>>> Akash_changes
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Review;
@@ -61,7 +58,7 @@ public class ProductController {
         try{
             Optional<Product> product = productService.ProductInfo(id);
             List<Review> reviews = reviewService.getReview(product.get());
-            List<Inventory> inventory = inventoryService.productInventory(product.get());
+            List<Inventory> inventory = inventoryService.getProductInventory(product.get());
             product.get().setReview(reviews);
             product.get().setVariant(inventory);
             ApiResponseService res = new ApiResponseService("product info",true,List.of(product.get()));

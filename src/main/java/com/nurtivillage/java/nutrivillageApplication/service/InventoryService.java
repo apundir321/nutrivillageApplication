@@ -35,21 +35,19 @@ public class InventoryService {
 		}
 	}
 
-	public Inventory getProductInventory(Product product) {
+	public List<Inventory> getProductInventory(Product product) {
 		try {
-			Inventory inv=inventoryRepo.findByProduct(product);
-	return inv;
+			List<Inventory> inv=inventoryRepo.findByProduct(product);
+			return inv;
 		}
 		catch(Exception e) {
 			throw e;
 		}
 	}
-	public Inventory updateInventory(Product product,Variant variant,int q) {
+	public List<Inventory> updateInventory(Product product,Variant variant,int q) {
 		try {
-			Inventory inv=inventoryRepo.findByProduct(product);
-			
-			
-	return inv;
+			List<Inventory> inv=inventoryRepo.findByProduct(product);
+			return inv;
 		}
 		catch(Exception e) {
 

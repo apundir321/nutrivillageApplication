@@ -44,8 +44,8 @@ public ResponseEntity<?> addInventory(@RequestBody Inventory inventory) {
 @RequestMapping("/getProductInventory")
 public ResponseEntity<?> getProductInventory(@RequestBody Product product) {
 	try {
-Inventory inv= inventoryService.getProductInventory(product);
-	 return new ResponseEntity<>(inv, HttpStatus.OK);
+			List<Inventory> inv= inventoryService.getProductInventory(product);
+	 		return new ResponseEntity<>(inv, HttpStatus.OK);
 	}catch (Exception e) {
 		// TODO: handle exception
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -54,7 +54,7 @@ Inventory inv= inventoryService.getProductInventory(product);
 @RequestMapping("/updateInventory/{product_id}/{variant}/{quantity}")
 public ResponseEntity<?> updateInventory(@PathVariable Product product,@PathVariable Variant variant,@PathVariable int quantity) {
 	try {
-Inventory inv= inventoryService.updateInventory(product,variant,quantity);
+Inventory inv= (Inventory) inventoryService.updateInventory(product,variant,quantity);
 	 return new ResponseEntity<>(inv, HttpStatus.OK);
 	}catch (Exception e) {
 		// TODO: handle exception
