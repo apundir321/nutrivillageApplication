@@ -14,16 +14,29 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    public List<Review>getAllReview(){
+    	try {
+        return reviewRepository.findAll();
+    }
+    	catch(Exception e) {
+    	throw e;	
+    	}
+    	}
+  
+    public Review addReview(Review review) {
+    	try {
+    		Review r=reviewRepository.save(review);
+    return r;
+    	}
+    	catch(Exception e) {
+    		throw e;
+    	}
+    }
     public List<Review>getReview(Product product){
         List<Review> review = reviewRepository.findByProduct(product);
         return review;
     }
 
-    public List<Review> getAllReview() {
-        List<Review> review = reviewRepository.findAll();
-        return review;
-    }
-
-    
+   
     
 }

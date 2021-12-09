@@ -3,9 +3,12 @@ package com.nurtivillage.java.nutrivillageApplication.controller;
 import java.util.List;
 import java.util.Optional;
 
+<<<<<<< HEAD
 import javax.validation.Valid;
 
 import com.nurtivillage.java.nutrivillageApplication.dto.ProductInsert;
+=======
+>>>>>>> Akash_changes
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Review;
@@ -121,5 +124,5 @@ public class ProductController {
         }
     }
     
-    // public Res
+   
 }

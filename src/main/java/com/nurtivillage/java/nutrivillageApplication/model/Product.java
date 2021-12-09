@@ -6,13 +6,13 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
 import javax.persistence.FetchType;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -79,6 +79,15 @@ public class Product {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public void setReview(List<Review> review) {
+		this.review = review;
+	}
+
+
 	public String getName() {
 		return name;
 	}
@@ -94,7 +103,7 @@ public class Product {
 	public int getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	public String getImage() {
@@ -105,8 +114,8 @@ public class Product {
 	}
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", brand=" + brand + ", status=" + status + ", image=" + image
-				+ "]";
+		return "Product [pid=" + pid + ", name=" + name + ", brand=" + brand + ", category=" + category + ", status="
+				+ status + ", variants=" + variants + ", price=" + price + ", image=" + image + "]";
 	}
 	public Product() {
 		super();

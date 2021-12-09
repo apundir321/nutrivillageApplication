@@ -12,6 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,7 +32,8 @@ public class Inventory {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private int quantity;
-	private int size;
+	@OneToOne
+	private Variant variant;
 	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
 	@JoinColumn(name="product_id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
@@ -45,11 +52,12 @@ public class Inventory {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public int getSize() {
-		return size;
+
+	public Variant getVariant() {
+		return variant;
 	}
-	public void setSize(int size) {
-		this.size = size;
+	public void setVariant(Variant variant) {
+		this.variant = variant;
 	}
 	@JsonIgnore
 	public Product getProduct() {
@@ -60,7 +68,7 @@ public class Inventory {
 	}
 	@Override
 	public String toString() {
-		return "Inventory [id=" + id + ", quantity=" + quantity + ", size=" + size + ", product=" + product + "]";
+		return "Inventory [id=" + id + ", quantity=" + quantity + ", variant=" + variant + ", product=" + product + "]";
 	}
 	public Inventory() {
 		super();
