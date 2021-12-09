@@ -100,7 +100,7 @@ public class Product {
 	public int getStatus() {
 		return status;
 	}
-	public void setStatus(int status) {
+	public void setStatus(@NotEmpty int status) {
 		this.status = status;
 	}
 	public String getImage() {
