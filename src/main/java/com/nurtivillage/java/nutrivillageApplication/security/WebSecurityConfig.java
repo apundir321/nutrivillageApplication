@@ -14,12 +14,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 import com.nurtivillage.java.nutrivillageApplication.jwt.JwtAuthenticationEntryPoint;
 import com.nurtivillage.java.nutrivillageApplication.jwt.JwtRequestFilter;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Autowired
 	private JwtUserDetailsService jwtUserDetailsService;
@@ -52,10 +53,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/registrationAccountConfirm").permitAll()
         .antMatchers("/badUser").permitAll()
         
-        
-        
-        
-        
         .anyRequest().authenticated()
         .and().
         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
@@ -80,8 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
-	}
-    
+	}   
     
 
 }

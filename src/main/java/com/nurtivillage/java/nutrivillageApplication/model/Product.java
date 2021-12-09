@@ -19,6 +19,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -30,12 +32,17 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(nullable = false)
+	@NotBlank
     private String name;
+	@NotBlank
     private String brand;
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
 	@JoinColumn(name = "category_id")
+	@NotEmpty
     private Category category;
-    private String status; 
+	@NotEmpty
+    private int status; 
+	@NotBlank
     private String image;
 	private Date deletedAt;
 	@UpdateTimestamp
@@ -84,7 +91,7 @@ public class Product {
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
 	public void setStatus(String status) {

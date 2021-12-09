@@ -3,6 +3,9 @@ package com.nurtivillage.java.nutrivillageApplication.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
+import com.nurtivillage.java.nutrivillageApplication.dto.ProductInsert;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Review;
@@ -14,6 +17,8 @@ import com.nurtivillage.java.nutrivillageApplication.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping(path = "/product")
+@Validated
 public class ProductController {
     @Autowired
     private ProductService productService;
@@ -65,10 +71,9 @@ public class ProductController {
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<ApiResponseService> insertProduct(@RequestBody Product product){
+    public ResponseEntity<ApiResponseService> insertProduct(@Valid @RequestBody Product product){
         try {
-            Product data = productService.insertProduct(product);
-            ApiResponseService res = new ApiResponseService("product create",true,List.of(data));
+            ApiResponseService res = new ApiResponseService("product create",true,List.of());
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
@@ -106,8 +111,8 @@ public class ProductController {
     @GetMapping(value="/highlighter")
     public ResponseEntity<ApiResponseService> highlighterProduct(){
         try {
-            // List<Product> data = productService.highlighterProduct();
-            ApiResponseService res = new ApiResponseService("List of highlighter",true,List.of("data"));
+            List<Product> data = productService.highlighterProduct();
+            ApiResponseService res = new ApiResponseService("List of highlighter",true,List.of(data));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);

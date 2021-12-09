@@ -63,6 +63,11 @@ public class ProductService {
         }
     }
 
+    public List<Product> highlighterProduct() {
+        List<Product> productList = productRepository.findByStatusAndDeletedAtIsNull(1);
+        return productList;
+    }
+
     // public List<Product> highlighterProduct(){
         // List<Product> highlighter = productRepository.findByHighlighter(1);
         // return highlighter;
