@@ -44,7 +44,7 @@ public class Product {
     private Category category;
 
 	@NotEmpty
-    private String status; 
+    private int status; 
 	@NotBlank
     private String image;
 	private Date deletedAt;
@@ -132,10 +132,10 @@ public class Product {
 		this.productImage = productImage;
 	}
 
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
-	public void setStatus(@NotEmpty String status) {
+	public void setStatus(@NotEmpty int status) {
 		this.status = status;
 	}
 	public String getImage() {
