@@ -58,26 +58,25 @@ public class Product {
 	public Long getId() {
 		return id;
 	}
+
 	@ManyToMany(fetch=FetchType.LAZY,cascade = CascadeType.MERGE)
 	private List<Variant> variants;
-	// @Transient
-	// private List<Inventory> variant;
 
-	public List<Variant> getVariant() {
+	@OneToMany(cascade = CascadeType.MERGE)
+	private List<ProductImage> productImage;
+	public List<Variant> getVariants() {
 		return variants;
 	}
 
 	public void setVariants(List<Variant> variants) {
 		this.variants = variants;
 	}
-	// public void setVariant1(List<Inventory> variant1) {
-	// 	this.variant1 = variant1;
-	// }
-	public void setCategory(Category category) {
+	
+	public void setCategory(@NotBlank Category category) {
 		this.category = category;
 	}
 
-	public void setReview(List<Review> review) {
+	public void setReview(@NotBlank List<Review> review) {
 		this.review = review;
 	}
 
@@ -88,7 +87,7 @@ public class Product {
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
+	public void setName(@NotEmpty String name) {
 		this.name = name;
 	}
 	public String getBrand() {

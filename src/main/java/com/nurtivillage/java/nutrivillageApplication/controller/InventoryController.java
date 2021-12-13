@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.nurtivillage.java.nutrivillageApplication.dto.InventoryResponse;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Variant;
 import com.nurtivillage.java.nutrivillageApplication.service.InventoryService;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @RestController
+@RequestMapping("/inventory")
 public class InventoryController {
 @Autowired
 InventoryService inventoryService;
@@ -61,4 +64,11 @@ Inventory inv= (Inventory) inventoryService.updateInventory(product,variant,quan
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
+
+@PostMapping(value="/product/{id}")
+public ResponseEntity<?> productDetails(@PathVariable Long id) {
+	List<InventoryResponse> inv = inventoryService.detailsInventory(id);	
+	return new ResponseEntity<>(inv, HttpStatus.OK);
+}
+
 }

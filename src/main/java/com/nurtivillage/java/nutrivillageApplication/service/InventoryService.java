@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nurtivillage.java.nutrivillageApplication.dao.InventoryRepository;
+import com.nurtivillage.java.nutrivillageApplication.dto.InventoryResponse;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Variant;
@@ -53,5 +54,10 @@ public class InventoryService {
 
 			throw e;
 		}
+	}
+
+	public List<InventoryResponse> detailsInventory(Long id){
+		List<InventoryResponse> inv = inventoryRepo.findByProductId(id);
+		return inv;
 	}
 }

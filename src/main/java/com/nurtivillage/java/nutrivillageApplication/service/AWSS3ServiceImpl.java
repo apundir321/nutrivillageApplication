@@ -24,6 +24,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
 import com.nurtivillage.java.nutrivillageApplication.error.GenericException;
+import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 
@@ -70,6 +71,10 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 			LOGGER.info("File upload is failed.");
 			LOGGER.error("Error= {} while uploading file.", ex.getMessage());
 		}
+	}
+
+	public String uploadProductFile(final MultipartFile multipartFile,Product product) throws Exception{
+		return "hello";
 	}
 
 	private File convertMultiPartFileToFile(final MultipartFile multipartFile) {
