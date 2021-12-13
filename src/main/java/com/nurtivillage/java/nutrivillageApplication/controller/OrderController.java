@@ -6,8 +6,11 @@ import java.util.Optional;
 import com.nurtivillage.java.nutrivillageApplication.Request.OrderRequest;
 import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
 import com.nurtivillage.java.nutrivillageApplication.model.Status;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
+import com.nurtivillage.java.nutrivillageApplication.security.UserService;
 import com.nurtivillage.java.nutrivillageApplication.service.ApiResponseService;
+import com.nurtivillage.java.nutrivillageApplication.service.LoggedInUserService;
 import com.nurtivillage.java.nutrivillageApplication.service.OrderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
         @Autowired
         public OrderService orderService;
+        @Autowired
+        public LoggedInUserService userService;
         @GetMapping("/list")
         public ResponseEntity<ApiResponseService> allOrder(){
             try{
@@ -62,7 +67,7 @@ public class OrderController {
                 Optional<UserOrder> order = orderService.getOrder(id);
                 List<OrderDetails> orderDetails = orderService.findByUesrOrder(order.get());
                 
-                ApiResponseService res = new ApiResponseService("orderStatus",true,orderDetails);
+                ApiResponseService res = new ApiResponseService("order detail",true,orderDetails);
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
             }catch(Exception e){
                 System.out.println(e);
@@ -77,6 +82,21 @@ public class OrderController {
                 System.out.println(id);
                 UserOrder orderCreate = orderService.orderStatus(id,status);
                 ApiResponseService res = new ApiResponseService("orderStatus",true,List.of(orderCreate));
+                return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+            }catch(Exception e){
+                System.out.println(e);
+                ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+                return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        @GetMapping("/user/list")
+        public ResponseEntity<ApiResponseService> userOrderList(){
+            try{
+                User user = userService.userDetails();
+                List<?> order = orderService.getUserOrder(user);
+                
+                ApiResponseService res = new ApiResponseService("User order list",true,order);
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
             }catch(Exception e){
                 System.out.println(e);

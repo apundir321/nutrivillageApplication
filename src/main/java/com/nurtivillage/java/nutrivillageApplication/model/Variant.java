@@ -16,7 +16,7 @@ import javax.persistence.ManyToMany;
 public class Variant {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int vid;
+	private int id;
 	private String name;
 	@ManyToMany(fetch=FetchType.LAZY,mappedBy="variants")
 	private List<Product> products;
@@ -25,12 +25,15 @@ public class Variant {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public int getVid() {
-		return vid;
+
+	public int getId() {
+		return id;
 	}
-	public void setVid(int vid) {
-		this.vid = vid;
+
+	public void setId(int id) {
+		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
@@ -46,7 +49,7 @@ public class Variant {
 	}
 	@Override
 	public String toString() {
-		return "Variant [vid=" + vid + ", name=" + name + ", products=" + products + "]";
+		return "Variant [id=" + id + ", name=" + name + ", products=" + products + "]";
 	}
 	
 	

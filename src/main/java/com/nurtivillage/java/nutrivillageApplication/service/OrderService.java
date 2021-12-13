@@ -9,6 +9,7 @@ import com.nurtivillage.java.nutrivillageApplication.dao.OrderRepository;
 import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Status;
+import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,4 +76,8 @@ public class OrderService {
         return Status.valueOf(status);
     }
 
+    public List<?> getUserOrder(User user){
+        List<?> orderList = orderRepository.findByUser(user);
+        return orderList;
+    }
 }

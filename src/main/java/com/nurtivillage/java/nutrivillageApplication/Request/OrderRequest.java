@@ -2,6 +2,7 @@ package com.nurtivillage.java.nutrivillageApplication.Request;
 
 import java.util.List;
 
+import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 
@@ -13,14 +14,16 @@ public class OrderRequest {
     private double amount;
     private User user;
     private List<Long> quantity;
+    private List<Inventory> inventory;
 
     public OrderRequest(){}
 
-    public OrderRequest(List<Product> item,List<Long> quantity,double amount,User user){
+    public OrderRequest(List<Product> item,List<Long> quantity,double amount,User user,List<Inventory> inventory){
         this.item = item;
         this.quantity = quantity;
         this.amount = amount;
-        this.user = user;;
+        this.user = user;
+        this.inventory = inventory;
     }
 
     public double getAmount() {
@@ -34,5 +37,9 @@ public class OrderRequest {
     }
     public User getUser() {
         return user;
+    }
+
+    public List<Inventory> getInventory() {
+        return inventory;
     }
 }

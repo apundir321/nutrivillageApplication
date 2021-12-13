@@ -19,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -27,16 +29,21 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int pid;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
 
     @Column(nullable = false)
+	@NotBlank
     private String name;
+	@NotBlank
     private String brand;
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
 	@JoinColumn(name = "category_id")
+	@NotEmpty
     private Category category;
     private String status;
+    private Date createdAt;
+    private Date deletedAt;
 	@ManyToMany(fetch=FetchType.LAZY,cascade=CascadeType.MERGE)
 	  @JoinTable(
 		        name = "products_variant",
@@ -61,6 +68,40 @@ public class Product {
 	}
 
 
+
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getDeletedAt() {
+		return deletedAt;
+	}
+
+	public void setDeletedAt(Date deletedAt) {
+		this.deletedAt = deletedAt;
+	}
+
+	public List<Variant> getVariants() {
+		return variants;
+	}
+
+	public void setVariants(List<Variant> variants) {
+		this.variants = variants;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -76,7 +117,7 @@ public class Product {
 	public String getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(@NotEmpty String status) {
 		this.status = status;
 	}
 	public String getImage() {
@@ -87,8 +128,9 @@ public class Product {
 	}
 	@Override
 	public String toString() {
-		return "Product [pid=" + pid + ", name=" + name + ", brand=" + brand + ", category=" + category + ", status="
-				+ status + ", variants=" + variants + ", image=" + image + "]";
+		return "Product [id=" + id + ", name=" + name + ", brand=" + brand + ", category=" + category + ", status="
+				+ status + ", createdAt=" + createdAt + ", deletedAt=" + deletedAt + ", variants=" + variants
+				+ ", review=" + review + ", image=" + image + "]";
 	}
 	public Product() {
 		super();

@@ -44,7 +44,7 @@ public ResponseEntity<?> addInventory(@RequestBody Inventory inventory) {
 @RequestMapping("/getProductInventory")
 public ResponseEntity<?> getProductInventory(@RequestBody Product product) {
 	try {
-Inventory inv= inventoryService.getProductInventory(product);
+List<Inventory> inv= inventoryService.getProductInventory(product);
 	 return new ResponseEntity<>(inv, HttpStatus.OK);
 	}catch (Exception e) {
 		// TODO: handle exception
@@ -52,9 +52,9 @@ Inventory inv= inventoryService.getProductInventory(product);
 	}
 }
 @RequestMapping("/getProductVariantInventory")
-public ResponseEntity<?> getProductVariantInventory(@RequestBody Product product,Variant variant) {
+public ResponseEntity<?> getProductVariantInventory(@RequestParam int productId,@RequestParam int variantId) {
 	try {
-Inventory inv= inventoryService.getProductVariantInventory(product,variant);
+Inventory inv= inventoryService.getProductVariantInventory(productId,variantId);
 	 return new ResponseEntity<>(inv, HttpStatus.OK);
 	}catch (Exception e) {
 		// TODO: handle exception
@@ -62,9 +62,9 @@ Inventory inv= inventoryService.getProductVariantInventory(product,variant);
 	}
 }
 @RequestMapping("/updateInventory/{quantity}")
-public ResponseEntity<?> updateInventory(@RequestBody Product product,@RequestBody Variant variant,@PathVariable int quantity) {
+public ResponseEntity<?> updateInventory(@RequestParam int productId,@RequestParam int variantId,@PathVariable int quantity) {
 	try {
-Inventory inv= inventoryService.updateInventory(product,variant,quantity);
+Inventory inv= inventoryService.updateInventory(productId,variantId,quantity);
 	 return new ResponseEntity<>(inv, HttpStatus.OK);
 	}catch (Exception e) {
 		// TODO: handle exception

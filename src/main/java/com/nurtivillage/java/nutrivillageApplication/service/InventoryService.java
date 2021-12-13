@@ -1,6 +1,7 @@
 package com.nurtivillage.java.nutrivillageApplication.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,29 +35,29 @@ public class InventoryService {
 		}
 	}
 
-	public Inventory getProductInventory(Product product) {
+	public List<Inventory> getProductInventory(Product product) {
 		try {
-			Inventory inv=inventoryRepo.findByProduct(product);
+			List<Inventory> inv=inventoryRepo.findByProduct(product);
 	return inv;
 		}
 		catch(Exception e) {
 			throw e;
 		}
 	}
-	public Inventory getProductVariantInventory(Product product,Variant variant) {
+	public Inventory getProductVariantInventory(int  productId,int  variantId) {
 		try {
-			Inventory inv=inventoryRepo.findByProductAndVariant(product,variant);
+			Inventory inv=inventoryRepo.findByProductIdAndVariantId(productId,variantId);
 	return inv;
 		}
 		catch(Exception e) {
 			throw e;
 		}
 	}
-	public Inventory updateInventory(Product product,Variant variant,int q) {
+	public Inventory updateInventory(int productId,int variantId,int quantity) {
 		try {
-			Inventory inv=inventoryRepo.findByProductAndVariant(product,variant);
-			if(inv.getQuantity()>=q) {
-			inv.setQuantity(inv.getQuantity()-q);
+			Inventory inv=inventoryRepo.findByProductIdAndVariantId(productId,variantId);
+			if(inv.getQuantity()>=quantity) {
+			inv.setQuantity(inv.getQuantity()-quantity);
 			inventoryRepo.save(inv);}
 			return inv;
 		}

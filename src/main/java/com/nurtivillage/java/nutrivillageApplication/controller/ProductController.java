@@ -3,6 +3,8 @@ package com.nurtivillage.java.nutrivillageApplication.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Review;
@@ -14,6 +16,8 @@ import com.nurtivillage.java.nutrivillageApplication.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping(path = "/product")
+@Validated
 public class ProductController {
     @Autowired
     private ProductService productService;
@@ -48,13 +53,13 @@ public class ProductController {
     }
 
     @GetMapping("/info/{id}")
-    public ResponseEntity<ApiResponseService> ProductInfo(@PathVariable Long id){
+    public ResponseEntity<ApiResponseService> ProductInfo(@PathVariable int id){
         try{
             Optional<Product> product = productService.ProductInfo(id);
             List<Review> reviews = reviewService.getReview(product.get());
-            List<Inventory> inventory = inventoryService.productInventory(product.get());
+            List<Inventory> inventory = inventoryService.getProductInventory(product.get());
             product.get().setReview(reviews);
-            product.get().setVariant(inventory);
+           
             ApiResponseService res = new ApiResponseService("product info",true,List.of(product.get()));
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         }catch(Exception e){
@@ -65,10 +70,9 @@ public class ProductController {
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<ApiResponseService> insertProduct(@RequestBody Product product){
+    public ResponseEntity<ApiResponseService> insertProduct(@Valid @RequestBody Product product){
         try {
-            Product data = productService.insertProduct(product);
-            ApiResponseService res = new ApiResponseService("product create",true,List.of(data));
+            ApiResponseService res = new ApiResponseService("product create",true,List.of());
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
@@ -91,7 +95,7 @@ public class ProductController {
     } 
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ApiResponseService> deleteProduct(@PathVariable Long id){
+    public ResponseEntity<ApiResponseService> deleteProduct(@PathVariable int id){
         try {
             String msg = productService.DeleteProduct(id);
             ApiResponseService res = new ApiResponseService(msg,true,List.of(id));
@@ -106,8 +110,21 @@ public class ProductController {
     @GetMapping(value="/highlighter")
     public ResponseEntity<ApiResponseService> highlighterProduct(){
         try {
-            // List<Product> data = productService.highlighterProduct();
-            ApiResponseService res = new ApiResponseService("List of highlighter",true,List.of("data"));
+            List<Product> data = productService.highlighterProduct();
+            ApiResponseService res = new ApiResponseService("List of highlighter",true,List.of(data));
+            return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e);
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+            return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value="/list/{categoryId}")
+    public ResponseEntity<ApiResponseService> categoryProductLIst(@PathVariable Integer categoryId){
+        try {
+            List<Product> data = productService.categoryProductLIst(categoryId);
+            ApiResponseService res = new ApiResponseService("List of highlighter",true,List.of(data));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);

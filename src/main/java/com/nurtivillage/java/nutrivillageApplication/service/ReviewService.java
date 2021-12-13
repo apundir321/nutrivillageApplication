@@ -14,6 +14,7 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
+
     public List<Review>getAllReview(){
     	try {
         return reviewRepository.findAll();
@@ -38,5 +39,6 @@ public class ReviewService {
     }
 
    
+
     
 }

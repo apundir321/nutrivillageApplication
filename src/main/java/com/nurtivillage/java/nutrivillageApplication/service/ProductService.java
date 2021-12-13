@@ -33,7 +33,7 @@ public class ProductService {
         }
     }
 
-    public String DeleteProduct(Long id) throws Exception{
+    public String DeleteProduct(int id) throws Exception{
         try {
             if(!productRepository.existsById(id)){
                 throw new ExceptionService("product is deleted or not exists");
@@ -48,7 +48,7 @@ public class ProductService {
         }
     }
 
-    public Optional<Product> ProductInfo(Long id) throws Exception {
+    public Optional<Product> ProductInfo(int id) throws Exception {
         try {
             if(!productRepository.existsById(id)){
                 throw new ExceptionService("product is not exists");
@@ -62,6 +62,18 @@ public class ProductService {
             throw e;
         }
     }
+
+    public List<Product> highlighterProduct() {
+        List<Product> productList = productRepository.findByStatusAndDeletedAtIsNull(1);
+        return productList;
+    }
+
+    public List<Product> categoryProductLIst(Integer categoryId) {
+        List<Product> productList = productRepository.findByCategoryIdAndDeletedAtIsNull(categoryId);
+        return productList;
+    }
+
+
 
     // public List<Product> highlighterProduct(){
         // List<Product> highlighter = productRepository.findByHighlighter(1);

@@ -13,6 +13,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,14 +30,16 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 public class Inventory {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private int quantity;
+
 	@OneToOne
+	@JoinColumn(name="variant_id")
 	private Variant variant;
-	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
-	@JoinColumn(name="product_id")
-	private Product product;
+	@OneToOne
+	@JoinColumn(name="product_id",referencedColumnName="id")
+    private Product product;
 	private int price;
 	
 	public int getPrice() {
