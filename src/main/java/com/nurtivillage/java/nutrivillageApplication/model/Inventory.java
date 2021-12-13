@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,20 +35,24 @@ public class Inventory {
 	private int id;
 	private int quantity;
 
+	private int price;
+
 	@OneToOne
 	@JoinColumn(name="variant_id")
 	private Variant variant;
-	@OneToOne
-	@JoinColumn(name="product_id",referencedColumnName="id")
-    private Product product;
-	private int price;
-	
-	public int getPrice() {
-		return price;
-	}
+
+	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+	@JoinColumn(name="product_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private Product product;
+
 	public void setPrice(int price) {
 		this.price = price;
 	}
+
+	
+
+
 	public int getId() {
 		return id;
 	}
@@ -56,6 +61,9 @@ public class Inventory {
 	}
 	public int getQuantity() {
 		return quantity;
+	}
+	public int getPrice() {
+		return price;
 	}
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
@@ -67,7 +75,7 @@ public class Inventory {
 	public void setVariant(Variant variant) {
 		this.variant = variant;
 	}
-	@JsonIgnore
+	// @JsonIgnore
 	public Product getProduct() {
 		return product;
 	}
@@ -82,6 +90,13 @@ public class Inventory {
 	public Inventory() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public Inventory(Product product,Variant variant,int quantity,int price){
+		this.product = product;
+		this.variant = variant;
+		this.quantity = quantity;
+		this.price = price;
 	}
 	
 	

@@ -9,15 +9,22 @@ import java.util.Optional;
 import java.util.List;
 import java.util.Optional;
 
+import com.nurtivillage.java.nutrivillageApplication.dto.InventoryResponse;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Variant;
 
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
-	
 
-	Inventory findByProductIdAndVariantId(int product, int variant);
+	// Inventory findByProduct(Product product);
+
+
+	Inventory findByProductIdAndVariantId(Long product, int variant);
 
     List<Inventory> findByProduct(Product product);
+
+	List<InventoryResponse> findByProductId(Long id);
+
+    
 }

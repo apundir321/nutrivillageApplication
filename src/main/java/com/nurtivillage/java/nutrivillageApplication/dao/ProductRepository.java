@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface ProductRepository extends JpaRepository<Product,Integer>{
+public interface ProductRepository extends JpaRepository<Product,Long>{
 
     
     List<Product> findByDeletedAtIsNull();
@@ -17,4 +17,6 @@ public interface ProductRepository extends JpaRepository<Product,Integer>{
     List<Product> findByStatusAndDeletedAtIsNull(int status);
 
     List<Product> findByCategoryIdAndDeletedAtIsNull(Integer categoryId);
+    
+    
 }

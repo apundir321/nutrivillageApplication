@@ -1,6 +1,10 @@
 package com.nurtivillage.java.nutrivillageApplication.dto;
 
 
+
+import javax.validation.constraints.NotBlank;
+
+
 import javax.validation.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -9,7 +13,9 @@ import com.amazonaws.services.support.model.Category;
 
 public class ProductInsert {
 
+
     @NotBlank(message = "name is required")
+
 
     private String name;
     @NotNull(message = "brand is required")

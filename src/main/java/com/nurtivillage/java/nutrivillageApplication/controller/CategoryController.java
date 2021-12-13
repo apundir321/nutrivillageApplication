@@ -24,7 +24,6 @@ public ResponseEntity<?> addCategory(@RequestBody Category category) {
 	Category c = categoryService.addCategory(category);
 	 return new ResponseEntity<Category>(c, HttpStatus.OK);
 	}catch (Exception e) {
-		// TODO: handle exception
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

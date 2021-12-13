@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.nurtivillage.java.nutrivillageApplication.dto.InventoryResponse;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Variant;
 import com.nurtivillage.java.nutrivillageApplication.service.InventoryService;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @RestController
+@RequestMapping("/inventory")
 public class InventoryController {
 @Autowired
 InventoryService inventoryService;
@@ -44,16 +47,19 @@ public ResponseEntity<?> addInventory(@RequestBody Inventory inventory) {
 @RequestMapping("/getProductInventory")
 public ResponseEntity<?> getProductInventory(@RequestBody Product product) {
 	try {
-List<Inventory> inv= inventoryService.getProductInventory(product);
-	 return new ResponseEntity<>(inv, HttpStatus.OK);
+
+			List<Inventory> inv= inventoryService.getProductInventory(product);
+	 		return new ResponseEntity<>(inv, HttpStatus.OK);
+
 	}catch (Exception e) {
 		// TODO: handle exception
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
 @RequestMapping("/getProductVariantInventory")
-public ResponseEntity<?> getProductVariantInventory(@RequestParam int productId,@RequestParam int variantId) {
+public ResponseEntity<?> getProductVariantInventory(@RequestParam Long productId,@RequestParam int variantId) {
 	try {
+
 Inventory inv= inventoryService.getProductVariantInventory(productId,variantId);
 	 return new ResponseEntity<>(inv, HttpStatus.OK);
 	}catch (Exception e) {
@@ -62,13 +68,21 @@ Inventory inv= inventoryService.getProductVariantInventory(productId,variantId);
 	}
 }
 @RequestMapping("/updateInventory/{quantity}")
-public ResponseEntity<?> updateInventory(@RequestParam int productId,@RequestParam int variantId,@PathVariable int quantity) {
+public ResponseEntity<?> updateInventory(@RequestParam Long productId,@RequestParam int variantId,@PathVariable int quantity) {
 	try {
 Inventory inv= inventoryService.updateInventory(productId,variantId,quantity);
+
 	 return new ResponseEntity<>(inv, HttpStatus.OK);
 	}catch (Exception e) {
 		// TODO: handle exception
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
+
+@PostMapping(value="/product/{id}")
+public ResponseEntity<?> productDetails(@PathVariable Long id) {
+	List<InventoryResponse> inv = inventoryService.detailsInventory(id);	
+	return new ResponseEntity<>(inv, HttpStatus.OK);
+}
+
 }

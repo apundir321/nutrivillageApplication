@@ -64,6 +64,10 @@ public class Category {
 	public void setCode(String code) {
 		this.code = code;
 	}
+
+
+
+	
 	@Override
 	public String toString() {
 		return "Category [id=" + id + ", name=" + name + ", code=" + code + ", coverImage=" + coverImage + ", image="

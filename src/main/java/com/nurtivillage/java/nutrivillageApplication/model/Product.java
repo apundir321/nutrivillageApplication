@@ -30,7 +30,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+
+    private Long id;
 
     @Column(nullable = false)
 	@NotBlank
@@ -41,41 +42,78 @@ public class Product {
 	@JoinColumn(name = "category_id")
 	@NotEmpty
     private Category category;
-    private String status;
-    private Date createdAt;
-    private Date deletedAt;
-	@ManyToMany(fetch=FetchType.LAZY,cascade=CascadeType.MERGE)
-	  @JoinTable(
-		        name = "products_variant",
-		        joinColumns = {
-		            @JoinColumn(name = "pid")
-		        },
-		        inverseJoinColumns = {
-		            @JoinColumn(name = "vid")
-		        }
-		    )
-    private List<Variant> variants;
-    @OneToMany
-	private List<Review> review;
+
+	@NotEmpty
+    private String status; 
+	@NotBlank
     private String image;
-    
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-
-	public void setReview(List<Review> review) {
-		this.review = review;
-	}
-
-
-
-
-	public int getId() {
+	private Date deletedAt;
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false)
+	private Date updateAt;
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false)
+	private Date createdAt;
+	@Transient
+	private List<Review> review;
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	@ManyToMany(fetch=FetchType.LAZY,cascade = CascadeType.MERGE)
+	private List<Variant> variants;
+
+	@OneToMany(cascade = CascadeType.MERGE)
+	private List<ProductImage> productImage;
+	public List<Variant> getVariants() {
+		return variants;
+	}
+
+	public void setVariants(List<Variant> variants) {
+		this.variants = variants;
+	}
+	
+	public void setCategory(@NotBlank Category category) {
+		this.category = category;
+	}
+
+	public void setReview(@NotBlank List<Review> review) {
+		this.review = review;
+	}
+
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+	public void setName(@NotEmpty String name) {
+		this.name = name;
+	}
+	public String getBrand() {
+		return brand;
+	}
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+	public Date getDeletedAt() {
+		return deletedAt;
+	}
+
+	public void setDeletedAt(Date deletedAt) {
+		this.deletedAt = deletedAt;
+	}
+
+	public Date getUpdateAt() {
+		return updateAt;
+	}
+
+	public void setUpdateAt(Date updateAt) {
+		this.updateAt = updateAt;
 	}
 
 	public Date getCreatedAt() {
@@ -86,34 +124,14 @@ public class Product {
 		this.createdAt = createdAt;
 	}
 
-	public Date getDeletedAt() {
-		return deletedAt;
+	public List<ProductImage> getProductImage() {
+		return productImage;
 	}
 
-	public void setDeletedAt(Date deletedAt) {
-		this.deletedAt = deletedAt;
+	public void setProductImage(List<ProductImage> productImage) {
+		this.productImage = productImage;
 	}
 
-	public List<Variant> getVariants() {
-		return variants;
-	}
-
-	public void setVariants(List<Variant> variants) {
-		this.variants = variants;
-	}
-
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getBrand() {
-		return brand;
-	}
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
 	public String getStatus() {
 		return status;
 	}
@@ -129,8 +147,10 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", brand=" + brand + ", category=" + category + ", status="
+
 				+ status + ", createdAt=" + createdAt + ", deletedAt=" + deletedAt + ", variants=" + variants
 				+ ", review=" + review + ", image=" + image + "]";
+
 	}
 	public Product() {
 		super();

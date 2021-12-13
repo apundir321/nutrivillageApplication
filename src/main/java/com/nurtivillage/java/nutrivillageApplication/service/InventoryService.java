@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nurtivillage.java.nutrivillageApplication.dao.InventoryRepository;
+import com.nurtivillage.java.nutrivillageApplication.dto.InventoryResponse;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Variant;
@@ -38,22 +39,25 @@ public class InventoryService {
 	public List<Inventory> getProductInventory(Product product) {
 		try {
 			List<Inventory> inv=inventoryRepo.findByProduct(product);
+
 	return inv;
+
 		}
 		catch(Exception e) {
 			throw e;
 		}
 	}
-	public Inventory getProductVariantInventory(int  productId,int  variantId) {
+
+	public Inventory getProductVariantInventory(Long  productId,int  variantId) {
 		try {
 			Inventory inv=inventoryRepo.findByProductIdAndVariantId(productId,variantId);
-	return inv;
-		}
+	return inv;}
 		catch(Exception e) {
-			throw e;
+			throw e;}
 		}
-	}
-	public Inventory updateInventory(int productId,int variantId,int quantity) {
+
+
+	public Inventory updateInventory(Long productId,int variantId,int quantity) throws Exception {
 		try {
 			Inventory inv=inventoryRepo.findByProductIdAndVariantId(productId,variantId);
 			if(inv.getQuantity()>=quantity) {
@@ -63,7 +67,13 @@ public class InventoryService {
 		}
 		catch(Exception e) {
 
+
 			throw e;
-		}
+		}}
+
+	public List<InventoryResponse> detailsInventory(Long id){
+		List<InventoryResponse> inv = inventoryRepo.findByProductId(id);
+		return inv;
+
 	}
 }
