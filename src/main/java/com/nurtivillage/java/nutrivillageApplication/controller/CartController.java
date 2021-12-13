@@ -1,5 +1,6 @@
 package com.nurtivillage.java.nutrivillageApplication.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
@@ -43,7 +44,7 @@ public class CartController {
             ApiResponseService res = new ApiResponseService("Cart item",true,cartItem);
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("data"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("data"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -54,10 +55,10 @@ public class CartController {
             User user = userService.userDetails();
             cart.setUser(user);
             Cart cartItem = cartService.insertCart(cart);
-            ApiResponseService res = new ApiResponseService("Cart item insert",true,List.of(cart));
+            ApiResponseService res = new ApiResponseService("Cart item insert",true,Arrays.asList(cart));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("data"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("data"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -68,10 +69,10 @@ public class CartController {
             Cart getCartItem = cartService.cartItemById(cart.getId());
             getCartItem.setQuantity(cart.getQuantity());
             Cart cartItem = cartService.insertCart(getCartItem);
-            ApiResponseService res = new ApiResponseService("Cart item insert",true,List.of(cart));
+            ApiResponseService res = new ApiResponseService("Cart item insert",true,Arrays.asList(cart));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("data"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("data"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -80,10 +81,10 @@ public class CartController {
     public ResponseEntity<ApiResponseService> removeFromCart(@PathVariable Long id){
         try {
             cartService.DeleteCartItem(id);
-            ApiResponseService res = new ApiResponseService("Delete item from cart",true,List.of(id));
+            ApiResponseService res = new ApiResponseService("Delete item from cart",true,Arrays.asList(id));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("data"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("data"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -98,7 +99,7 @@ public class CartController {
             ApiResponseService res = new ApiResponseService("cart clear",true,cartItem);
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("data"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("data"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

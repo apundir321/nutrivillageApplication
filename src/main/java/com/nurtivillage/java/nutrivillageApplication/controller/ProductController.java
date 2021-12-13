@@ -1,6 +1,7 @@
 package com.nurtivillage.java.nutrivillageApplication.controller;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +57,7 @@ public class ProductController {
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         }catch(Exception e){
             System.out.println(e);
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -71,11 +72,12 @@ public class ProductController {
 
             // product.get().setVariant(inventory);
 
-            ApiResponseService res = new ApiResponseService("product info",true,List.of(product.get()));
+            ApiResponseService res = new ApiResponseService("product info",true,Arrays.asList(product.get()));
+
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         }catch(Exception e){
             System.out.println(e);
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -84,11 +86,11 @@ public class ProductController {
     public ResponseEntity<ApiResponseService> insertProduct(@Valid @RequestBody Product product){
         try {
             Product insetProduct = productService.insertProduct(product);
-            ApiResponseService res = new ApiResponseService("product create",true,List.of(insetProduct));
+            ApiResponseService res = new ApiResponseService("product create",true,Arrays.asList(insetProduct));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -97,11 +99,11 @@ public class ProductController {
     public ResponseEntity<ApiResponseService> editProduct(@RequestBody Product product){
         try {
             Product data = productService.insertProduct(product);
-            ApiResponseService res = new ApiResponseService("update product",true,List.of(data));
+            ApiResponseService res = new ApiResponseService("update product",true,Arrays.asList(data));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     } 
@@ -110,11 +112,11 @@ public class ProductController {
     public ResponseEntity<ApiResponseService> deleteProduct(@PathVariable Long id){
         try {
             String msg = productService.DeleteProduct(id);
-            ApiResponseService res = new ApiResponseService(msg,true,List.of(id));
+            ApiResponseService res = new ApiResponseService(msg,true,Arrays.asList(id));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     } 
@@ -123,11 +125,11 @@ public class ProductController {
     public ResponseEntity<ApiResponseService> highlighterProduct(){
         try {
             List<Product> data = productService.highlighterProduct();
-            ApiResponseService res = new ApiResponseService("List of highlighter",true,List.of(data));
+            ApiResponseService res = new ApiResponseService("List of highlighter",true,Arrays.asList(data));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -136,11 +138,11 @@ public class ProductController {
     public ResponseEntity<ApiResponseService> categoryProductLIst(@PathVariable Integer categoryId){
         try {
             List<Product> data = productService.categoryProductLIst(categoryId);
-            ApiResponseService res = new ApiResponseService("List of highlighter",true,List.of(data));
+            ApiResponseService res = new ApiResponseService("List of highlighter",true,Arrays.asList(data));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
-            ApiResponseService res = new ApiResponseService(e.getMessage(),false,List.of("error"));
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

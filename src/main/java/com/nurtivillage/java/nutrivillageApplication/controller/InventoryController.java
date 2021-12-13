@@ -74,7 +74,6 @@ Inventory inv= inventoryService.updateInventory(productId,variantId,quantity);
 
 	 return new ResponseEntity<>(inv, HttpStatus.OK);
 	}catch (Exception e) {
-		// TODO: handle exception
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
