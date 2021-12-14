@@ -6,9 +6,11 @@ import java.util.List;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
 import com.nurtivillage.java.nutrivillageApplication.dto.CartResponseDto;
 import com.nurtivillage.java.nutrivillageApplication.model.Cart;
+import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.service.ApiResponseService;
 import com.nurtivillage.java.nutrivillageApplication.service.CartService;
+import com.nurtivillage.java.nutrivillageApplication.service.InventoryService;
 import com.nurtivillage.java.nutrivillageApplication.service.LoggedInUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ public class CartController {
             private UserRepository userRepository;
     @Autowired
         private LoggedInUserService userService;
+    @Autowired
+        private InventoryService inventoryService;
     @GetMapping("/list")
     public ResponseEntity<ApiResponseService> getAllCartItem(){
         try {
@@ -54,6 +58,13 @@ public class CartController {
         try {
             User user = userService.userDetails();
             cart.setUser(user);
+            System.out.println(cart.getVariant().getId());
+            int variantId = cart.getVariant().getId();
+            Inventory inventory = inventoryService.getProductVariantInventory(cart.getProduct().getId(),variantId);
+            cart.setInventory(inventory);
+            if(inventory.getQuantity() < cart.getQuantity()){
+                throw new Exception("out of stock");
+            }
             Cart cartItem = cartService.insertCart(cart);
             ApiResponseService res = new ApiResponseService("Cart item insert",true,Arrays.asList(cart));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
