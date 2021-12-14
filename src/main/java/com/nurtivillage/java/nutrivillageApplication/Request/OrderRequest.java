@@ -2,6 +2,7 @@ package com.nurtivillage.java.nutrivillageApplication.Request;
 
 import java.util.List;
 
+import com.nurtivillage.java.nutrivillageApplication.model.Cart;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
@@ -10,36 +11,24 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OrderRequest {
-    private List<Product> item;
     private double amount;
-    private User user;
-    private List<Long> quantity;
-    private List<Inventory> inventory;
+    private List<Cart> cartItem;
 
     public OrderRequest(){}
 
-    public OrderRequest(List<Product> item,List<Long> quantity,double amount,User user,List<Inventory> inventory){
-        this.item = item;
-        this.quantity = quantity;
+    public OrderRequest(List<Cart> cartItem,double amount){
+        // this.item = item;
+        // this.quantity = quantity;
         this.amount = amount;
-        this.user = user;
-        this.inventory = inventory;
+        // this.user = user;
+        this.cartItem = cartItem;
     }
 
     public double getAmount() {
         return amount;
     }
-    public List<Product> getItem() {
-        return item;
+    public List<Cart> getCartItem() {
+        return cartItem;
     }
-    public List<Long> getQuantity() {
-        return quantity;
-    }
-    public User getUser() {
-        return user;
-    }
-
-    public List<Inventory> getInventory() {
-        return inventory;
-    }
+    
 }

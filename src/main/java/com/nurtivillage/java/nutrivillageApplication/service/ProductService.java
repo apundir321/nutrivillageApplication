@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import com.amazonaws.services.simplesystemsmanagement.model.GetInventoryRequest;
 import com.nurtivillage.java.nutrivillageApplication.dao.CategoryRepository;
@@ -35,8 +36,11 @@ public class ProductService {
         try {
             List<Product> allProduct = productRepository.
             findByDeletedAtIsNull();
+            int index=0;
+            int indexY=0;
             allProduct.forEach((var)->{
                 List<Variant> variants = var.getVariants();
+                
                 variants.forEach((v)->{
                     Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(var.getId(),v.getId());
                     v.setPrice(variantInventory.getPrice());

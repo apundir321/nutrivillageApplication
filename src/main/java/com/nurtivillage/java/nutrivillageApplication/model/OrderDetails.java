@@ -26,16 +26,20 @@ public class OrderDetails {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "order_id")
     private UserOrder uesrOrder;
-    private Long quantity;
+    private int quantity;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "variant_id")
+    private Variant variant;
 
     // private Inventory
 
     public OrderDetails(){}
 
-    public OrderDetails(Product product,UserOrder userOrder,Long quantity){
+    public OrderDetails(Product product,UserOrder userOrder,int i,Variant variant){
         this.product = product;
         this.uesrOrder = userOrder;
-        this.quantity = quantity;
+        this.quantity = i;
+        this.variant = variant;
     }
 
     public Long getId() {
@@ -46,8 +50,12 @@ public class OrderDetails {
         return product;
     }
 
-    public Long getQuantity() {
+    public int getQuantity() {
         return quantity;
+    }
+
+    public Variant getVariant() {
+        return variant;
     }
 
     @JsonIgnore

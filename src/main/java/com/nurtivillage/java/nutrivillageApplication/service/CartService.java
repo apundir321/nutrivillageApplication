@@ -21,6 +21,9 @@ public class CartService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    public LoggedInUserService userService;
+
     public List<CartResponseDto>getCartItem(Long id){
         try {
             List<CartResponseDto> cartItem = cartRepository.findByUserId(id);
@@ -59,10 +62,11 @@ public class CartService {
     }
 
     @Transactional
-    public String cartClear(Long id){
+    public String cartClear(){
         try {
-            cartRepository.deleteByUserId(id);
-            return "hello";
+            User user = userService.userDetails();
+            cartRepository.deleteByUserId(user.getId());
+            return "cart clear";
         } catch (Exception e) {
             throw e;
         }

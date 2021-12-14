@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.nurtivillage.java.nutrivillageApplication.dao.OrderDetailsRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.OrderRepository;
+import com.nurtivillage.java.nutrivillageApplication.model.Cart;
 import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Status;
@@ -26,6 +27,9 @@ public class OrderService {
     @Autowired
     public OrderService orderService;
 
+    @Autowired
+    public CartService cartService;
+
     public List<UserOrder> getAllOrder(){
         List<UserOrder> userOrder = orderRepository.findAll();
         return userOrder;
@@ -36,14 +40,16 @@ public class OrderService {
         return orderCreate;
     }
 
-    public List<OrderDetails> createOrderDetails(List<Product> product,UserOrder order,List<Long> quantity){
-        int size = product.size();
+    public List<OrderDetails> createOrderDetails(List<Cart> cartItems,UserOrder order){//(List<Product> product,UserOrder order,List<Long> quantity){
+        int size = cartItems.size();
         List<OrderDetails> orderAllItem = new ArrayList<>();
-        for(int i=0;i<size;i++){
-            OrderDetails orderItem = new OrderDetails(product.get(i),order,quantity.get(i));
+        cartItems.forEach((var)->{
+            Cart cartItem = cartService.cartItemById(var.getId());
+            OrderDetails orderItem = new OrderDetails(cartItem.getProduct(),order,cartItem.getQuantity(),cartItem.getVariant());
             orderAllItem.add(orderItem);
-        }
+        });
         orderDetailsRepository.saveAll(orderAllItem);
+        cartService.cartClear();
         return orderAllItem;
     }
 
@@ -79,5 +85,14 @@ public class OrderService {
     public List<?> getUserOrder(User user){
         List<?> orderList = orderRepository.findByUser(user);
         return orderList;
+    }
+
+    public Long getLastOrderNO() {
+        List<UserOrder> userList = orderRepository.findAll();
+        int Size = userList.size();
+        UserOrder userOrder = userList.get(Size-1);
+        Long init = (long) 1;
+        return userOrder.getOrderNo() == null ? init :userOrder.getOrderNo();
+
     }
 }

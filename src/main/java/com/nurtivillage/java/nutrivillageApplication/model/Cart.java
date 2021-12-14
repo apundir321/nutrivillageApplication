@@ -39,7 +39,7 @@ public class Cart {
     // @JoinColumn(name = "variant_id")
     @Transient
     private Variant variant;
-    // public Cart(){}
+    public Cart(){}
 
     public Cart(User user,Product product,int quantity,Variant variant){
         this.product = product;

@@ -48,10 +48,12 @@ public class OrderController {
         @PostMapping("/create")
         public ResponseEntity<ApiResponseService> createOrder(@RequestBody OrderRequest orderRequest){
             try{
-                Long orderNO = (long) 13;
-                UserOrder order = new UserOrder(orderRequest.getAmount(),orderRequest.getUser(),orderNO,orderRequest.getItem().size(),Status.ordered);
+                Long orderNO = orderService.getLastOrderNO();
+                double amount = orderRequest.getAmount();
+                User user = userService.userDetails();
+                UserOrder order = new UserOrder(amount,user,orderNO+1,orderRequest.getCartItem().size(),Status.ordered);
                 UserOrder orderCreate = orderService.createOrder(order);
-                List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getItem(),orderCreate,orderRequest.getQuantity());
+                List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
                 System.out.print(data);
                 ApiResponseService res = new ApiResponseService("orderStatus",true,data);
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
