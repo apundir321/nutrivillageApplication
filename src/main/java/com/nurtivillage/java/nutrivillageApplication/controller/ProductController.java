@@ -12,10 +12,12 @@ import com.nurtivillage.java.nutrivillageApplication.dto.ProductInsert;
 
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
+import com.nurtivillage.java.nutrivillageApplication.model.ProductImage;
 import com.nurtivillage.java.nutrivillageApplication.model.Review;
 import com.nurtivillage.java.nutrivillageApplication.service.AWSS3Service;
 import com.nurtivillage.java.nutrivillageApplication.service.ApiResponseService;
 import com.nurtivillage.java.nutrivillageApplication.service.InventoryService;
+import com.nurtivillage.java.nutrivillageApplication.service.ProductImageService;
 import com.nurtivillage.java.nutrivillageApplication.service.ProductService;
 import com.nurtivillage.java.nutrivillageApplication.service.ReviewService;
 
@@ -49,6 +51,8 @@ public class ProductController {
     private InventoryService inventoryService;
     @Autowired
     private AWSS3Service awsService;
+    @Autowired 
+    private ProductImageService productImageService;
     @GetMapping("/list")
     public ResponseEntity<ApiResponseService> getAllProduct(){
         try{
@@ -148,20 +152,38 @@ public class ProductController {
     }
     
     @PostMapping(value = "/uploadimage/{id}")
-	public ResponseEntity<?> updateProfilePic(@RequestPart(value= "file",required = true) final MultipartFile multipartFile,@PathVariable Long id)
+	public ResponseEntity<ApiResponseService> updateProductImage(@RequestPart(value= "file",required = true) final MultipartFile multipartFile,@PathVariable Long id)
 			throws Exception {
 		Optional<Product> product = null;
 		File file = null;
 		try {
 			product  = productService.ProductInfo(id);
-			String res = awsService.uploadProductFile(multipartFile,product.get());
-			// profile.setProfilePicName(multipartFile.getOriginalFilename());
-			// userProfileService.updateUserProfilePic(profile);
-    		return new ResponseEntity<String>(res,HttpStatus.OK);
+			String url = awsService.uploadProductFile(multipartFile,product.get());
+            productImageService.addImage(product.get(), url);
+            ApiResponseService res = new ApiResponseService("file upload successfully",true,Arrays.asList(url));
+    		return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<String>("error",HttpStatus.INTERNAL_SERVER_ERROR);
+            ApiResponseService res = new ApiResponseService("file not uploaded. something went worng",true,Arrays.asList("error"));
+			return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 	}
 	
+    @DeleteMapping(value = "/deleteimage/{id}")
+    public ResponseEntity<ApiResponseService> deleteProductImage(@PathVariable Long id)
+			throws Exception {
+		try {
+			ProductImage productimage = productImageService.deleteImage(id);
+			// String url = awsService.uploadProductFile(multipartFile,product.get());
+            // productImageService.addImage(product.get(), url);
+			// profile.setProfilePicName(multipartFile.getOriginalFilename());
+			// userProfileService.updateUserProfilePic(profile);
+            ApiResponseService res = new ApiResponseService("file upload successfully",true,Arrays.asList(id));
+    		return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+		} catch (Exception e) {
+            ApiResponseService res = new ApiResponseService("file not uploaded. something went worng",false,Arrays.asList(e.getMessage()));
+			return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
 }

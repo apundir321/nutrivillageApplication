@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -19,11 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
 import com.nurtivillage.java.nutrivillageApplication.error.GenericException;
+import com.nurtivillage.java.nutrivillageApplication.model.Category;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
@@ -74,7 +77,19 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 	}
 
 	public String uploadProductFile(final MultipartFile multipartFile,Product product) throws Exception{
-		return "hello";
+		final File file = convertMultiPartFileToFile(multipartFile);
+		URL imageUrl = uploadProductImageToS3(bucketName,file,product);
+		LOGGER.info("File upload is completed.");
+		file.delete();
+		return imageUrl.toString();
+	}
+
+	public String uploadCategoryFile(final MultipartFile multipartFile,Category category) throws Exception{
+		final File file = convertMultiPartFileToFile(multipartFile);
+		URL imageUrl = uploadCategoryImageToS3(bucketName,file,category);
+		LOGGER.info("category image upload is completed.");
+		file.delete();
+		return imageUrl.toString();
 	}
 
 	private File convertMultiPartFileToFile(final MultipartFile multipartFile) {
@@ -98,7 +113,24 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 	
 }
 
-	
+	private URL uploadProductImageToS3(final String bucketName,final File file,Product product){
+		final String fileName = product.getId()+"/"+product.getName()+"/"+file.getName();
+		LOGGER.info("Uploading file with name= " + fileName);
+		final PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead);
+		amazonS3.putObject(putObjectRequest);
+		URL imageUrl = amazonS3.getUrl(bucketName, fileName);
+		return imageUrl;
+	}	
+
+	private URL uploadCategoryImageToS3(final String bucketName,final File file,Category category){
+		final String fileName = category.getId()+"/"+category.getName()+"/"+file.getName();
+		LOGGER.info("Uploading file with name= " + fileName);
+		final PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead);
+		amazonS3.putObject(putObjectRequest);
+		URL imageUrl = amazonS3.getUrl(bucketName, fileName);
+		return imageUrl;
+	}	
+
 	private void uploadGenericFileToS3Bucket(final String bucketName, final File file)throws Exception {
 		
 			final String uniqueFileName = file.getName();

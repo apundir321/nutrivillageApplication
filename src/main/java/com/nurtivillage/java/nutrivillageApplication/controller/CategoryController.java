@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nurtivillage.java.nutrivillageApplication.model.Category;
 import com.nurtivillage.java.nutrivillageApplication.service.CategoryService;
@@ -47,5 +50,17 @@ public ResponseEntity<?> getCategory(@PathVariable String name) {
 		// TODO: handle exception
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+}
+
+@PutMapping("uploadImage/{id}")
+public ResponseEntity<?> updateImage(@RequestPart(value= "file",required = true) final MultipartFile multipartFile,@PathVariable int id){
+	try {
+		Category category = categoryService.getCategoryById(id);
+		categoryService.uploadImage(multipartFile,category);
+		return new ResponseEntity<>("image save successfully", HttpStatus.OK);
+	} catch (Exception e) {
+		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 }
 }

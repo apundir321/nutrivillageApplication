@@ -2,6 +2,7 @@ package com.nurtivillage.java.nutrivillageApplication.service;
 
 import java.io.ByteArrayOutputStream;
 
+import com.nurtivillage.java.nutrivillageApplication.model.Category;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 
@@ -15,6 +16,8 @@ public interface AWSS3Service {
 
 	String uploadProductFile(MultipartFile multipartFile,Product product) throws Exception;
 	
+	String uploadCategoryFile(MultipartFile multipartFile,Category category) throws Exception;
+
 	public ByteArrayOutputStream downloadFile(String keyName,UserProfile profile);
 	
 	public ByteArrayOutputStream downloadFile(String keyName);

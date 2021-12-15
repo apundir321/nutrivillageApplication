@@ -65,7 +65,7 @@ public class Product {
 	@ManyToMany(fetch=FetchType.LAZY,cascade = CascadeType.MERGE)
 	private List<Variant> variants;
 
-	@OneToMany(cascade = CascadeType.MERGE)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<ProductImage> productImage;
 	public List<Variant> getVariants() {
 		return variants;

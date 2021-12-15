@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.nurtivillage.java.nutrivillageApplication.model.Category;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
+import com.nurtivillage.java.nutrivillageApplication.model.ProductImage;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
@@ -18,5 +19,5 @@ public interface ProductRepository extends JpaRepository<Product,Long>{
 
     List<Product> findByCategoryIdAndDeletedAtIsNull(Integer categoryId);
     
-    
+    Product findByProductImage(ProductImage productImage);
 }

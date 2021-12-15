@@ -15,5 +15,18 @@ public class ProductImage {
 
     public String name;
     public String url;
+
+    public ProductImage(){};
+
+    public ProductImage(String name,String url){
+        this.name = name;
+        this.url = url;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getUrl() {
+        return url;
+    }
     // public Product product;
 }

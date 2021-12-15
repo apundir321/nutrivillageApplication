@@ -9,7 +9,6 @@ import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
 import com.nurtivillage.java.nutrivillageApplication.model.Status;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
-import com.nurtivillage.java.nutrivillageApplication.security.UserService;
 import com.nurtivillage.java.nutrivillageApplication.service.ApiResponseService;
 import com.nurtivillage.java.nutrivillageApplication.service.LoggedInUserService;
 import com.nurtivillage.java.nutrivillageApplication.service.OrderService;
