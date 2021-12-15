@@ -104,7 +104,7 @@ public class CartController {
     public ResponseEntity<ApiResponseService> cartClear(){
         try {
             User user = userService.userDetails();
-            String cart = cartService.cartClear(user.getId());
+            String cart = cartService.cartClear();
             System.out.println(cart);
             List<CartResponseDto> cartItem = cartService.getCartItem(user.getId());
             ApiResponseService res = new ApiResponseService("cart clear",true,cartItem);
