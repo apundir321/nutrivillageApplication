@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.nurtivillage.java.nutrivillageApplication.dao.OrderDetailsRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.OrderRepository;
+import com.nurtivillage.java.nutrivillageApplication.dto.StatusRequest;
 import com.nurtivillage.java.nutrivillageApplication.model.Cart;
 import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
@@ -29,9 +30,10 @@ public class OrderService {
 
     @Autowired
     public CartService cartService;
+    
 
     public List<UserOrder> getAllOrder(){
-        List<UserOrder> userOrder = orderRepository.findAll();
+        List<UserOrder> userOrder = orderRepository.findByStatusNotOrderByCreatedAtAsc(Status.canceled);
         return userOrder;
     }
 
@@ -68,12 +70,12 @@ public class OrderService {
         return order;
     }
 
-    public UserOrder orderStatus(Long id, String status) {
-        System.out.println(id);
-        Optional<UserOrder> order = orderService.getOrder(id);
+    public UserOrder orderStatus(StatusRequest statusRequest) {
+        Optional<UserOrder> order = orderService.getOrder(statusRequest.getId());
         UserOrder orderInfo = order.get();
-        Status updateStatus = getStatus(status);
+        Status updateStatus = getStatus(statusRequest.getStatus());
         orderInfo.setStatus(updateStatus);
+        orderInfo.setComment(statusRequest.getComment());
         UserOrder updatedOrder = orderRepository.save(orderInfo);
         return updatedOrder;
     }
@@ -94,5 +96,10 @@ public class OrderService {
         Long init = (long) 1;
         return userOrder.getOrderNo() == null ? init :userOrder.getOrderNo();
 
+    }
+
+    public List<UserOrder> getAllCancelOrder() {
+        List<UserOrder> userOrder = orderRepository.findByStatusOrderByCreatedAtAsc(Status.canceled);
+        return userOrder;
     }
 }

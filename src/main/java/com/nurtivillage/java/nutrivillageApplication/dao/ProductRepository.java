@@ -6,6 +6,8 @@ import com.nurtivillage.java.nutrivillageApplication.model.Category;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.ProductImage;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ProductRepository extends JpaRepository<Product,Long>{
 
     
-    List<Product> findByDeletedAtIsNull();
+    Page<Product> findByDeletedAtIsNull(Pageable pageable);
 
     List<Product> findByStatusAndDeletedAtIsNull(int status);
 

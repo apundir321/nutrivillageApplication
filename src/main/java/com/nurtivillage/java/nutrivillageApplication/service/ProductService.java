@@ -17,6 +17,8 @@ import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Variant;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,20 +34,16 @@ public class ProductService {
     @Autowired
     private InventoryService inventoryService;
 
-    public List<Product> getAllProduct(){
+    public Page<Product> getAllProduct(Pageable pageable){
         try {
-            List<Product> allProduct = productRepository.
-            findByDeletedAtIsNull();
-            int index=0;
-            int indexY=0;
+            Page<Product> allProduct = productRepository.
+            findByDeletedAtIsNull(pageable);
             allProduct.forEach((var)->{
-                List<Variant> variants = var.getVariants();
-                
-                variants.forEach((v)->{
-                    Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(var.getId(),v.getId());
-                    v.setPrice(variantInventory.getPrice());
-                    v.setQuantity( variantInventory.getQuantity());
-                });
+                // List<Variant> variants = ;
+                if(var.getVariants().size() > 0){
+                    Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(var.getId(),var.getVariants().get(0).getId());
+                    var.setDefaultPrice(variantInventory.getPrice());
+                }
             });
             return allProduct;
         } catch (Exception e) {

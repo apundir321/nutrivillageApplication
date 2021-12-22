@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
-
+import javax.websocket.server.PathParam;
 
 import com.nurtivillage.java.nutrivillageApplication.dto.ProductInsert;
 
@@ -22,6 +22,11 @@ import com.nurtivillage.java.nutrivillageApplication.service.ProductService;
 import com.nurtivillage.java.nutrivillageApplication.service.ReviewService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -54,10 +59,11 @@ public class ProductController {
     @Autowired 
     private ProductImageService productImageService;
     @GetMapping("/list")
-    public ResponseEntity<ApiResponseService> getAllProduct(){
+    public ResponseEntity<ApiResponseService> getAllProduct(@RequestParam int pageNo,@RequestParam String sortBy){
         try{
-            List<Product> product = productService.getAllProduct();
-            ApiResponseService res = new ApiResponseService("Product List",true,product);
+            Pageable firstPage = PageRequest.of(pageNo, 10,Direction.ASC,sortBy);
+            Page<Product> product = productService.getAllProduct(firstPage);
+            ApiResponseService res = new ApiResponseService("Product List",true,product.toList(),product.getTotalPages());
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         }catch(Exception e){
             System.out.println(e);

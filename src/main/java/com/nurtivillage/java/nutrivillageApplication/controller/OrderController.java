@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.nurtivillage.java.nutrivillageApplication.Request.OrderRequest;
+import com.nurtivillage.java.nutrivillageApplication.dto.StatusRequest;
 import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
 import com.nurtivillage.java.nutrivillageApplication.model.Status;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
@@ -44,13 +45,26 @@ public class OrderController {
             }
         }
 
+        @GetMapping("/cancel")
+        public ResponseEntity<ApiResponseService> cancelOrder(){
+            try{
+                List<UserOrder> orderList = orderService.getAllCancelOrder();
+                ApiResponseService res = new ApiResponseService("order List",true,orderList);
+                return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+            }catch(Exception e){
+                System.out.println(e);
+                ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
+                return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
         @PostMapping("/create")
         public ResponseEntity<ApiResponseService> createOrder(@RequestBody OrderRequest orderRequest){
             try{
                 Long orderNO = orderService.getLastOrderNO();
                 double amount = orderRequest.getAmount();
                 User user = userService.userDetails();
-                UserOrder order = new UserOrder(amount,user,orderNO+1,orderRequest.getCartItem().size(),Status.ordered);
+                UserOrder order = new UserOrder(amount,user,orderNO+1,orderRequest.getCartItem().size(),Status.ordered,orderRequest.getShippingAddress());
                 UserOrder orderCreate = orderService.createOrder(order);
                 List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
                 System.out.print(data);
@@ -78,11 +92,10 @@ public class OrderController {
             }
         }
 
-        @PutMapping("/{status}/{id}")
-        public ResponseEntity<ApiResponseService> orderStatus(@PathVariable String status,@PathVariable Long id){
+        @PutMapping("status")
+        public ResponseEntity<ApiResponseService> orderStatus(@RequestBody StatusRequest statusRequest){
             try{
-                System.out.println(id);
-                UserOrder orderCreate = orderService.orderStatus(id,status);
+                UserOrder orderCreate = orderService.orderStatus(statusRequest);
                 ApiResponseService res = new ApiResponseService("orderStatus",true,Arrays.asList(orderCreate));
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
             }catch(Exception e){

@@ -65,6 +65,9 @@ public class Product {
 	@ManyToMany(fetch=FetchType.LAZY,cascade = CascadeType.MERGE)
 	private List<Variant> variants;
 
+	@Transient
+	private int defaultPrice;
+
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<ProductImage> productImage;
 	public List<Variant> getVariants() {
@@ -164,6 +167,13 @@ public class Product {
 		return category;
 	}
 
+	public int getDefaultPrice() {
+		return defaultPrice;
+	}
+	
+	public void setDefaultPrice(int defaultPrice) {
+		this.defaultPrice = defaultPrice;
+	}
 
 	
 	// public Inventory getInventory() {

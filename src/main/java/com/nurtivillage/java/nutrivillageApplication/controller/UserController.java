@@ -88,11 +88,12 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AccountCredentials authenticationRequest)
 			throws Exception {
-
+		System.out.println("hello sir" +authenticationRequest.getUsername());
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
+		System.out.println("other is selected");
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
+		System.out.println(token);
 		List<String> roles = new ArrayList<>();
 		for (GrantedAuthority grantedAuthority : userDetails.getAuthorities()) {
 			roles.add(grantedAuthority.getAuthority());

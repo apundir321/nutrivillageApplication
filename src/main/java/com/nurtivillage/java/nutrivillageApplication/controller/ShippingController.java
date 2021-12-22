@@ -22,20 +22,20 @@ ShippingAddressService shippingService;
 @RequestMapping("/AddShippingAddress")
 public ResponseEntity<?> addAddress(@RequestBody ShippingAddress address) {
 	try {
-	ShippingAddress sa = shippingService.addAddress(address);
-	 return new ResponseEntity<>(sa, HttpStatus.OK);
+		ShippingAddress sa = shippingService.addAddress(address);
+	 	return new ResponseEntity<>(sa, HttpStatus.OK);
 	}catch (Exception e) {
 		// TODO: handle exception
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
+
 @RequestMapping("/getAddress")
 public ResponseEntity<?> getAddress(@RequestBody SearchAddress searchAddress) {
 	try {
-	List<ShippingAddress>sa = shippingService.getAddress(searchAddress);
-	 return new ResponseEntity<>(sa, HttpStatus.OK);
+		List<ShippingAddress>sa = shippingService.getAddress(searchAddress);
+	 	return new ResponseEntity<>(sa, HttpStatus.OK);
 	}catch (Exception e) {
-		// TODO: handle exception
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

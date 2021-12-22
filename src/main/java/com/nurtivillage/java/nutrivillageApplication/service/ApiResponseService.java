@@ -9,8 +9,15 @@ public class ApiResponseService {
     private String msg;
     private boolean status;
     private List<?> data;
+    private int totalPage; 
 
     public ApiResponseService(){};
+    public ApiResponseService(String msg,boolean status,List<?> data,int page){
+        this.msg = msg;
+        this.status = status;
+        this.data = data;
+        this.totalPage = page;
+    };
     public ApiResponseService(String msg,boolean status,List<?> data){
         this.msg = msg;
         this.status = status;
@@ -25,6 +32,10 @@ public class ApiResponseService {
     }
     public boolean getStatus(){
         return status;
+    }
+
+    public int getTotalPage() {
+        return totalPage;
     }
 
 
