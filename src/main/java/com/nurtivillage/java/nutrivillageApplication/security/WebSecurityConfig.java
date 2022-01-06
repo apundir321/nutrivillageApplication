@@ -54,7 +54,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         .antMatchers(HttpMethod.GET,"/review/list").permitAll()
         .antMatchers("/registrationAccountConfirm").permitAll()
         .antMatchers("/badUser").permitAll()
-        
         .anyRequest().authenticated()
         .and().
         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
