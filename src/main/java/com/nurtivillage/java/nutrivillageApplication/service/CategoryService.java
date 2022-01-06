@@ -66,4 +66,15 @@ public void uploadImage(final MultipartFile multipartFile,Category category) thr
 		throw e;
 	}
 }
+
+public void uploadCoverImage(MultipartFile multipartFile, Category category) throws Exception {
+	try {
+		String res = awsS3Service.uploadCategoryFile(multipartFile, category);
+		category.setCoverImage(res);
+		categoryRepository.save(category);
+	} catch (Exception e) {
+		throw e;
+	}
+}
+
 }

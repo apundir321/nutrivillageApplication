@@ -63,4 +63,17 @@ public ResponseEntity<?> updateImage(@RequestPart(value= "file",required = true)
 	}
 
 }
+
+@PutMapping("uploadCoverImage/{id}")
+public ResponseEntity<?> updateCoverImage(@RequestPart(value= "file",required = true) final MultipartFile multipartFile,@PathVariable int id){
+	try {
+		Category category = categoryService.getCategoryById(id);
+		categoryService.uploadCoverImage(multipartFile,category);
+		return new ResponseEntity<>("image save successfully", HttpStatus.OK);
+	} catch (Exception e) {
+		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+}
+
 }
