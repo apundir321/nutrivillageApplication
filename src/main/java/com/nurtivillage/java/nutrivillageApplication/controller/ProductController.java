@@ -139,7 +139,7 @@ public class ProductController {
     public ResponseEntity<ApiResponseService> highlighterProduct(){
         try {
             List<Product> data = productService.highlighterProduct();
-            ApiResponseService res = new ApiResponseService("List of highlighter",true,Arrays.asList(data));
+            ApiResponseService res = new ApiResponseService("List of highlighter",true,data);
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
