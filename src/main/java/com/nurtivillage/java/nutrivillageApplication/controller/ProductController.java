@@ -63,11 +63,24 @@ public class ProductController {
     private TestedEventPublisher testedEventPublisher;
 
     @GetMapping("/list")
-    public ResponseEntity<ApiResponseService> getAllProduct(@RequestParam int pageNo,@RequestParam String sortBy){
+    public ResponseEntity<ApiResponseService> getAllProductByPage(@RequestParam int pageNo,@RequestParam String sortBy){
         try{
             Pageable firstPage = PageRequest.of(pageNo, 2,Direction.ASC,sortBy);
             Page<Product> product = productService.getAllProduct(firstPage);
             ApiResponseService res = new ApiResponseService("Product List",true,product.toList(),product.getTotalPages());
+            return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+        }catch(Exception e){
+            System.out.println(e);
+            ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
+            return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/list-all")
+    public ResponseEntity<ApiResponseService> getAllProduct(){
+        try{
+            List<Product> product = productService.getProductAll();
+            ApiResponseService res = new ApiResponseService("Product List",true,product);
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         }catch(Exception e){
             System.out.println(e);
@@ -152,7 +165,7 @@ public class ProductController {
     public ResponseEntity<ApiResponseService> categoryProductLIst(@PathVariable Integer categoryId){
         try {
             List<Product> data = productService.categoryProductLIst(categoryId);
-            ApiResponseService res = new ApiResponseService("List of highlighter",true,Arrays.asList(data));
+            ApiResponseService res = new ApiResponseService("List of highlighter",true,data);
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
