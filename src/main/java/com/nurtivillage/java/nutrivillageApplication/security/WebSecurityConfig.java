@@ -47,13 +47,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         .antMatchers(HttpMethod.GET,"/getProfilePicByProfileId/**").permitAll()
         .antMatchers(HttpMethod.GET,"/console").permitAll()
         .antMatchers(HttpMethod.GET,"/getLocations").permitAll()
-        .antMatchers(HttpMethod.GET,"/GetCategories").permitAll()
+        .antMatchers(HttpMethod.GET,"/product/list").permitAll()
         .antMatchers(HttpMethod.GET,"/product/highlighter").permitAll()
+        .antMatchers(HttpMethod.GET,"/product/test").permitAll()
+        .antMatchers(HttpMethod.GET,"/product/info/*").permitAll()
         .antMatchers(HttpMethod.GET,"/product/test").permitAll()
         .antMatchers(HttpMethod.GET,"/product/info/*").permitAll()
         .antMatchers(HttpMethod.GET,"/review/list").permitAll()
         .antMatchers("/registrationAccountConfirm").permitAll()
         .antMatchers("/badUser").permitAll()
+        
         .anyRequest().authenticated()
         .and().
         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
