@@ -26,7 +26,6 @@ public class AWSS3Ctrl {
 		try {
 			service.uploadFile(multipartFile,userId);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		final String response = "[" + multipartFile.getOriginalFilename() + "] uploaded successfully.";

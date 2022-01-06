@@ -27,8 +27,6 @@ public Variant addVariant(Variant variant) {
 public List<Variant> getAllVariants() {
 	try {
 		return variantRepository.findAll();
-		
-		
 	}
 	catch(Exception e) {
 		throw e;

@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import com.nurtivillage.java.nutrivillageApplication.dto.ProductInsert;
-
+import com.nurtivillage.java.nutrivillageApplication.events.TestedEventPublisher;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.ProductImage;
@@ -58,10 +58,14 @@ public class ProductController {
     private AWSS3Service awsService;
     @Autowired 
     private ProductImageService productImageService;
+
+    @Autowired
+    private TestedEventPublisher testedEventPublisher;
+
     @GetMapping("/list")
     public ResponseEntity<ApiResponseService> getAllProduct(@RequestParam int pageNo,@RequestParam String sortBy){
         try{
-            Pageable firstPage = PageRequest.of(pageNo, 10,Direction.ASC,sortBy);
+            Pageable firstPage = PageRequest.of(pageNo, 2,Direction.ASC,sortBy);
             Page<Product> product = productService.getAllProduct(firstPage);
             ApiResponseService res = new ApiResponseService("Product List",true,product.toList(),product.getTotalPages());
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
@@ -192,4 +196,10 @@ public class ProductController {
 		}
 		
 	}
+
+    @GetMapping(value="/test")
+    public String test(){
+        testedEventPublisher.testPublish();
+        return "hello";
+    }
 }
