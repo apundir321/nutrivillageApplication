@@ -37,7 +37,6 @@ public ResponseEntity<?> getCategories() {
 	List<Category> c = categoryService.getCategories();
 	 return new ResponseEntity<>(c, HttpStatus.OK);
 	}catch (Exception e) {
-		// TODO: handle exception
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
