@@ -65,7 +65,7 @@ public class ProductController {
     @GetMapping("/list")
     public ResponseEntity<ApiResponseService> getAllProductByPage(@RequestParam int pageNo,@RequestParam String sortBy){
         try{
-            Pageable firstPage = PageRequest.of(pageNo, 2,Direction.ASC,sortBy);
+            Pageable firstPage = PageRequest.of(pageNo,10,Direction.ASC,sortBy);
             Page<Product> product = productService.getAllProduct(firstPage);
             ApiResponseService res = new ApiResponseService("Product List",true,product.toList(),product.getTotalPages());
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
