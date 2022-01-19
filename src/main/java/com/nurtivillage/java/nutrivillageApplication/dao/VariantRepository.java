@@ -6,4 +6,6 @@ import com.nurtivillage.java.nutrivillageApplication.model.Variant;
 
 public interface VariantRepository extends JpaRepository<Variant,Integer> {
 
+    Variant findByName(String name);
+
 }

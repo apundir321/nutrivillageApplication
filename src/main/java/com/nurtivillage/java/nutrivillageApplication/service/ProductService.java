@@ -171,6 +171,23 @@ public class ProductService {
         }
     }
 
+    // public Page<Product> getAllProductWithFilter(Variant i,Pageable firstPage) {
+    //     try {
+    //         Page<Product> allProduct = productRepository.
+    //         findByVariantIdDeletedAtIsNull(i,firstPage);
+    //         allProduct.forEach((var)->{
+    //             // List<Variant> variants = ;
+    //             if(var.getVariants().size() > 0){
+    //                 Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(var.getId(),var.getVariants().get(0).getId());
+    //                 var.setDefaultPrice(variantInventory.getPrice());
+    //             }
+    //         });
+    //         return allProduct;
+    //     } catch (Exception e) {
+    //         throw e;
+    //     }
+    // }
+
 
     // public List<Product> Filter
 

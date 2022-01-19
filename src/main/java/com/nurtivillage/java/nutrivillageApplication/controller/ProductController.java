@@ -14,12 +14,14 @@ import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.ProductImage;
 import com.nurtivillage.java.nutrivillageApplication.model.Review;
+import com.nurtivillage.java.nutrivillageApplication.model.Variant;
 import com.nurtivillage.java.nutrivillageApplication.service.AWSS3Service;
 import com.nurtivillage.java.nutrivillageApplication.service.ApiResponseService;
 import com.nurtivillage.java.nutrivillageApplication.service.InventoryService;
 import com.nurtivillage.java.nutrivillageApplication.service.ProductImageService;
 import com.nurtivillage.java.nutrivillageApplication.service.ProductService;
 import com.nurtivillage.java.nutrivillageApplication.service.ReviewService;
+import com.nurtivillage.java.nutrivillageApplication.service.VariantService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -62,17 +64,24 @@ public class ProductController {
     @Autowired
     private TestedEventPublisher testedEventPublisher;
 
+    @Autowired
+    private VariantService variantService;
+
     @GetMapping("/list")
     public ResponseEntity<ApiResponseService> getAllProductByPage(@RequestParam(value="pageNo",defaultValue = "0",required = false) int pageNo,
             @RequestParam(value="sortBy",defaultValue = "name",required = false) String sortBy,
             // @RequestParam(required = false) String sortBy
-            @RequestParam(value="sortBy",defaultValue = "null",required = false) String varient
+            @RequestParam(value="varient",defaultValue = "null",required = false) String variant
             ){
         try{
             Pageable firstPage = PageRequest.of(pageNo,10,Direction.ASC,sortBy);
-            if(varient != null){
-                System.out.println(varient);
-            }
+            // if(variant != "null"){
+            //     Variant variantData = variantService.getVariantBYName(variant);
+            //     System.out.println(variant);
+            //     Page<Product> product = productService.getAllProductWithFilter(variantData,firstPage);
+            //     ApiResponseService res = new ApiResponseService("Product List",true,product.toList(),product.getTotalPages());
+            //     return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+            // }
             Page<Product> product = productService.getAllProduct(firstPage);
             ApiResponseService res = new ApiResponseService("Product List",true,product.toList(),product.getTotalPages());
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);

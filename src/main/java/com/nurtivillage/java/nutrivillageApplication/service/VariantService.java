@@ -24,21 +24,31 @@ public Variant addVariant(Variant variant) {
 		throw e;
 	}
 }
-public List<Variant> getAllVariants() {
-	try {
-		return variantRepository.findAll();
+	public List<Variant> getAllVariants() {
+		try {
+			return variantRepository.findAll();
+		}
+		catch(Exception e) {
+			throw e;
+		}
 	}
-	catch(Exception e) {
-		throw e;
+
+	public Optional<Variant> getVariant(int id) {
+		try {
+			Optional<Variant> v=variantRepository.findById(id);
+			return v;
+		}
+		catch(Exception e) {
+			throw e;
+		}
 	}
-}
-public Optional<Variant> getVariant(int id) {
-	try {
-		Optional<Variant> v=variantRepository.findById(id);
-		return v;
+
+	public Variant getVariantBYName(String name){
+		try {
+			Variant variant = variantRepository.findByName(name);
+			return variant;			
+		} catch (Exception e) {
+			throw e;
+		}
 	}
-catch(Exception e) {
-	throw e;
-}
-}
 }
