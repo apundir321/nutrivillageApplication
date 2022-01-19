@@ -102,4 +102,9 @@ public class OrderService {
         List<UserOrder> userOrder = orderRepository.findByStatusOrderByCreatedAtAsc(Status.canceled);
         return userOrder;
     }
+
+    public List<UserOrder> getUserCancelOrder(Long userId) {
+        List<UserOrder> userOrder = orderRepository.findByStatusAndUserIdOrderByCreatedAtAsc(Status.canceled,userId);
+        return userOrder;
+    }
 }

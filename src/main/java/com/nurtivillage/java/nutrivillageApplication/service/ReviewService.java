@@ -18,14 +18,24 @@ public class ReviewService {
     public List<Review>getAllReview(){
     	try {
         return reviewRepository.findAll();
-    }
+        }
     	catch(Exception e) {
     	throw e;	
     	}
+    }
+
+    public List<Review>getProductReview(Long productId){
+    	try {
+        return reviewRepository.findByProductId(productId);
+        }
+    	catch(Exception e) {
+    	throw e;	
     	}
+    }    
   
     public Review addReview(Review review) {
     	try {
+            System.out.println(review);
     		Review r=reviewRepository.save(review);
     return r;
     	}

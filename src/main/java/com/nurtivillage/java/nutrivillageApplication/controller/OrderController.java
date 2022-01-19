@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping(path = "/order")
@@ -119,4 +121,34 @@ public class OrderController {
                 return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
+
+        @GetMapping(value="/usercancelorderList")
+        public ResponseEntity<ApiResponseService> getUserCancelOrder(){
+            try {
+                User user = userService.userDetails();
+                List<UserOrder> orderList = orderService.getUserCancelOrder(user.getId());
+                ApiResponseService res = new ApiResponseService("order List",true,orderList);
+                return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+            } catch (Exception e) {
+                System.out.println(e);
+                ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
+                return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        @PutMapping("/userodercancel")
+        public ResponseEntity<ApiResponseService> userOrderCancel(@RequestBody StatusRequest statusRequest){
+            try{
+                statusRequest.setStatus("canceled");
+                UserOrder orderCreate = orderService.orderStatus(statusRequest);
+                ApiResponseService res = new ApiResponseService("orderStatus",true,Arrays.asList(orderCreate));
+                return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+            }catch(Exception e){
+                System.out.println(e);
+                ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
+                return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        
+        
 }

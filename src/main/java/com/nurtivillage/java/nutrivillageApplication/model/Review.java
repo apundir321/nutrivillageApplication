@@ -48,4 +48,8 @@ public class Review {
    public User getUser() {
        return user;
    }
+
+   public Product getProduct() {
+       return product;
+   }
 }

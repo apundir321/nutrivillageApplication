@@ -63,9 +63,16 @@ public class ProductController {
     private TestedEventPublisher testedEventPublisher;
 
     @GetMapping("/list")
-    public ResponseEntity<ApiResponseService> getAllProductByPage(@RequestParam int pageNo,@RequestParam String sortBy){
+    public ResponseEntity<ApiResponseService> getAllProductByPage(@RequestParam(value="pageNo",defaultValue = "0",required = false) int pageNo,
+            @RequestParam(value="sortBy",defaultValue = "name",required = false) String sortBy,
+            // @RequestParam(required = false) String sortBy
+            @RequestParam(value="sortBy",defaultValue = "null",required = false) String varient
+            ){
         try{
             Pageable firstPage = PageRequest.of(pageNo,10,Direction.ASC,sortBy);
+            if(varient != null){
+                System.out.println(varient);
+            }
             Page<Product> product = productService.getAllProduct(firstPage);
             ApiResponseService res = new ApiResponseService("Product List",true,product.toList(),product.getTotalPages());
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);

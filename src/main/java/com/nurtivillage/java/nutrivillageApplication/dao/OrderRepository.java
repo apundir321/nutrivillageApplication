@@ -15,4 +15,6 @@ public interface OrderRepository extends JpaRepository<UserOrder,Long>{
     
     List<UserOrder> findByStatusOrderByCreatedAtAsc(Status status);
     // void getOneOrderBYAsc();
+
+    List<UserOrder> findByStatusAndUserIdOrderByCreatedAtAsc(Status canceled, Long userId);
 }
