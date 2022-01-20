@@ -117,8 +117,8 @@ public class RegistrationRestController {
 
     // Change user password
     @PostMapping("/user/updatePassword")
-    public GenericResponse changeUserPassword(final Locale locale, @Valid PasswordDto passwordDto) {
-        final User user = userService.findUserByEmail(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmail());
+    public GenericResponse changeUserPassword(final Locale locale, @RequestBody @Valid PasswordDto passwordDto) {
+    	final User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if (!userService.checkIfValidOldPassword(user, passwordDto.getOldPassword())) {
             throw new InvalidOldPasswordException();
         }
