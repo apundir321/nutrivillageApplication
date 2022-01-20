@@ -146,7 +146,7 @@ public class Product {
 		return "Product [id=" + id + ", name=" + name + ", brand=" + brand + ", category=" + category + ", status="
 
 				+ status + ", createdAt=" + createdAt + ", deletedAt=" + deletedAt + ", variants=" + variants
-				+ ", review=" + review + ", image=" + image + "]";
+				+ ", image=" + image + "]";
 
 	}
 	public Product() {
