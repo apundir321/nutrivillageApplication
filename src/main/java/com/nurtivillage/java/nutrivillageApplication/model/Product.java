@@ -55,8 +55,7 @@ public class Product {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
 	private Date createdAt;
-	@Transient
-	private List<Review> review;
+	
 	public Long getId() {
 		return id;
 	}
@@ -79,10 +78,6 @@ public class Product {
 	
 	public void setCategory(@NotBlank Category category) {
 		this.category = category;
-	}
-
-	public void setReview(@NotBlank List<Review> review) {
-		this.review = review;
 	}
 
 	public void setId(Long id) {
@@ -158,9 +153,9 @@ public class Product {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public List<Review> getReview(){
-		return review;
-	}
+	// public List<Review> getReview(){
+	// 	return review;
+	// }
 
 	public Category getCategory() {
 		return category;
