@@ -31,6 +31,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -75,13 +76,16 @@ public class ProductController {
             ){
         try{
             Pageable firstPage = PageRequest.of(pageNo,10,Direction.ASC,sortBy);
-            // if(variant != "null"){
-            //     Variant variantData = variantService.getVariantBYName(variant);
-            //     System.out.println(variant);
-            //     Page<Product> product = productService.getAllProductWithFilter(variantData,firstPage);
-            //     ApiResponseService res = new ApiResponseService("Product List",true,product.toList(),product.getTotalPages());
-            //     return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
-            // }
+
+            if(variant != "null"){
+                Variant variantData = variantService.getVariantBYName(variant);
+                System.out.println(variant);
+                Page<Product> product = productService.getAllProductWithFilter(variantData,firstPage);
+                ApiResponseService res = new ApiResponseService("Product List",true,product.toList(),product.getTotalPages());
+                return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+            }
+
+
             Page<Product> product = productService.getAllProduct(firstPage);
             ApiResponseService res = new ApiResponseService("Product List",true,product.toList(),product.getTotalPages());
             return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
@@ -92,6 +96,7 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIE')")
     @GetMapping("/list-all")
     public ResponseEntity<ApiResponseService> getAllProduct(){
         try{
@@ -109,9 +114,9 @@ public class ProductController {
     public ResponseEntity<ApiResponseService> ProductInfo(@PathVariable Long id){
         try{
             Optional<Product> product = productService.ProductInfo(id);
-            List<Review> reviews = reviewService.getReview(product.get());
+            // List<Review> reviews = reviewService.getReview(product.get());
             List<Inventory> inventory = inventoryService.getProductInventory(product.get());
-            product.get().setReview(reviews);
+            // product.get().setReview(reviews);
 
             // product.get().setVariant(inventory);
 

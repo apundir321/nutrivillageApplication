@@ -43,6 +43,7 @@ public class ReviewService {
     		throw e;
     	}
     }
+    
     public List<Review>getReview(Product product){
         List<Review> review = reviewRepository.findByProduct(product);
         return review;
