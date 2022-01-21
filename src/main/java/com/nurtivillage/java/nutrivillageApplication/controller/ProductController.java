@@ -96,7 +96,7 @@ public class ProductController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIE')")
+    // @PreAuthorize("hasRole('ROLE_ADMIE')")
     @GetMapping("/list-all")
     public ResponseEntity<ApiResponseService> getAllProduct(){
         try{

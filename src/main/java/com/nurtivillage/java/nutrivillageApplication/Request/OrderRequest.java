@@ -15,13 +15,15 @@ public class OrderRequest {
     private double amount;
     private List<Cart> cartItem;
     private ShippingAddress shippingAddress;
+    private String paymentMethod;
 
     public OrderRequest(){}
 
-    public OrderRequest(List<Cart> cartItem,double amount,ShippingAddress shippingAddress){
+    public OrderRequest(List<Cart> cartItem,double amount,ShippingAddress shippingAddress,String paymentMethod){
         this.amount = amount;
         this.cartItem = cartItem;
         this.shippingAddress = shippingAddress;
+        this.paymentMethod = paymentMethod;
     }
 
     public double getAmount() {
@@ -33,6 +35,10 @@ public class OrderRequest {
 
     public ShippingAddress getShippingAddress() {
         return shippingAddress;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
     
 }

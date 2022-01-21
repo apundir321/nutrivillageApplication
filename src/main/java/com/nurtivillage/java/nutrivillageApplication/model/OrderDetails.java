@@ -57,7 +57,6 @@ public class OrderDetails {
     public Variant getVariant() {
         return variant;
     }
-
     @JsonIgnore
     public UserOrder getUesrOrder() {
         return uesrOrder;

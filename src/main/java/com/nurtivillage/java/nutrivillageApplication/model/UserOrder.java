@@ -42,6 +42,9 @@ public class UserOrder {
     @Column(nullable = false)
     private int itemNO;
 
+    @Column(nullable = false)
+    private String paymentMethod;
+
     @Lob
     private String comment;
 
@@ -55,13 +58,14 @@ public class UserOrder {
     
     public UserOrder(){}
 
-    public UserOrder(double amount,User user,Long orderNO,int itemNO,Status status,ShippingAddress shippingAddress){
+    public UserOrder(double amount,User user,Long orderNO,int itemNO,Status status,ShippingAddress shippingAddress,String paymentMethod){
         this.amount = amount;
         this.orderNo = orderNO;
         this.user = user;
         this.itemNO = itemNO;
         this.status = status;
         this.shippingAddress = shippingAddress;
+        this.paymentMethod = paymentMethod;
     }
 
     public ShippingAddress getShippingAddress() {
@@ -92,6 +96,10 @@ public class UserOrder {
     }
     public int getItemNO(){
         return itemNO;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
     public void setComment(String comment) {

@@ -12,7 +12,9 @@ import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
 import com.nurtivillage.java.nutrivillageApplication.service.ApiResponseService;
 import com.nurtivillage.java.nutrivillageApplication.service.LoggedInUserService;
+import com.nurtivillage.java.nutrivillageApplication.service.OnlinePaymentService;
 import com.nurtivillage.java.nutrivillageApplication.service.OrderService;
+import com.razorpay.Order;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,8 @@ public class OrderController {
         public OrderService orderService;
         @Autowired
         public LoggedInUserService userService;
+        @Autowired 
+        public OnlinePaymentService onlinePaymentService;
         @GetMapping("/list")
         public ResponseEntity<ApiResponseService> allOrder(){
             try{
@@ -66,11 +70,16 @@ public class OrderController {
                 Long orderNO = orderService.getLastOrderNO();
                 double amount = orderRequest.getAmount();
                 User user = userService.userDetails();
-                UserOrder order = new UserOrder(amount,user,orderNO+1,orderRequest.getCartItem().size(),Status.ordered,orderRequest.getShippingAddress());
+                UserOrder order = new UserOrder(amount,user,orderNO+1,orderRequest.getCartItem().size(),Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
                 UserOrder orderCreate = orderService.createOrder(order);
                 List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
+                if(orderRequest.getPaymentMethod() != "COD"){
+                    Order orderRes = onlinePaymentService.createOrderOnRazorpay(order);
+                    ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount")));
+                    return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+                }
                 System.out.print(data);
-                ApiResponseService res = new ApiResponseService("orderStatus",true,data);
+                ApiResponseService res = new ApiResponseService("order placed",true,data);
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
             }catch(Exception e){
                 System.out.println(e);
@@ -148,7 +157,5 @@ public class OrderController {
                 ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
                 return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }
-        
-        
+        } 
 }
