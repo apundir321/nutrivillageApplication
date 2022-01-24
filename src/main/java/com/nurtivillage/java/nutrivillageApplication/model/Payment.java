@@ -15,8 +15,8 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String razorpayPaymentId;
-    private String razopayOrderId;
-    private String razopaySignature;
+    private String razorpayOrderId;
+    private String razorpaySignature;
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
 	@JoinColumn(name = "order_id")
     private UserOrder order;
@@ -24,8 +24,8 @@ public class Payment {
     public Payment(){};
     public Payment(String razorpayPaymentId,String razopayOrderId,String razorpaySignature,UserOrder order){
         this.razorpayPaymentId = razorpayPaymentId;
-        this.razopayOrderId = razopayOrderId;
-        this.razopaySignature = razopaySignature;
+        this.razorpayOrderId = razopayOrderId;
+        this.razorpaySignature = razorpaySignature;
         this.order = order;
 
     }
@@ -35,15 +35,33 @@ public class Payment {
     }
 
     public String getRazopayOrderId() {
-        return razopayOrderId;
+        return razorpayOrderId;
     }
 
     public String getRazorpayPaymentId() {
         return razorpayPaymentId;
     }
 
-    public String getRazopaySignature() {
-        return razopaySignature;
+    public String getRazorpaySignature() {
+        return razorpaySignature;
     }
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public void setRazorpayPaymentId(String razorpayPaymentId) {
+		this.razorpayPaymentId = razorpayPaymentId;
+	}
+	public void setRazorpayOrderId(String razorpayOrderId) {
+		this.razorpayOrderId = razorpayOrderId;
+	}
+	public void setRazorpaySignature(String razorpaySignature) {
+		this.razorpaySignature = razorpaySignature;
+	}
+	public void setOrder(UserOrder order) {
+		this.order = order;
+	}
 
 }

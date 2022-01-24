@@ -4,9 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.nurtivillage.java.nutrivillageApplication.RazorPayClientConfig;
 import com.nurtivillage.java.nutrivillageApplication.Request.OrderRequest;
 import com.nurtivillage.java.nutrivillageApplication.dto.StatusRequest;
 import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
+import com.nurtivillage.java.nutrivillageApplication.model.Payment;
 import com.nurtivillage.java.nutrivillageApplication.model.Status;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
@@ -15,6 +17,8 @@ import com.nurtivillage.java.nutrivillageApplication.service.LoggedInUserService
 import com.nurtivillage.java.nutrivillageApplication.service.OnlinePaymentService;
 import com.nurtivillage.java.nutrivillageApplication.service.OrderService;
 import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +42,16 @@ public class OrderController {
         public LoggedInUserService userService;
         @Autowired 
         public OnlinePaymentService onlinePaymentService;
+        private RazorpayClient razorpayClient;
+        private RazorPayClientConfig razorpayClientConfig;
+        
+        @Autowired
+        public OrderController(RazorPayClientConfig razorpayClientConfig) throws RazorpayException{
+        	this.razorpayClientConfig=razorpayClientConfig;
+        	this.razorpayClient=new RazorpayClient(razorpayClientConfig.getKey(),razorpayClientConfig.getSecret());
+        }
+        
+        
         @GetMapping("/list")
         public ResponseEntity<ApiResponseService> allOrder(){
             try{
@@ -87,6 +101,23 @@ public class OrderController {
                 return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } 
+        @PutMapping("/validatePayment")
+        public ResponseEntity<?> updateOrder(@RequestBody Payment payment,@RequestParam Long userOrderId){
+        	try {
+        		String error=onlinePaymentService.validateAndUpdateOrder(payment.getRazopayOrderId(),payment.getRazorpayPaymentId(),payment.getRazorpaySignature(),razorpayClientConfig.getSecret());
+        	     if(error!=null) {
+        	    	 return new ResponseEntity<String>(error,HttpStatus.BAD_REQUEST);
+        	     }
+        	     UserOrder userOrder=orderService.getOrder(userOrderId).get();
+        	     userOrder.setPaymentStatus("PAID");
+        	     return new ResponseEntity<String>("ok",HttpStatus.OK);
+        	}
+        	catch(Exception e) {
+        		return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);	
+        	}
+			
+        	
+        }
 
         @GetMapping("/detail/{id}")
         public ResponseEntity<ApiResponseService> orderDetail(@PathVariable Long id){

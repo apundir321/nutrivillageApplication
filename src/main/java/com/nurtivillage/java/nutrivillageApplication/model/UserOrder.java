@@ -47,6 +47,7 @@ public class UserOrder {
 
     @Lob
     private String comment;
+    private String paymentStatus;
 
     @UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
@@ -109,5 +110,37 @@ public class UserOrder {
     public void setShippingAddress(ShippingAddress shippingAddress) {
         this.shippingAddress = shippingAddress;
     }
+
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setOrderNo(Long orderNo) {
+		this.orderNo = orderNo;
+	}
+
+	public void setItemNO(int itemNO) {
+		this.itemNO = itemNO;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
 }
 
