@@ -89,7 +89,9 @@ public class OrderController {
                 List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
                 if(orderRequest.getPaymentMethod() != "COD"){
                     Order orderRes = onlinePaymentService.createOrderOnRazorpay(order);
-                    ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount")));
+                    onlinePaymentService.savePayment(orderRes.get("id"), order);
+                    
+                    ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount"),orderCreate.getId()));
                     return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
                 }
                 System.out.print(data);

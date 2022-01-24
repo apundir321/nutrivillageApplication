@@ -40,11 +40,14 @@ public class OnlinePaymentService {
 	@Autowired
 	PaymentRepository paymentRepo;
 	@Transactional
-	Payment savePayment(String razorpayOrderId,UserOrder userOrder) {
-	    Payment p=new Payment();
+	 public Payment savePayment(String razorpayOrderId,UserOrder userOrder) throws Exception {
+	  try {  Payment p=new Payment();
 	    p.setRazorpayOrderId(razorpayOrderId);
 	    p.setOrder(userOrder);
-	    return paymentRepo.save(p);
+	    return paymentRepo.save(p);}
+	  catch(Exception e) {
+		  throw e;
+	  }
 	}
 	@Transactional
 	public String validateAndUpdateOrder(final String razorpayOrderId,final String razorpayPaymentId,final String razorSignature,final String secret) {
