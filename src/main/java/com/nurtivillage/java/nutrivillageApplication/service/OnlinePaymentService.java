@@ -57,6 +57,10 @@ public class OnlinePaymentService {
 		String error=null;
 		try {
 			Payment payment=paymentRepo.findByRazorpayOrderId(razorpayOrderId);
+			if(payment == null){
+				new Exception("payment null"+razorpayOrderId);
+			}
+			
 	        String generatedSignature = Signature.calculateRFC2104HMAC(payment.getRazopayOrderId() + "|" + razorpayPaymentId, secret);
 	        if(generatedSignature.equals(razorSignature)) {
 	        	payment.setRazorpayOrderId(razorpayOrderId);
