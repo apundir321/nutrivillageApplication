@@ -2,6 +2,7 @@ package com.nurtivillage.java.nutrivillageApplication.service;
 
 
 
+import com.nurtivillage.java.nutrivillageApplication.dao.OrderRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.PaymentRepository;
 import com.nurtivillage.java.nutrivillageApplication.model.Payment;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OnlinePaymentService {
+	@Autowired
+	OrderRepository orderRepository;
     public Order createOrderOnRazorpay(UserOrder order,RazorpayClient client) throws Exception{
         
         String razorpayOrderId = null;
@@ -59,6 +62,10 @@ public class OnlinePaymentService {
 	        	payment.setRazorpayOrderId(razorpayOrderId);
 	        	payment.setRazorpaySignature(razorSignature);
 	        	payment.setRazorpayPaymentId(razorpayPaymentId);
+	        	UserOrder userOrder=payment.getOrder();
+	        	userOrder.setPaymentStatus("PAID");
+	        	orderRepository.save(userOrder);
+	        	
 	        	paymentRepo.save(payment);
 	        }
 	        else {

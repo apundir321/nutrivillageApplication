@@ -104,14 +104,13 @@ public class OrderController {
             }
         } 
         @PutMapping("/validatePayment")
-        public ResponseEntity<?> updateOrder(@RequestBody Payment payment,@RequestParam Long userOrderId){
+        public ResponseEntity<?> updateOrder(@RequestBody Payment payment){
         	try {
         		String error=onlinePaymentService.validateAndUpdateOrder(payment.getRazopayOrderId(),payment.getRazorpayPaymentId(),payment.getRazorpaySignature(),razorpayClientConfig.getSecret());
         	     if(error!=null) {
         	    	 return new ResponseEntity<String>(error,HttpStatus.BAD_REQUEST);
         	     }
-        	     UserOrder userOrder=orderService.getOrder(userOrderId).get();
-        	     userOrder.setPaymentStatus("PAID");
+        	     
         	     return new ResponseEntity<String>("ok",HttpStatus.OK);
         	}
         	catch(Exception e) {
