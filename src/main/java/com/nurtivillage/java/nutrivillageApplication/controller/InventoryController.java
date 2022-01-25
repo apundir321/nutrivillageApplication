@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
-@RequestMapping("/inventory")
+
 public class InventoryController {
 @Autowired
 InventoryService inventoryService;

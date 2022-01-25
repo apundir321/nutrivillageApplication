@@ -22,8 +22,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OnlinePaymentService {
-    public Order createOrderOnRazorpay(UserOrder order) throws Exception{
-        RazorpayClient client = null;
+    public Order createOrderOnRazorpay(UserOrder order,RazorpayClient client) throws Exception{
+        
         String razorpayOrderId = null;
         try {
            String amountInPaise=convertRupeeToPaise(String.valueOf(order.getAmount()));
