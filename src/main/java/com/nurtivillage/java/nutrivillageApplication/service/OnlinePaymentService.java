@@ -2,6 +2,7 @@ package com.nurtivillage.java.nutrivillageApplication.service;
 
 
 
+import com.nurtivillage.java.nutrivillageApplication.RazorPayClientConfig;
 import com.nurtivillage.java.nutrivillageApplication.dao.PaymentRepository;
 import com.nurtivillage.java.nutrivillageApplication.model.Payment;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
@@ -9,6 +10,7 @@ import com.nurtivillage.java.nutrivillageApplication.model.Signature;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import com.razorpay.Refund;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -22,8 +24,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OnlinePaymentService {
-    public Order createOrderOnRazorpay(UserOrder order) throws Exception{
-        RazorpayClient client = null;
+	private RazorpayClient razorPayClient;
+	public OnlinePaymentService(RazorPayClientConfig razorpayClientConfig)throws RazorpayException{
+		this.razorPayClient=new RazorpayClient(razorpayClientConfig.getKey(),razorpayClientConfig.getSecret());
+	}
+
+    public Order createOrderOnRazorpay(UserOrder order,RazorpayClient client) throws Exception{
         String razorpayOrderId = null;
         try {
            String amountInPaise=convertRupeeToPaise(String.valueOf(order.getAmount()));
@@ -75,5 +81,18 @@ public class OnlinePaymentService {
 		BigDecimal value=b.multiply(new BigDecimal("100"));
 		return value.setScale(0, RoundingMode.UP).toString();
 		
+	}
+	public void refund(Long id) throws Exception {
+		try {
+			Payment paymentInfo = paymentRepo.findByOrderId(id);
+			if(paymentInfo == null){
+				new Exception("order payment record not found");
+			}
+			JSONObject refundRequest = new JSONObject();
+			refundRequest.put("payment_id",paymentInfo.getRazorpayPaymentId());
+			Refund refund = this.razorPayClient.Payments.refund(refundRequest);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 }

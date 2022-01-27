@@ -2,7 +2,10 @@ package com.nurtivillage.java.nutrivillageApplication.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import javax.websocket.server.PathParam;
 
 import com.nurtivillage.java.nutrivillageApplication.RazorPayClientConfig;
 import com.nurtivillage.java.nutrivillageApplication.Request.OrderRequest;
@@ -88,10 +91,9 @@ public class OrderController {
                 UserOrder orderCreate = orderService.createOrder(order);
                 List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
                 if(orderRequest.getPaymentMethod() != "COD"){
-                    Order orderRes = onlinePaymentService.createOrderOnRazorpay(order);
+                    Order orderRes = onlinePaymentService.createOrderOnRazorpay(order,this.razorpayClient);
                     onlinePaymentService.savePayment(orderRes.get("id"), order);
-                    
-                    ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount"),orderCreate.getId()));
+                    ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount")));
                     return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
                 }
                 System.out.print(data);
@@ -103,6 +105,7 @@ public class OrderController {
                 return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } 
+        
         @PutMapping("/validatePayment")
         public ResponseEntity<?> updateOrder(@RequestBody Payment payment,@RequestParam Long userOrderId){
         	try {
@@ -191,4 +194,22 @@ public class OrderController {
                 return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } 
+
+        @GetMapping(value="/refund/{order_id}")
+        public ResponseEntity<ApiResponseService> getMethodName(@PathVariable Long order_id) {
+            try {
+                Optional<UserOrder> order = orderService.getOrder(order_id);
+                if(order.isEmpty()){
+                    new Exception("order not found");
+                }
+                onlinePaymentService.refund(order_id);
+                // UserOrder orderCreate = orderService.orderStatus(statusRequest);
+                ApiResponseService res = new ApiResponseService("orderStatus",true,Arrays.asList(orderCreate));
+                return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+            } catch (Exception e) {
+                throw e;
+            }
+        }
+        
+
 }

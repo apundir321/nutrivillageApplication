@@ -6,4 +6,6 @@ import com.nurtivillage.java.nutrivillageApplication.model.Payment;
 
 public interface PaymentRepository extends JpaRepository<Payment,Integer> {
 Payment findByRazorpayOrderId(String id);
+Payment findByOrderId(Long id);
+
 }
