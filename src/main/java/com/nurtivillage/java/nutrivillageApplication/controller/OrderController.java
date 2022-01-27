@@ -107,17 +107,19 @@ public class OrderController {
         } 
         
         @PutMapping("/validatePayment")
-        public ResponseEntity<?> updateOrder(@RequestBody Payment payment){
+        public ResponseEntity<ApiResponseService> updateOrder(@RequestBody Payment payment){
         	try {
         		String error=onlinePaymentService.validateAndUpdateOrder(payment.getRazopayOrderId(),payment.getRazorpayPaymentId(),payment.getRazorpaySignature(),razorpayClientConfig.getSecret());
         	     if(error!=null) {
-        	    	 return new ResponseEntity<String>(error,HttpStatus.BAD_REQUEST);
+                    ApiResponseService res = new ApiResponseService("something went wrong",false,Arrays.asList("error"));
+        	    	return new ResponseEntity<ApiResponseService>(res,HttpStatus.BAD_REQUEST);
         	     }
-        	     
-        	     return new ResponseEntity<String>("ok",HttpStatus.OK);
+                 ApiResponseService res = new ApiResponseService("ok",false,Arrays.asList());
+        	     return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         	}
         	catch(Exception e) {
-        		return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);	
+                ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
+        		return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);	
         	}
 			
         	
