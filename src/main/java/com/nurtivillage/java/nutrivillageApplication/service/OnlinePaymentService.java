@@ -3,6 +3,7 @@ package com.nurtivillage.java.nutrivillageApplication.service;
 
 
 import com.nurtivillage.java.nutrivillageApplication.RazorPayClientConfig;
+import com.nurtivillage.java.nutrivillageApplication.dao.OrderRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.PaymentRepository;
 import com.nurtivillage.java.nutrivillageApplication.model.Payment;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
@@ -28,8 +29,10 @@ public class OnlinePaymentService {
 	public OnlinePaymentService(RazorPayClientConfig razorpayClientConfig)throws RazorpayException{
 		this.razorPayClient=new RazorpayClient(razorpayClientConfig.getKey(),razorpayClientConfig.getSecret());
 	}
-
+	@Autowired
+	OrderRepository orderRepository;
     public Order createOrderOnRazorpay(UserOrder order,RazorpayClient client) throws Exception{
+        
         String razorpayOrderId = null;
         try {
            String amountInPaise=convertRupeeToPaise(String.valueOf(order.getAmount()));
@@ -60,11 +63,19 @@ public class OnlinePaymentService {
 		String error=null;
 		try {
 			Payment payment=paymentRepo.findByRazorpayOrderId(razorpayOrderId);
+			
+			
 	        String generatedSignature = Signature.calculateRFC2104HMAC(payment.getRazopayOrderId() + "|" + razorpayPaymentId, secret);
+	      
+	    
 	        if(generatedSignature.equals(razorSignature)) {
 	        	payment.setRazorpayOrderId(razorpayOrderId);
 	        	payment.setRazorpaySignature(razorSignature);
 	        	payment.setRazorpayPaymentId(razorpayPaymentId);
+	        	UserOrder userOrder=payment.getOrder();
+	        	userOrder.setPaymentStatus("PAID");
+	        	orderRepository.save(userOrder);
+	        	
 	        	paymentRepo.save(payment);
 	        }
 	        else {

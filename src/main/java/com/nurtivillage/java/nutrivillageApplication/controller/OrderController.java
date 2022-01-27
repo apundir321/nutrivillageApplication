@@ -107,14 +107,13 @@ public class OrderController {
         } 
         
         @PutMapping("/validatePayment")
-        public ResponseEntity<?> updateOrder(@RequestBody Payment payment,@RequestParam Long userOrderId){
+        public ResponseEntity<?> updateOrder(@RequestBody Payment payment){
         	try {
         		String error=onlinePaymentService.validateAndUpdateOrder(payment.getRazopayOrderId(),payment.getRazorpayPaymentId(),payment.getRazorpaySignature(),razorpayClientConfig.getSecret());
         	     if(error!=null) {
         	    	 return new ResponseEntity<String>(error,HttpStatus.BAD_REQUEST);
         	     }
-        	     UserOrder userOrder=orderService.getOrder(userOrderId).get();
-        	     userOrder.setPaymentStatus("PAID");
+        	     
         	     return new ResponseEntity<String>("ok",HttpStatus.OK);
         	}
         	catch(Exception e) {
@@ -195,21 +194,21 @@ public class OrderController {
             }
         } 
 
-        @GetMapping(value="/refund/{order_id}")
-        public ResponseEntity<ApiResponseService> getMethodName(@PathVariable Long order_id) {
-            try {
-                Optional<UserOrder> order = orderService.getOrder(order_id);
-                if(order.isEmpty()){
-                    new Exception("order not found");
-                }
-                onlinePaymentService.refund(order_id);
-                // UserOrder orderCreate = orderService.orderStatus(statusRequest);
-                ApiResponseService res = new ApiResponseService("orderStatus",true,Arrays.asList(orderCreate));
-                return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
-            } catch (Exception e) {
-                throw e;
-            }
-        }
+        // @GetMapping(value="/refund/{order_id}")
+        // public ResponseEntity<ApiResponseService> getMethodName(@PathVariable Long order_id) {
+        //     try {
+        //         Optional<UserOrder> order = orderService.getOrder(order_id);
+        //         if(order.isEmpty()){
+        //             new Exception("order not found");
+        //         }
+        //         onlinePaymentService.refund(order_id);
+        //         // UserOrder orderCreate = orderService.orderStatus(statusRequest);
+        //         ApiResponseService res = new ApiResponseService("orderStatus",true,Arrays.asList(orderCreate));
+        //         return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+        //     } catch (Exception e) {
+        //         throw e;
+        //     }
+        // }
         
 
 }
