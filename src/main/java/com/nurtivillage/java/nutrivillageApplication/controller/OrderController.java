@@ -182,7 +182,7 @@ public class OrderController {
             }
         }
 
-        @PutMapping("/userodercancel")
+        @PutMapping("/userOrderCancel")
         public ResponseEntity<ApiResponseService> userOrderCancel(@RequestBody StatusRequest statusRequest){
             try{
                 statusRequest.setStatus("canceled");
