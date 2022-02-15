@@ -76,4 +76,8 @@ public class InventoryService {
 		return inv;
 
 	}
+    public List<?> findbyname(String string) {
+		List<InventoryResponse> products = inventoryRepo.findByProductNameContains(string);
+        return products;
+    }
 }

@@ -3,6 +3,7 @@ package com.nurtivillage.java.nutrivillageApplication.controller;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -71,7 +72,6 @@ public class ProductController {
     @GetMapping("/list")
     public ResponseEntity<ApiResponseService> getAllProductByPage(@RequestParam(value="pageNo",defaultValue = "0",required = false) int pageNo,
             @RequestParam(value="sortBy",defaultValue = "name",required = false) String sortBy,
-            // @RequestParam(required = false) String sortBy
             @RequestParam(value="varient",defaultValue = "null",required = false) String variant
             ){
         try{
@@ -96,7 +96,6 @@ public class ProductController {
         }
     }
 
-    // @PreAuthorize("hasRole('ROLE_ADMIE')")
     @GetMapping("/list-all")
     public ResponseEntity<ApiResponseService> getAllProduct(){
         try{
@@ -218,10 +217,6 @@ public class ProductController {
 			throws Exception {
 		try {
 			ProductImage productimage = productImageService.deleteImage(id);
-			// String url = awsService.uploadProductFile(multipartFile,product.get());
-            // productImageService.addImage(product.get(), url);
-			// profile.setProfilePicName(multipartFile.getOriginalFilename());
-			// userProfileService.updateUserProfilePic(profile);
             ApiResponseService res = new ApiResponseService("file upload successfully",true,Arrays.asList(id));
     		return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
 		} catch (Exception e) {
@@ -231,9 +226,38 @@ public class ProductController {
 		
 	}
 
-    @GetMapping(value="/test")
-    public String test(){
-        testedEventPublisher.testPublish();
-        return "hello";
+    // @PostMapping()
+    // public ResponseEntity<ApiResponseService> filterProductList(@RequestBody Map<String,String> request){
+    //     try {
+    //         // request.forEach(i->{
+    //         //    System.out.println(i); 
+    //         // });
+    //         ApiResponseService res = new ApiResponseService("file upload successfully",true,Arrays.asList());
+    // 		return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+	// 	} catch (Exception e) {
+    //         ApiResponseService res = new ApiResponseService("file not uploaded. something went worng",false,Arrays.asList(e.getMessage()));
+	// 		return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+	// 	}
+    // }
+
+    @PostMapping("/search")
+    public List<?> search(@RequestBody Map<String,String> request){
+        try {
+            List<Product> products = this.productService.searchProduct(request.get("key"));
+            return products;
+        } catch (Exception e) {
+            throw e;
+        }
+        
+    }
+
+    @PostMapping(value="/test")
+    public List<?> test(@RequestBody Map<String,String> request){
+        try {
+            List<?> products = this.inventoryService.findbyname(request.get("key"));
+            return products;
+        } catch (Exception e) {
+            throw e;
+        }        
     }
 }

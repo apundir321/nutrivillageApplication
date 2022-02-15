@@ -176,13 +176,21 @@ public class ProductService {
             Page<Product> allProduct = productRepository.
             findByVariantsAndDeletedAtIsNull(i,firstPage);
             allProduct.forEach((var)->{
-                // List<Variant> variants = ;
                 if(var.getVariants().size() > 0){
                     Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(var.getId(),var.getVariants().get(0).getId());
                     var.setDefaultPrice(variantInventory.getPrice());
                 }
             });
             return allProduct;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public List<Product> searchProduct(String str) {
+        try {
+            List<Product> products = this.productRepository.findBynameContains(str);
+            return products;
         } catch (Exception e) {
             throw e;
         }

@@ -25,4 +25,5 @@ public interface ProductRepository extends JpaRepository<Product,Long>{
     
     Product findByProductImage(ProductImage productImage);
     Page<Product> findByVariantsAndDeletedAtIsNull(Variant variantId, Pageable firstPage);
+    List<Product> findBynameContains(String str);
 }
