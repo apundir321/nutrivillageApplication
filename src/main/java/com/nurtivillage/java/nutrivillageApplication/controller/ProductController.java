@@ -251,6 +251,12 @@ public class ProductController {
         
     }
 
+    @GetMapping("/menu")
+    public Map<String,List<?>> categoryByProduct(){
+        Map<String,List<?>> map = this.productService.getProductListByCategory();
+        return map;
+    }
+
     @PostMapping(value="/test")
     public List<?> test(@RequestBody Map<String,String> request){
         try {

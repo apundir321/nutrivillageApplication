@@ -2,7 +2,9 @@ package com.nurtivillage.java.nutrivillageApplication.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -33,6 +35,8 @@ public class ProductService {
     private InventoryRepository inventoryRepository;
     @Autowired
     private InventoryService inventoryService;
+    @Autowired
+    private CategoryService categoryService;
 
     public Page<Product> getAllProduct(Pageable pageable){
         try {
@@ -194,6 +198,25 @@ public class ProductService {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    public Map<String, List<?>> getProductListByCategory() {
+        List<Category> c = categoryService.getCategories();
+        Map<String,List<?>> products = new HashMap<>();
+        c.forEach((category)->{
+            List<Product> p;
+            try {
+                p = this.categoryProductLIst(category.getId());
+                if(category.getName() != null){
+                    products.put(category.getName(),p);
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
+        // Map<String,List> products = this.productRepository.
+        return products;
     }
 
 
