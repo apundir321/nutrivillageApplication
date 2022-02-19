@@ -75,7 +75,7 @@ public class ProductController {
             @RequestParam(value="varient",defaultValue = "null",required = false) String variant
             ){
         try{
-            Pageable firstPage = PageRequest.of(pageNo,1,Direction.ASC,sortBy);
+            Pageable firstPage = PageRequest.of(pageNo,10,Direction.ASC,sortBy);
 
             // if(variant != "null"){
             //     Variant variantData = variantService.getVariantBYName(variant);

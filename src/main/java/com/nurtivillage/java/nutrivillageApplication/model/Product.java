@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -46,6 +47,10 @@ public class Product {
     private int status; 
 	@NotBlank
     private String image;
+	@Lob
+	private String Additional;
+	@Lob
+	private String Discription;
 	private Date deletedAt;
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
@@ -167,6 +172,22 @@ public class Product {
 	
 	public void setDefaultPrice(int defaultPrice) {
 		this.defaultPrice = defaultPrice;
+	}
+
+	public void setAdditional(String additional) {
+		Additional = additional;
+	}
+
+	public void setDiscription(String discription) {
+		Discription = discription;
+	}
+
+	public String getAdditional() {
+		return Additional;
+	}
+
+	public String getDiscription() {
+		return Discription;
 	}
 
 	

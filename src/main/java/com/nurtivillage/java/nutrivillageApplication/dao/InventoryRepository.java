@@ -26,6 +26,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 
 	List<InventoryResponse> findByProductId(Long id);
 
-	List<InventoryResponse> findByProductNameContains(String string);
+	List<InventoryResponse> findDistinctByProductNameContains(String string);
     
 }
