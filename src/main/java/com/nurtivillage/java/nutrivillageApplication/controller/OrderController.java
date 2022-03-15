@@ -101,7 +101,7 @@ public class OrderController {
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
             }catch(Exception e){
                 System.out.println(e);
-                ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList("error"));
+                ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList(e));
                 return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } 
