@@ -142,5 +142,9 @@ public class UserOrder {
 	public void setPaymentMethod(String paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
+
+    public Date getCreatedAt(){
+        return createdAt;
+    }
 }
 

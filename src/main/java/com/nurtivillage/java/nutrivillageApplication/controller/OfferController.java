@@ -34,6 +34,17 @@ public ResponseEntity<?> addOffer(@RequestBody Offer offer) {
 	}
 }
 
+@GetMapping("/list")
+public ResponseEntity<?> addOffer() throws Exception{
+	try {
+		List<Offer> offerList=offerService.getAllOffer();
+		return new ResponseEntity<>(offerList,HttpStatus.OK);
+	}
+	catch(Exception e) {
+		throw e;
+	}
+}
+
 @GetMapping("/{offerId}")
 public ResponseEntity<?> getOfferById(@PathVariable Long offerId) throws Exception{
 	try {

@@ -14,7 +14,6 @@ import com.nurtivillage.java.nutrivillageApplication.model.Offer;
 public class OfferService {
 @Autowired
 private OfferRepository offerRepository;
-
 // to add offer 
 public Offer addOffer(Offer offer) {
 	try {
@@ -24,7 +23,15 @@ public Offer addOffer(Offer offer) {
 		throw e;
 	}
 }
-
+//to get all offer
+public List<Offer> getAllOffer() throws Exception{
+	try{
+		List<Offer> allOffer = offerRepository.findAll(); 
+		return allOffer;
+	}catch(Exception e){
+		throw e;
+	}
+}
 // to get offer by offer id
 public Offer getOfferById(Long id) throws Exception {
 	try {

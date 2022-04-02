@@ -1,6 +1,7 @@
 package com.nurtivillage.java.nutrivillageApplication.model;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,16 +31,19 @@ public class OrderDetails {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "variant_id")
     private Variant variant;
-
-    // private Inventory
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "offer_id")
+    private Offer offer;
+    //private Inventory
 
     public OrderDetails(){}
 
-    public OrderDetails(Product product,UserOrder userOrder,int i,Variant variant){
+    public OrderDetails(Product product,UserOrder userOrder,int i,Variant variant,Offer offer){
         this.product = product;
         this.uesrOrder = userOrder;
         this.quantity = i;
         this.variant = variant;
+        this.offer = offer;
     }
 
     public Long getId() {
@@ -57,6 +61,11 @@ public class OrderDetails {
     public Variant getVariant() {
         return variant;
     }
+
+    public Offer getOffer(){
+        return offer;
+    }
+
     @JsonIgnore
     public UserOrder getUesrOrder() {
         return uesrOrder;

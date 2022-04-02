@@ -88,6 +88,11 @@ public class OrderController {
                 double amount = orderRequest.getAmount();
                 User user = userService.userDetails();
                 UserOrder order = new UserOrder(amount,user,orderNO+1,orderRequest.getCartItem().size(),Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
+                //varify amount
+                boolean checker = orderService.amountVarify(amount,orderRequest.getCartItem());
+                if(checker){
+                    throw new Exception("amount not varify");
+                }
                 UserOrder orderCreate = orderService.createOrder(order);
                 List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
                 if(!orderRequest.getPaymentMethod().equals("COD")){
@@ -211,6 +216,7 @@ public class OrderController {
         //         throw e;
         //     }
         // }
+
         
 
 }

@@ -32,7 +32,6 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     @Column(nullable = false)
 	@NotBlank
     private String name;
@@ -42,7 +41,6 @@ public class Product {
 	@JoinColumn(name = "category_id")
 	@NotEmpty
     private Category category;
-
 	@NotEmpty
     private int status; 
 	@NotBlank
@@ -51,6 +49,7 @@ public class Product {
 	private String Additional;
 	@Lob
 	private String Discription;
+	
 	private Date deletedAt;
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)

@@ -8,12 +8,13 @@ import com.nurtivillage.java.nutrivillageApplication.dao.OrderDetailsRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.OrderRepository;
 import com.nurtivillage.java.nutrivillageApplication.dto.StatusRequest;
 import com.nurtivillage.java.nutrivillageApplication.model.Cart;
+import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
+import com.nurtivillage.java.nutrivillageApplication.model.Offer;
 import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Status;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,14 @@ public class OrderService {
 
     @Autowired
     public CartService cartService;
+
+    @Autowired
+    public InventoryService inventoryService;
+
+    @Autowired 
+    public OfferService offerService;
     
+    double totalAmount = 0;
 
     public List<UserOrder> getAllOrder(){
         List<UserOrder> userOrder = orderRepository.findByStatusNotOrderByCreatedAtAsc(Status.canceled);
@@ -43,12 +51,17 @@ public class OrderService {
     }
 
     public List<OrderDetails> createOrderDetails(List<Cart> cartItems,UserOrder order){//(List<Product> product,UserOrder order,List<Long> quantity){
-        int size = cartItems.size();
         List<OrderDetails> orderAllItem = new ArrayList<>();
         cartItems.forEach((var)->{
             Cart cartItem = cartService.cartItemById(var.getId());
-            OrderDetails orderItem = new OrderDetails(cartItem.getProduct(),order,cartItem.getQuantity(),cartItem.getVariant());
-            orderAllItem.add(orderItem);
+            List<Offer> offer = offerService.getOffersByProduct(cartItem.getProduct().getId());
+            if(offer.size() == 0){
+                OrderDetails orderItem = new OrderDetails(cartItem.getProduct(),order,cartItem.getQuantity(),cartItem.getVariant(),offer.get(0));
+                orderAllItem.add(orderItem);
+            }else{
+                OrderDetails orderItem = new OrderDetails(cartItem.getProduct(),order,cartItem.getQuantity(),cartItem.getVariant(),null);
+                orderAllItem.add(orderItem);
+            }
         });
         orderDetailsRepository.saveAll(orderAllItem);
         cartService.cartClear();
@@ -106,5 +119,19 @@ public class OrderService {
     public List<UserOrder> getUserCancelOrder(Long userId) {
         List<UserOrder> userOrder = orderRepository.findByStatusAndUserIdOrderByCreatedAtAsc(Status.canceled,userId);
         return userOrder;
+    }
+
+    public boolean amountVarify(double amount,List<Cart> cartItems){
+        cartItems.forEach(cartinfo->{
+            System.out.println(cartinfo.getId());
+            Cart cartItem = cartService.cartItemById(cartinfo.getId());
+            Inventory inventoryItem = inventoryService.getProductVariantInventory(cartItem.getProduct().getId(),cartItem.getVariant().getId());
+            double price =inventoryItem.getPrice();
+            totalAmount = totalAmount + price;
+        });
+        if(totalAmount != amount){
+            return false;
+        }
+        return true;
     }
 }
