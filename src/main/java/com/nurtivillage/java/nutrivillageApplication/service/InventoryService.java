@@ -80,4 +80,13 @@ public class InventoryService {
 		List<InventoryResponse> products = inventoryRepo.findDistinctByProductNameContains(string);
         return products;
     }
+    
+    public List<Inventory> getInventoryFilteredByPrice(int maxPrice,int minPrice){
+    	try {
+    		return inventoryRepo.getInventoryFilteredByPrice(maxPrice, minPrice);
+    	}
+    	catch(Exception e) {
+    		throw e;
+    	}
+    }
 }

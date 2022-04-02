@@ -1,6 +1,8 @@
 package com.nurtivillage.java.nutrivillageApplication.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,6 +20,8 @@ import com.nurtivillage.java.nutrivillageApplication.model.Variant;
 public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 
 	// Inventory findByProduct(Product product);
+	@Query(value="select * from inventory where price <= :maxPrice and price >= :minPrice",nativeQuery=true)
+	List<Inventory> getInventoryFilteredByPrice(@Param("maxPrice") int maxPrice,@Param("minPrice") int minPrice);
 
 
 	Inventory findByProductIdAndVariantId(Long product, int variant);

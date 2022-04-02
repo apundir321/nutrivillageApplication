@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nurtivillage.java.nutrivillageApplication.dao.InventoryRepository;
 import com.nurtivillage.java.nutrivillageApplication.dto.InventoryResponse;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
@@ -82,6 +84,15 @@ Inventory inv= inventoryService.updateInventory(productId,variantId,quantity);
 public ResponseEntity<?> productDetails(@PathVariable Long id) {
 	List<InventoryResponse> inv = inventoryService.detailsInventory(id);	
 	return new ResponseEntity<>(inv, HttpStatus.OK);
+}
+@GetMapping("/getInventoryByPrice")
+public List<Inventory> getInventoryByPrice(@RequestParam int maxPrice,@RequestParam int minPrice){
+	try {
+		return inventoryService.getInventoryFilteredByPrice(maxPrice, minPrice);
+	}
+	catch(Exception e) {
+		throw e;
+	}
 }
 
 }
