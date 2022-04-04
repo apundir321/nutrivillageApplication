@@ -55,7 +55,7 @@ public class OrderService {
         cartItems.forEach((var)->{
             Cart cartItem = cartService.cartItemById(var.getId());
             List<Offer> offer = offerService.getOffersByProduct(cartItem.getProduct().getId());
-            if(offer.size() == 0){
+            if(offer.size() != 0){
                 OrderDetails orderItem = new OrderDetails(cartItem.getProduct(),order,cartItem.getQuantity(),cartItem.getVariant(),offer.get(0));
                 orderAllItem.add(orderItem);
             }else{
@@ -122,11 +122,11 @@ public class OrderService {
     }
 
     public boolean amountVarify(double amount,List<Cart> cartItems){
+        totalAmount = 0;
         cartItems.forEach(cartinfo->{
             System.out.println(cartinfo.getId());
             Cart cartItem = cartService.cartItemById(cartinfo.getId());
-            Inventory inventoryItem = inventoryService.getProductVariantInventory(cartItem.getProduct().getId(),cartItem.getVariant().getId());
-            double price =inventoryItem.getPrice();
+            double price =cartItem.getInventory().getPrice();
             totalAmount = totalAmount + price;
         });
         if(totalAmount != amount){

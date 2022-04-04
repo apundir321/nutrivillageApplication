@@ -90,7 +90,7 @@ public class OrderController {
                 UserOrder order = new UserOrder(amount,user,orderNO+1,orderRequest.getCartItem().size(),Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
                 //varify amount
                 boolean checker = orderService.amountVarify(amount,orderRequest.getCartItem());
-                if(checker){
+                if(!checker){
                     throw new Exception("amount not varify");
                 }
                 UserOrder orderCreate = orderService.createOrder(order);
