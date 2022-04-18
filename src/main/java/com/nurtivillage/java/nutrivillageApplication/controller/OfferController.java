@@ -67,7 +67,7 @@ public ResponseEntity<?> getOffersByProduct(@PathVariable Long productId) {
 	}
 }
 @GetMapping("/category/{categoryID}")
-public ResponseEntity<?> getOffersByCategory(@PathVariable Long categoryId) {
+public ResponseEntity<?> getOffersByCategory(@PathVariable int categoryId) {
 	try {
 	List<Offer> savedOffers=offerService.getOffersByCategory(categoryId);
 		return new ResponseEntity<>(savedOffers,HttpStatus.OK);
