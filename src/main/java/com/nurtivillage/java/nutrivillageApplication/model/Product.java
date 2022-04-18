@@ -46,9 +46,9 @@ public class Product {
 	@NotBlank
     private String image;
 	@Lob
-	private String Additional;
+	private String additional;
 	@Lob
-	private String Discription;
+	private String discription;
 	
 	private Date deletedAt;
 	@UpdateTimestamp
@@ -188,19 +188,19 @@ public class Product {
 	}
 
 	public void setAdditional(String additional) {
-		Additional = additional;
+		this.additional = additional;
 	}
 
-	public void setDiscription(String discription) {
-		Discription = discription;
+	public void setdiscription(String discription) {
+		this.discription = discription;
 	}
 
-	public String getAdditional() {
-		return Additional;
+	public String getadditional() {
+		return additional;
 	}
 
 	public String getDiscription() {
-		return Discription;
+		return discription;
 	}
 
 	
