@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.nurtivillage.java.nutrivillageApplication.dao.OfferRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.OrderDetailsRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.OrderRepository;
 import com.nurtivillage.java.nutrivillageApplication.dto.StatusRequest;
@@ -127,7 +128,25 @@ public class OrderService {
             System.out.println(cartinfo.getId());
             Cart cartItem = cartService.cartItemById(cartinfo.getId());
             double price =cartItem.getInventory().getPrice();
+            //get discount amount;
+            Offer discount=null;
+            List<Offer> productOffer = offerService.getOffersByProduct(cartItem.getInventory().getProduct().getId());
+            if(productOffer.size() != 0){
+                discount = productOffer.get(0);
+            }
+            List<Offer> categoryOffer = offerService.getOffersByCategory(cartItem.getInventory().getProduct().getCategory().getId());
+            if(categoryOffer.size() != 0 && discount == null){
+                discount = categoryOffer.get(0);
+            }
             totalAmount = totalAmount + price;
+            if(discount != null){
+                int number = Integer.parseInt(discount.getAmount());
+                if(discount.getDiscountType() == "PERCENT"){
+                    totalAmount = totalAmount - (totalAmount*number)/100;
+                }else{
+                    totalAmount = totalAmount - number;
+                }
+            }
         });
         if(totalAmount != amount){
             return false;

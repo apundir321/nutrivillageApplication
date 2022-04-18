@@ -26,7 +26,7 @@ private Category category;
 
 private String amount;
 
-private String discountType="AMOUNT";
+private String discountType;
 
 private Date deletedAt;
 

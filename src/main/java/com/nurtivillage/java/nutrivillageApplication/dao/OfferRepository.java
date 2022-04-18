@@ -9,7 +9,7 @@ import com.nurtivillage.java.nutrivillageApplication.model.Offer;
 public interface OfferRepository extends JpaRepository<Offer,Long>{
 	List<Offer> findByProductIdAndDeletedAtIsNull(Long productId);
 	
-	List<Offer> findByCategoryIdAndDeletedAtIsNull(Long categoryId);
+	List<Offer> findByCategoryIdAndDeletedAtIsNull(int categoryId);
 	
 	Offer findByIdAndDeletedAtIsNull(Long offerId);
 

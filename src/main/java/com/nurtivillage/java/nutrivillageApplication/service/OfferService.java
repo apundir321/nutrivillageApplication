@@ -58,7 +58,7 @@ public List<Offer> getOffersByProduct(Long productId){
 	}
 }
 
-public List<Offer> getOffersByCategory(Long categoryId){
+public List<Offer> getOffersByCategory(int categoryId){
 	try {
 		return offerRepository.findByCategoryIdAndDeletedAtIsNull(categoryId);
 	}
