@@ -68,7 +68,10 @@ public class Product {
 	private List<Variant> variants;
 
 	@Transient
-	private int defaultPrice;
+	private String defaultPrice;
+
+	@Transient
+	private int rating;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<ProductImage> productImage;
@@ -145,6 +148,9 @@ public class Product {
 	public void setImage(String image) {
 		this.image = image;
 	}
+
+	
+
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", brand=" + brand + ", category=" + category + ", status="
@@ -165,11 +171,19 @@ public class Product {
 		return category;
 	}
 
-	public int getDefaultPrice() {
+	public String getDefaultPrice() {
 		return defaultPrice;
 	}
+
+	public int getRating(){
+		return rating;
+	}	
+
+	public void setRating(int rating){
+		this.rating = rating;
+	}
 	
-	public void setDefaultPrice(int defaultPrice) {
+	public void setDefaultPrice(String defaultPrice) {
 		this.defaultPrice = defaultPrice;
 	}
 

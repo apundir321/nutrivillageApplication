@@ -1,6 +1,7 @@
 package com.nurtivillage.java.nutrivillageApplication.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.nurtivillage.java.nutrivillageApplication.dao.ReviewRepository;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
@@ -49,5 +50,9 @@ public class ReviewService {
         return review;
     }
 
+    public Integer avgRating(Long productId){
+        Integer avg = reviewRepository.findAvgratingByProduct(productId);
+        return avg;
+    }
 
 }

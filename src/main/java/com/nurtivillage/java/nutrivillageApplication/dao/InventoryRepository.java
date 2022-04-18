@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 	@Query(value="select * from inventory where price <= :maxPrice and price >= :minPrice",nativeQuery=true)
 	List<Inventory> getInventoryFilteredByPrice(@Param("maxPrice") int maxPrice,@Param("minPrice") int minPrice);
 
+	@Query(value="select max(price),min(price)from inventory where product_id ='?1'",nativeQuery = true)
+	Object[] getdefaultPrice(Long productId);
 
 	Inventory findByProductIdAndVariantId(Long product, int variant);
 

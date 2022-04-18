@@ -1,5 +1,6 @@
 package com.nurtivillage.java.nutrivillageApplication.service;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,6 +38,8 @@ public class ProductService {
     private InventoryService inventoryService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private ReviewService reviewService;
 
     public Page<Product> getAllProduct(Pageable pageable){
         try {
@@ -46,7 +49,7 @@ public class ProductService {
                 // List<Variant> variants = ;
                 if(var.getVariants().size() > 0){
                     Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(var.getId(),var.getVariants().get(0).getId());
-                    var.setDefaultPrice(variantInventory.getPrice());
+                    var.setDefaultPrice(String.valueOf(variantInventory.getPrice()));
                 }
             });
             return allProduct;
@@ -153,6 +156,16 @@ public class ProductService {
                 throw new ExceptionService("Category is not exists");
             }
             List<Product> productList = productRepository.findByCategoryIdAndDeletedAtIsNull(categoryId);
+            productList.forEach(product->{
+                Integer rating = reviewService.avgRating(product.getId());
+                // Object[] defaultPrice = inventoryService.defaultPrice(product.getId());
+                // System.out.println(defaultPrice);
+                
+                
+                // product.setDefaultPrice(String.valueOf(defaultPrice)+"-"+String.valueOf(defaultPrice[0]));
+                rating = rating ==null?5:rating;
+                product.setRating(rating.intValue());
+            });
             return productList;
         } catch (Exception e) {
             throw e;
@@ -166,7 +179,7 @@ public class ProductService {
                 // List<Variant> variants = ;
                 if(var.getVariants().size() > 0){
                     Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(var.getId(),var.getVariants().get(0).getId());
-                    var.setDefaultPrice(variantInventory.getPrice());
+                    var.setDefaultPrice(String.valueOf(variantInventory.getPrice()));
                 }
             });
             return allProduct;
@@ -182,7 +195,7 @@ public class ProductService {
             allProduct.forEach((var)->{
                 if(var.getVariants().size() > 0){
                     Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(var.getId(),var.getVariants().get(0).getId());
-                    var.setDefaultPrice(variantInventory.getPrice());
+                    var.setDefaultPrice(String.valueOf(variantInventory.getPrice()));
                 }
             });
             return allProduct;

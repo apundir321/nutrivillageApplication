@@ -1,6 +1,7 @@
 package com.nurtivillage.java.nutrivillageApplication.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,5 +89,9 @@ public class InventoryService {
     	catch(Exception e) {
     		throw e;
     	}
+    }
+    public Object[] defaultPrice(Long id) {
+		Object[] defaultprice = inventoryRepo.getdefaultPrice(id);
+        return defaultprice;
     }
 }
