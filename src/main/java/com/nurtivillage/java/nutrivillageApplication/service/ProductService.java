@@ -165,6 +165,10 @@ public class ProductService {
                 // product.setDefaultPrice(String.valueOf(defaultPrice)+"-"+String.valueOf(defaultPrice[0]));
                 rating = rating ==null?5:rating;
                 product.setRating(rating.intValue());
+                if(product.getVariants().size() > 0){
+                    Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(product.getId(),product.getVariants().get(0).getId());
+                    product.setDefaultPrice(String.valueOf(variantInventory.getPrice()));
+                }
             });
             return productList;
         } catch (Exception e) {
