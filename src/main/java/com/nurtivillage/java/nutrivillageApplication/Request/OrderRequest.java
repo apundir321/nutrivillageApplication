@@ -16,6 +16,9 @@ public class OrderRequest {
     private List<Cart> cartItem;
     private ShippingAddress shippingAddress;
     private String paymentMethod;
+    private Long productId;
+    private int variantId;
+    private int quantity;
 
     public OrderRequest(){}
 
@@ -26,7 +29,15 @@ public class OrderRequest {
         this.paymentMethod = paymentMethod;
     }
 
-    public double getAmount() {
+    public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public double getAmount() {
         return amount;
     }
     public List<Cart> getCartItem() {
@@ -40,5 +51,25 @@ public class OrderRequest {
     public String getPaymentMethod() {
         return paymentMethod;
     }
+
+	public Long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+
+	public int getVariantId() {
+		return variantId;
+	}
+
+	public void setVariantId(int variantId) {
+		this.variantId = variantId;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
     
 }

@@ -56,7 +56,7 @@ public ResponseEntity<?> getOfferById(@PathVariable Long offerId) throws Excepti
 	}
 }
 
-@GetMapping("/product/{productID}")
+@GetMapping("/product/{productId}")
 public ResponseEntity<?> getOffersByProduct(@PathVariable Long productId) {
 	try {
 	List<Offer> savedOffers=offerService.getOffersByProduct(productId);
@@ -66,7 +66,7 @@ public ResponseEntity<?> getOffersByProduct(@PathVariable Long productId) {
 		throw e;
 	}
 }
-@GetMapping("/category/{categoryID}")
+@GetMapping("/category/{categoryId}")
 public ResponseEntity<?> getOffersByCategory(@PathVariable int categoryId) {
 	try {
 	List<Offer> savedOffers=offerService.getOffersByCategory(categoryId);

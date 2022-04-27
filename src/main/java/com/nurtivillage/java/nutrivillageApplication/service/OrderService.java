@@ -16,11 +16,15 @@ import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Status;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrderService {
+	private static final Logger log=LogManager.getLogger(OrderService.class);
     @Autowired
     public OrderRepository orderRepository;
 
@@ -67,6 +71,21 @@ public class OrderService {
         orderDetailsRepository.saveAll(orderAllItem);
         cartService.cartClear();
         return orderAllItem;
+    }
+    public OrderDetails createSingleOrderDetails(Long productId,int variantId,UserOrder order){//(List<Product> product,UserOrder order,List<Long> quantity){
+       OrderDetails orderItem =null;
+        Inventory inventory=inventoryService.getProductVariantInventory(productId, variantId);
+           List<Offer> offer = offerService.getOffersByProduct(inventory.getProduct().getId());
+            if(offer.size() != 0){
+               orderItem = new OrderDetails(inventory.getProduct(),order,1,inventory.getVariant(),offer.get(0));
+               
+            }else{
+                 orderItem = new OrderDetails(inventory.getProduct(),order,1,inventory.getVariant(),null);
+              
+            }
+       orderDetailsRepository.save(orderItem);
+      
+        return orderItem;
     }
 
     public Optional<OrderDetails> getOrderDetail(Long id){
@@ -152,5 +171,67 @@ public class OrderService {
             return false;
         }
         return true;
+    }
+    public boolean checkAmount(double amount,Long productId,int variantId) throws Exception{
+    	try {
+    		totalAmount=0;
+    		Inventory inventory=inventoryService.getProductVariantInventory(productId, variantId);
+    		if(inventory==null) {
+    			log.error("Product is not available");
+    			throw new Exception("Product is not available with id: "+productId);
+    		}
+    		double productPrice=inventory.getPrice();
+    	     Offer discount=null;
+             List<Offer> productOffer = offerService.getOffersByProduct(inventory.getProduct().getId());
+             if(productOffer.size() != 0){
+                 discount = productOffer.get(0);
+             }
+             List<Offer> categoryOffer = offerService.getOffersByCategory(inventory.getProduct().getCategory().getId());
+             if(categoryOffer.size() != 0 && discount == null){
+                 discount = categoryOffer.get(0);
+             }
+             totalAmount = totalAmount + productPrice;
+             if(discount != null){
+                 int number = Integer.parseInt(discount.getAmount());
+                 if(discount.getDiscountType() == "PERCENT"){
+                     totalAmount = totalAmount - (totalAmount*number)/100;
+                 }else{
+                     totalAmount = totalAmount - number;
+                 }
+                 
+             }	
+    	if(totalAmount==amount) {
+    		return false;
+    	}
+    	else {
+    		return true;
+    	}
+    	}
+    	
+    	catch(Exception e) {
+    		log.error(e.getMessage());
+    		throw e;
+    	}
+    }
+    public boolean checkQuantity(Long productId,int variantId,int quantity) throws Exception{
+    	try {
+    		Inventory inventory=inventoryService.getProductVariantInventory(productId, variantId);
+    		if(inventory==null) {
+    			log.error("Product is not available with id: "+productId);
+    			throw new Exception("product is not available with id: "+productId);
+    		}
+    		if(inventory.getQuantity()>=quantity) {
+    			log.info("In Stock");
+    			return true;
+    		}
+    		else {
+    			log.error("Not in Stock");
+    			return false;
+    		}
+    	}
+    	catch(Exception e) {
+    		log.error(e.getMessage());
+    		throw e;
+    	}
     }
 }

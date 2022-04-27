@@ -96,8 +96,8 @@ public class OrderController {
                 UserOrder orderCreate = orderService.createOrder(order);
                 List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
                 if(!orderRequest.getPaymentMethod().equals("COD")){
-                    Order orderRes = onlinePaymentService.createOrderOnRazorpay(order,this.razorpayClient);
-                    onlinePaymentService.savePayment(orderRes.get("id"), order);
+                    Order orderRes = onlinePaymentService.createOrderOnRazorpay(orderCreate,this.razorpayClient);
+                    onlinePaymentService.savePayment(orderRes.get("id"), orderCreate);
                     ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount")));
                     return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
                 }
@@ -110,7 +110,39 @@ public class OrderController {
                 return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } 
-        
+        @PostMapping("/product")
+        public ResponseEntity<ApiResponseService> createSingleProductOrder(@RequestBody OrderRequest orderRequest){
+            try{
+                Long orderNO = orderService.getLastOrderNO();
+                double amount = orderRequest.getAmount();
+                User user = userService.userDetails();
+               boolean inStock=orderService.checkQuantity(orderRequest.getProductId(), orderRequest.getVariantId(), orderRequest.getQuantity());
+               if(!inStock) {
+            	   throw new Exception("Not in Stock");
+               }
+               UserOrder order = new UserOrder(amount,user,orderNO+1,1,Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
+                //verify amount
+                boolean checker = orderService.checkAmount(amount,orderRequest.getProductId(),orderRequest.getVariantId());
+                if(!checker){
+                    throw new Exception("Incorrect amount");
+                }
+                UserOrder orderCreate = orderService.createOrder(order);
+               OrderDetails data = orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderCreate);
+                if(!orderRequest.getPaymentMethod().equals("COD")){
+                    Order orderRes = onlinePaymentService.createOrderOnRazorpay(orderCreate,this.razorpayClient);
+                    onlinePaymentService.savePayment(orderRes.get("id"), orderCreate);
+                    ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount")));
+                    return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+                }
+                System.out.print(data);
+                ApiResponseService res = new ApiResponseService("order placed",true,Arrays.asList(data));
+                return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+            }catch(Exception e){
+                System.out.println(e);
+                ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList(e));
+                return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } 
         @PutMapping("/validatePayment")
         public ResponseEntity<ApiResponseService> updateOrder(@RequestBody Payment payment){
         	try {
