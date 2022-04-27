@@ -40,6 +40,7 @@ public ResponseEntity<?> getCategories() {
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
+
 @RequestMapping("/getCategory/{name}")
 public ResponseEntity<?> getCategory(@PathVariable String name) {
 	try {
