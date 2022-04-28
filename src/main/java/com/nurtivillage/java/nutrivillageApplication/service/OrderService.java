@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.nurtivillage.java.nutrivillageApplication.Request.OrderRequest;
 import com.nurtivillage.java.nutrivillageApplication.dao.OfferRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.OrderDetailsRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.OrderRepository;
@@ -147,6 +148,7 @@ public class OrderService {
             System.out.println(cartinfo.getId());
             Cart cartItem = cartService.cartItemById(cartinfo.getId());
             double price =cartItem.getInventory().getPrice();
+            price=price*cartItem.getQuantity();
             //get discount amount;
             Offer discount=null;
             List<Offer> productOffer = offerService.getOffersByProduct(cartItem.getInventory().getProduct().getId());
@@ -172,15 +174,18 @@ public class OrderService {
         }
         return true;
     }
-    public boolean checkAmount(double amount,Long productId,int variantId) throws Exception{
+    public boolean checkAmount(OrderRequest orderRequest) throws Exception{
     	try {
     		totalAmount=0;
+    		Long productId=orderRequest.getProductId();
+    		int variantId=orderRequest.getVariantId();
     		Inventory inventory=inventoryService.getProductVariantInventory(productId, variantId);
     		if(inventory==null) {
     			log.error("Product is not available");
     			throw new Exception("Product is not available with id: "+productId);
     		}
     		double productPrice=inventory.getPrice();
+    		productPrice=productPrice*orderRequest.getQuantity();
     	     Offer discount=null;
              List<Offer> productOffer = offerService.getOffersByProduct(inventory.getProduct().getId());
              if(productOffer.size() != 0){
@@ -200,7 +205,7 @@ public class OrderService {
                  }
                  
              }	
-    	if(totalAmount==amount) {
+    	if(totalAmount==orderRequest.getAmount()) {
     		return false;
     	}
     	else {
