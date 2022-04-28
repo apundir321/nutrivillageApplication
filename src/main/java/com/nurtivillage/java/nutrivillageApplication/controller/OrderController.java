@@ -122,7 +122,7 @@ public class OrderController {
                }
                UserOrder order = new UserOrder(amount,user,orderNO+1,1,Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
                 //verify amount
-                boolean checker = orderService.checkAmount(amount,orderRequest.getProductId(),orderRequest.getVariantId());
+                boolean checker = orderService.checkAmount(orderRequest);
                 if(!checker){
                     throw new Exception("Incorrect amount");
                 }
