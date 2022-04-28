@@ -162,6 +162,7 @@ public class OrderService {
             totalAmount = totalAmount + price;
             if(discount != null){
                 int number = Integer.parseInt(discount.getAmount());
+                number=number*cartItem.getQuantity();
                 if(discount.getDiscountType() == "PERCENT"){
                     totalAmount = totalAmount - (totalAmount*number)/100;
                 }else{
@@ -198,6 +199,7 @@ public class OrderService {
              totalAmount = totalAmount + productPrice;
              if(discount != null){
                  int number = Integer.parseInt(discount.getAmount());
+                 number=number*orderRequest.getQuantity();
                  if(discount.getDiscountType() == "PERCENT"){
                      totalAmount = totalAmount - (totalAmount*number)/100;
                  }else{
