@@ -155,10 +155,10 @@ public class OrderService {
             if(productOffer.size() != 0){
                 discount = productOffer.get(0);
             }
-            List<Offer> categoryOffer = offerService.getOffersByCategory(cartItem.getInventory().getProduct().getCategory().getId());
-            if(categoryOffer.size() != 0 && discount == null){
-                discount = categoryOffer.get(0);
-            }
+//            List<Offer> categoryOffer = offerService.getOffersByCategory(cartItem.getInventory().getProduct().getCategory().getId());
+//            if(categoryOffer.size() != 0 && discount == null){
+//                discount = categoryOffer.get(0);
+//            }
             totalAmount = totalAmount + price;
             if(discount != null){
                 int number = Integer.parseInt(discount.getAmount());
@@ -192,10 +192,10 @@ public class OrderService {
              if(productOffer.size() != 0){
                  discount = productOffer.get(0);
              }
-             List<Offer> categoryOffer = offerService.getOffersByCategory(inventory.getProduct().getCategory().getId());
-             if(categoryOffer.size() != 0 && discount == null){
-                 discount = categoryOffer.get(0);
-             }
+//             List<Offer> categoryOffer = offerService.getOffersByCategory(inventory.getProduct().getCategory().getId());
+//             if(categoryOffer.size() != 0 && discount == null){
+//                 discount = categoryOffer.get(0);
+//             }
              totalAmount = totalAmount + productPrice;
              if(discount != null){
                  int number = Integer.parseInt(discount.getAmount());

@@ -163,7 +163,7 @@ public class ProductService {
                 
                 
                 // product.setDefaultPrice(String.valueOf(defaultPrice)+"-"+String.valueOf(defaultPrice[0]));
-                rating = rating ==null?5:rating;
+                rating = rating ==null?0:rating;
                 product.setRating(rating.intValue());
                 if(product.getVariants().size() > 0){
                     Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(product.getId(),product.getVariants().get(0).getId());
@@ -211,19 +211,27 @@ public class ProductService {
 	public List<Product> searchProduct(String str) {
 		try {
 			List<Product> products = this.productRepository.findBynameContains(str);
-			if (products.size() > 0) {
-				return products;
-			} else {
+			if (products.size() == 0) {
+//				return products;
 				Category category = null;
 				List<Category> categories = this.categoryRepository.findBynameContains(str);
 				if (categories.size() > 0) {
 					category = categories.get(0);
-					return this.productRepository.findByCategoryIdAndDeletedAtIsNull(category.getId());
-				} else {
-					return products;
+					products = this.productRepository.findByCategoryIdAndDeletedAtIsNull(category.getId());
 				}
-
-			}
+			} 
+			
+			products.forEach(product->{
+                Integer rating = reviewService.avgRating(product.getId());
+                rating = rating ==null?0:rating;
+                product.setRating(rating.intValue());
+                if(product.getVariants().size() > 0){
+                    Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(product.getId(),product.getVariants().get(0).getId());
+                    product.setDefaultPrice(String.valueOf(variantInventory.getPrice()));
+                }
+            });
+			
+			return products;
 		} catch (Exception e) {
 			throw e;
 		}
