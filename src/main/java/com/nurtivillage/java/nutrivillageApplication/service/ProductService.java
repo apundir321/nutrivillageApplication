@@ -208,14 +208,26 @@ public class ProductService {
         }
     }
 
-    public List<Product> searchProduct(String str) {
-        try {
-            List<Product> products = this.productRepository.findBynameContains(str);
-            return products;
-        } catch (Exception e) {
-            throw e;
-        }
-    }
+	public List<Product> searchProduct(String str) {
+		try {
+			List<Product> products = this.productRepository.findBynameContains(str);
+			if (products.size() > 0) {
+				return products;
+			} else {
+				Category category = null;
+				List<Category> categories = this.categoryRepository.findBynameContains(str);
+				if (categories.size() > 0) {
+					category = categories.get(0);
+					return this.productRepository.findByCategoryIdAndDeletedAtIsNull(category.getId());
+				} else {
+					return products;
+				}
+
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 
     public Map<String, List<?>> getProductListByCategory() {
         List<Category> c = categoryService.getCategories();
