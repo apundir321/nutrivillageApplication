@@ -23,7 +23,10 @@ public class UserProfile {
 	private String phone;
 	private String profilePicName;
 	private String placeOfBirth;
-	
+	private String state;
+	private String pin;
+	private String city;
+	private String address;
 	private Date dob;
 	
 	private LocalDateTime timeOfBirth;
@@ -31,6 +34,30 @@ public class UserProfile {
 	private String gender;
 	public int getId() {
 		return id;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getPin() {
+		return pin;
+	}
+	public void setPin(String pin) {
+		this.pin = pin;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	public UserProfile() {
 		super();
