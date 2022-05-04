@@ -126,6 +126,9 @@ public class OrderService {
     public Long getLastOrderNO() {
         List<UserOrder> userList = orderRepository.findAll();
         int Size = userList.size();
+        if(Size==0) {
+        	return (long)0;
+        }
         UserOrder userOrder = userList.get(Size-1);
         Long init = (long) 1;
         return userOrder.getOrderNo() == null ? init :userOrder.getOrderNo();
