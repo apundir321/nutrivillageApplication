@@ -2,7 +2,8 @@ package com.nurtivillage.java.nutrivillageApplication.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Optional;import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.nurtivillage.java.nutrivillageApplication.Request.OrderRequest;
 import com.nurtivillage.java.nutrivillageApplication.dao.OfferRepository;
@@ -119,8 +120,10 @@ public class OrderService {
     }
 
     public List<?> getUserOrder(User user){
-        List<?> orderList = orderRepository.findByUser(user);
-        return orderList;
+        List<UserOrder> orderList = orderRepository.findByUser(user);
+        List<UserOrder> paidOrderList = null;
+        paidOrderList =  orderList.stream().filter(o-> o.getPaymentStatus()!=null).collect(Collectors.toList());
+        return paidOrderList;
     }
 
     public Long getLastOrderNO() {
