@@ -156,6 +156,32 @@ public class ProductService {
                 throw new ExceptionService("Category is not exists");
             }
             List<Product> productList = productRepository.findByCategoryIdAndDeletedAtIsNull(categoryId);
+//            productList.forEach(product->{
+//                Integer rating = reviewService.avgRating(product.getId());
+//                // Object[] defaultPrice = inventoryService.defaultPrice(product.getId());
+//                // System.out.println(defaultPrice);
+//                
+//                
+//                // product.setDefaultPrice(String.valueOf(defaultPrice)+"-"+String.valueOf(defaultPrice[0]));
+//                rating = rating ==null?0:rating;
+//                product.setRating(rating.intValue());
+//                if(product.getVariants().size() > 0){
+//                    Inventory variantInventory = inventoryRepository.findByProductIdAndVariantId(product.getId(),product.getVariants().get(0).getId());
+//                    product.setDefaultPrice(String.valueOf(variantInventory.getPrice()));
+//                }
+//            });
+            return productList;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    
+    public List<Product> getCategoryProducts(int categoryId)throws Exception{
+    	try {
+    		 if(!categoryRepository.existsById(categoryId)){
+                 throw new ExceptionService("Category is not exists");
+             }
+             List<Product> productList = productRepository.findByCategoryIdAndDeletedAtIsNull(categoryId);
             productList.forEach(product->{
                 Integer rating = reviewService.avgRating(product.getId());
                 // Object[] defaultPrice = inventoryService.defaultPrice(product.getId());
@@ -171,9 +197,10 @@ public class ProductService {
                 }
             });
             return productList;
-        } catch (Exception e) {
-            throw e;
-        }
+    	}
+    	catch(Exception e) {
+    		throw e;
+    	}
     }
 
     public List<Product> getProductAll() {

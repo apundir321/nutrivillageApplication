@@ -185,7 +185,7 @@ public class ProductController {
 	@GetMapping(value = "/list/{categoryId}")
 	public ResponseEntity<ApiResponseService> categoryProductLIst(@PathVariable Integer categoryId) {
 		try {
-			List<Product> data = productService.categoryProductLIst(categoryId);
+			List<Product> data = productService.getCategoryProducts(categoryId);
 			ApiResponseService res = new ApiResponseService("List of highlighter", true, data);
 			return new ResponseEntity<ApiResponseService>(res, HttpStatus.OK);
 		} catch (Exception e) {
