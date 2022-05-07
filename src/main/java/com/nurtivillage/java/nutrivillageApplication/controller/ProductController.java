@@ -183,15 +183,15 @@ public class ProductController {
 	}
 
 	@GetMapping(value = "/list/{categoryId}")
-	public ResponseEntity<ApiResponseService> categoryProductLIst(@PathVariable Integer categoryId) {
+	
+	public ResponseEntity<?> categoryProductLIst(@PathVariable Integer categoryId,@RequestParam boolean isCacheable,Pageable pageable) {
 		try {
-			List<Product> data = productService.getCategoryProducts(categoryId);
-			ApiResponseService res = new ApiResponseService("List of highlighter", true, data);
-			return new ResponseEntity<ApiResponseService>(res, HttpStatus.OK);
+			Page<Product> data = productService.getCategoryProducts(categoryId,isCacheable,pageable);
+			
+			return new ResponseEntity<Page<Product>>(data, HttpStatus.OK);
 		} catch (Exception e) {
 			System.out.println(e);
-			ApiResponseService res = new ApiResponseService(e.getMessage(), false, Arrays.asList("error"));
-			return new ResponseEntity<ApiResponseService>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -259,8 +259,8 @@ public class ProductController {
 	}
 
 	@GetMapping("/menu")
-	public Map<String, List<?>> categoryByProduct() {
-		Map<String, List<?>> map = this.productService.getProductListByCategory();
+	public Map<String, List<?>> categoryByProduct(@RequestParam boolean isCacheable) {
+		Map<String, List<?>> map = this.productService.getProductListByCategory(isCacheable);
 		return map;
 	}
 

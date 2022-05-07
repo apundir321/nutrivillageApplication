@@ -20,6 +20,7 @@ import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Variant;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -149,8 +150,8 @@ public class ProductService {
         List<Product> productList = productRepository.findByStatusAndDeletedAtIsNull(1);
         return productList;
     }
-
-    public List<Product> categoryProductLIst(Integer categoryId) throws Exception {
+    @Cacheable(value="product-cache",key="'ProductInCache'+#categoryId",condition="#isCacheable !=null && #isCacheable")
+    public List<Product> categoryProductLIst(Integer categoryId,boolean isCacheable) throws Exception {
         try {
             if(!categoryRepository.existsById(categoryId)){
                 throw new ExceptionService("Category is not exists");
@@ -175,13 +176,13 @@ public class ProductService {
             throw e;
         }
     }
-    
-    public List<Product> getCategoryProducts(int categoryId)throws Exception{
+    @Cacheable(value="category-cache",key="'CategoryInCache'+#categoryId",condition="#isCacheable !=null && #isCacheable")
+    public Page<Product> getCategoryProducts(int categoryId,boolean isCacheable,Pageable pageable)throws Exception{
     	try {
     		 if(!categoryRepository.existsById(categoryId)){
                  throw new ExceptionService("Category is not exists");
              }
-             List<Product> productList = productRepository.findByCategoryIdAndDeletedAtIsNull(categoryId);
+             Page<Product> productList = productRepository.getByCategoryIdAndDeletedAtIsnull(categoryId,pageable);
             productList.forEach(product->{
                 Integer rating = reviewService.avgRating(product.getId());
                 // Object[] defaultPrice = inventoryService.defaultPrice(product.getId());
@@ -264,13 +265,13 @@ public class ProductService {
 		}
 	}
 
-    public Map<String, List<?>> getProductListByCategory() {
+    public Map<String, List<?>> getProductListByCategory(boolean isCacheable) {
         List<Category> c = categoryService.getCategories();
         Map<String,List<?>> products = new HashMap<>();
         c.forEach((category)->{
             List<Product> p;
             try {
-                p = this.categoryProductLIst(category.getId());
+                p = this.categoryProductLIst(category.getId(),isCacheable);
                 if(category.getName() != null){
                     products.put(category.getName(),p);
                 }

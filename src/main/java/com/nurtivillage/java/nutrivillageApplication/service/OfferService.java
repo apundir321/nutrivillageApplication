@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.nurtivillage.java.nutrivillageApplication.dao.OfferRepository;
@@ -33,9 +34,10 @@ public List<Offer> getAllOffer() throws Exception{
 	}
 }
 // to get offer by offer id
-public Offer getOfferById(Long id) throws Exception {
+
+public Offer getOfferById(Long offerId) throws Exception {
 	try {
-		 Optional<Offer> offerTemp=offerRepository.findById(id);
+		 Optional<Offer> offerTemp=offerRepository.findById(offerId);
 		 if(offerTemp.isPresent()) {
 			 return offerTemp.get();
 		 }
@@ -84,4 +86,6 @@ public Offer updateOffer(Offer offer) {
 		throw e;
 	}
 }
+
+
 }
