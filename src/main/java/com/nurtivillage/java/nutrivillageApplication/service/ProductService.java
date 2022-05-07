@@ -150,13 +150,13 @@ public class ProductService {
         List<Product> productList = productRepository.findByStatusAndDeletedAtIsNull(1);
         return productList;
     }
-    @Cacheable(value="product-cache",key="'ProductInCache'+#categoryId",condition="#isCacheable !=null && #isCacheable")
-    public List<Product> categoryProductLIst(Integer categoryId,boolean isCacheable) throws Exception {
+    @Cacheable(value="product-cache",key="'ProductInCache'+#catId",condition="#isCacheable !=null && #isCacheable")
+    public List<Product> categoryProductLIst(Integer catId,boolean isCacheable) throws Exception {
         try {
-            if(!categoryRepository.existsById(categoryId)){
+            if(!categoryRepository.existsById(catId)){
                 throw new ExceptionService("Category is not exists");
             }
-            List<Product> productList = productRepository.findByCategoryIdAndDeletedAtIsNull(categoryId);
+            List<Product> productList = productRepository.findByCategoryIdAndDeletedAtIsNull(catId);
 //            productList.forEach(product->{
 //                Integer rating = reviewService.avgRating(product.getId());
 //                // Object[] defaultPrice = inventoryService.defaultPrice(product.getId());
@@ -176,8 +176,8 @@ public class ProductService {
             throw e;
         }
     }
-   @Cacheable(value="category-cache",key="'CategoryInCache'+#categoryId",condition="#isCacheable !=null && #isCacheable")
-    public Page<Product> getCategoryProducts(int categoryId,boolean isCacheable,Pageable pageable)throws Exception{
+   @Cacheable(value="category-cache",key="'CategoryInCache'+#catPage",condition="#isCacheable !=null && #isCacheable")
+    public Page<Product> getCategoryProducts(int categoryId,String catPage,boolean isCacheable,Pageable pageable)throws Exception{
     	try {
     		 if(!categoryRepository.existsById(categoryId)){
                  throw new ExceptionService("Category is not exists");
