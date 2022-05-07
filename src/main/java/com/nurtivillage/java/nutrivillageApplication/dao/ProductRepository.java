@@ -24,7 +24,7 @@ public interface ProductRepository extends JpaRepository<Product,Long>{
 
     List<Product> findByCategoryIdAndDeletedAtIsNull(Integer categoryId);
     
-    @Query(value="select * from product where category_id =:categoryId and deleted_at=null order by id desc",nativeQuery=true)
+    @Query(value="select * from product where category_id =:categoryId and deleted_at is null order by id desc",nativeQuery=true)
     Page<Product> getByCategoryIdAndDeletedAtIsnull(int categoryId,Pageable pageable);
     
     Product findByProductImage(ProductImage productImage);

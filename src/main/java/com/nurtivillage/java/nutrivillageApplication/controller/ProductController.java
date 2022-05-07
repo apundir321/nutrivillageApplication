@@ -187,8 +187,9 @@ public class ProductController {
 	public ResponseEntity<?> categoryProductLIst(@PathVariable Integer categoryId,@RequestParam boolean isCacheable,Pageable pageable) {
 		try {
 			Page<Product> data = productService.getCategoryProducts(categoryId,isCacheable,pageable);
-			
-			return new ResponseEntity<Page<Product>>(data, HttpStatus.OK);
+			ApiResponseService res = new ApiResponseService("Product List", true, data.toList(),
+					data.getTotalPages());
+			return new ResponseEntity<ApiResponseService>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			System.out.println(e);
 		return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);

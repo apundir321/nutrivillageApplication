@@ -25,7 +25,7 @@ public class EhCacheConfig extends CachingConfigurerSupport{
 		CacheConfiguration productCache=new CacheConfiguration();
 		productCache.setName("product-cache");
 		productCache.setMemoryStoreEvictionPolicy("LRU");
-		productCache.setMaxEntriesLocalHeap(1000);
+		productCache.setMaxEntriesLocalHeap(10000);
 		productCache.setTimeToLiveSeconds(7200);
 	net.sf.ehcache.config.Configuration config=new net.sf.ehcache.config.Configuration();
 	config.addCache(categoryCache);
