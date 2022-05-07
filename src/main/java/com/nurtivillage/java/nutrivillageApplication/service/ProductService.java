@@ -150,8 +150,8 @@ public class ProductService {
         List<Product> productList = productRepository.findByStatusAndDeletedAtIsNull(1);
         return productList;
     }
-    @Cacheable(value="product-cache",key="'ProductInCache'+#catId",condition="#isCacheable !=null && #isCacheable")
-    public List<Product> categoryProductLIst(Integer catId,boolean isCacheable) throws Exception {
+  
+    public List<Product> categoryProductLIst(Integer catId) throws Exception {
         try {
             if(!categoryRepository.existsById(catId)){
                 throw new ExceptionService("Category is not exists");
@@ -176,8 +176,8 @@ public class ProductService {
             throw e;
         }
     }
-   @Cacheable(value="category-cache",key="'CategoryInCache'+#catPage",condition="#isCacheable !=null && #isCacheable")
-    public Page<Product> getCategoryProducts(int categoryId,String catPage,boolean isCacheable,Pageable pageable)throws Exception{
+ 
+    public Page<Product> getCategoryProducts(int categoryId,Pageable pageable)throws Exception{
     	try {
     		 if(!categoryRepository.existsById(categoryId)){
                  throw new ExceptionService("Category is not exists");
@@ -265,13 +265,13 @@ public class ProductService {
 		}
 	}
 
-    public Map<String, List<?>> getProductListByCategory(boolean isCacheable) {
+    public Map<String, List<?>> getProductListByCategory() {
         List<Category> c = categoryService.getCategories();
         Map<String,List<?>> products = new HashMap<>();
         c.forEach((category)->{
             List<Product> p;
             try {
-                p = this.categoryProductLIst(category.getId(),isCacheable);
+                p = this.categoryProductLIst(category.getId());
                 if(category.getName() != null){
                     products.put(category.getName(),p);
                 }

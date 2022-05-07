@@ -184,10 +184,10 @@ public class ProductController {
 
 	@GetMapping(value = "/list/{categoryId}")
 	
-	public ResponseEntity<?> categoryProductLIst(@PathVariable Integer categoryId,@RequestParam boolean isCacheable,Pageable pageable) {
+	public ResponseEntity<?> categoryProductLIst(@PathVariable Integer categoryId,Pageable pageable) {
 		try {
-			String catPage=categoryId+"_"+pageable.getPageNumber();
-			Page<Product> data = productService.getCategoryProducts(categoryId,catPage,isCacheable,pageable);
+
+			Page<Product> data = productService.getCategoryProducts(categoryId,pageable);
 			ApiResponseService res = new ApiResponseService("Product List", true, data.toList(),
 					data.getTotalPages());
 			return new ResponseEntity<ApiResponseService>(res, HttpStatus.OK);
@@ -261,8 +261,8 @@ public class ProductController {
 	}
 
 	@GetMapping("/menu")
-	public Map<String, List<?>> categoryByProduct(@RequestParam boolean isCacheable) {
-		Map<String, List<?>> map = this.productService.getProductListByCategory(isCacheable);
+	public Map<String, List<?>> categoryByProduct() {
+		Map<String, List<?>> map = this.productService.getProductListByCategory();
 		return map;
 	}
 
