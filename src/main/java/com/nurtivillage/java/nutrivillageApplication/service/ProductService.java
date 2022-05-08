@@ -272,7 +272,7 @@ public class ProductService {
 		}
 	}
 	
-	@Cacheable(value = "productCache")
+//	@Cacheable(value = "productCache")
     public Map<String, List<?>> getProductListByCategory() {
 		System.out.println("Retrieving from Database");
         List<Category> c = categoryService.getCategories();
