@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import javax.annotation.PostConstruct;
+
 import com.amazonaws.services.simplesystemsmanagement.model.GetInventoryRequest;
 import com.nurtivillage.java.nutrivillageApplication.dao.CategoryRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.InventoryRepository;
@@ -41,6 +43,11 @@ public class ProductService {
     private CategoryService categoryService;
     @Autowired
     private ReviewService reviewService;
+    
+    @PostConstruct
+    public void load() {
+    	Map<String, List<?>> map = getProductListByCategory();
+    }
 
     public Page<Product> getAllProduct(Pageable pageable){
         try {
@@ -153,9 +160,9 @@ public class ProductService {
   
     public List<Product> categoryProductLIst(Integer catId) throws Exception {
         try {
-            if(!categoryRepository.existsById(catId)){
-                throw new ExceptionService("Category is not exists");
-            }
+//            if(!categoryRepository.existsById(catId)){
+//                throw new ExceptionService("Category is not exists");
+//            }
             List<Product> productList = productRepository.findByCategoryIdAndDeletedAtIsNull(catId);
 //            productList.forEach(product->{
 //                Integer rating = reviewService.avgRating(product.getId());
@@ -264,8 +271,10 @@ public class ProductService {
 			throw e;
 		}
 	}
-
+	
+	@Cacheable(value = "productCache")
     public Map<String, List<?>> getProductListByCategory() {
+		System.out.println("Retrieving from Database");
         List<Category> c = categoryService.getCategories();
         Map<String,List<?>> products = new HashMap<>();
         c.forEach((category)->{
