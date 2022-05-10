@@ -151,6 +151,13 @@ public class UserController {
 		
 	}
 	
+	
+	@GetMapping("/secured")
+	public String getValue()
+	{
+		return "hello https";
+	}
+	
 	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
 	public ResponseEntity<?> getUser(@RequestParam String userId)
 			throws Exception {
