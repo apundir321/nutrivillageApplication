@@ -264,7 +264,7 @@ public class ProductService {
 			throw e;
 		}
 	}
-
+	@Cacheable(value = "productCache")
     public Map<String, List<?>> getProductListByCategory() {
         List<Category> c = categoryService.getCategories();
         Map<String,List<?>> products = new HashMap<>();
