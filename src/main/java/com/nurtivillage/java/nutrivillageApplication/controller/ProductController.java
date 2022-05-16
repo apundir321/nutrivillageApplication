@@ -186,8 +186,8 @@ public class ProductController {
 	
 	public ResponseEntity<?> categoryProductLIst(@PathVariable Integer categoryId,Pageable pageable) {
 		try {
-
-			Page<Product> data = productService.getCategoryProducts(categoryId,pageable);
+            String catPage=pageable.getPageNumber()+"_"+categoryId+"_"+pageable.getPageSize();
+			Page<Product> data = productService.getCategoryProducts(categoryId,pageable,catPage);
 			ApiResponseService res = new ApiResponseService("Product List", true, data.toList(),
 					data.getTotalPages());
 			return new ResponseEntity<ApiResponseService>(res, HttpStatus.OK);

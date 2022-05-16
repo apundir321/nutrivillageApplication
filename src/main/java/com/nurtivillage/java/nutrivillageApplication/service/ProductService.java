@@ -176,8 +176,8 @@ public class ProductService {
             throw e;
         }
     }
- 
-    public Page<Product> getCategoryProducts(int categoryId,Pageable pageable)throws Exception{
+ @Cacheable(value="categoryCache",key="#catPage")
+    public Page<Product> getCategoryProducts(int categoryId,Pageable pageable,String catPage)throws Exception{
     	try {
     		 if(!categoryRepository.existsById(categoryId)){
                  throw new ExceptionService("Category is not exists");
