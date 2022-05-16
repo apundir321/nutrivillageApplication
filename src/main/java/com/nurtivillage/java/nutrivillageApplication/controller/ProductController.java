@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import com.nurtivillage.java.nutrivillageApplication.dto.ProductInsert;
+import com.nurtivillage.java.nutrivillageApplication.dto.ProductUpdateDto;
 import com.nurtivillage.java.nutrivillageApplication.events.TestedEventPublisher;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
@@ -299,9 +300,9 @@ public class ProductController {
 	}
 	
 	@PutMapping("/{productId}/updateDescription")
-	public ResponseEntity<?> updateDescription(@PathVariable Long productId,@RequestParam String description,@RequestParam String additional)throws Exception{
+	public ResponseEntity<?> updateDescription(@PathVariable Long productId,@RequestBody ProductUpdateDto productDto)throws Exception{
 	try {log.info("Updating Product description --Start");
-		Product savedProduct=productService.updateDescription(productId, description, additional);
+		Product savedProduct=productService.updateDescription(productId,productDto);
 		log.info("Updating Product description --End");
 		return new ResponseEntity<Product>(savedProduct,HttpStatus.OK);
 	}	

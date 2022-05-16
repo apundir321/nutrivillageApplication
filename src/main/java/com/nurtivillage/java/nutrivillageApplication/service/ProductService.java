@@ -14,6 +14,7 @@ import com.nurtivillage.java.nutrivillageApplication.dao.CategoryRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.InventoryRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.ProductRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.VariantRepository;
+import com.nurtivillage.java.nutrivillageApplication.dto.ProductUpdateDto;
 import com.nurtivillage.java.nutrivillageApplication.model.Category;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
@@ -287,7 +288,7 @@ public class ProductService {
         return products;
     }
 
-   public Product updateDescription(Long productId,String description,String additional)throws Exception {
+   public Product updateDescription(Long productId,ProductUpdateDto productDto)throws Exception {
 	   try {
 		  Optional< Product >product=productRepository.findById(productId);
 		  if(!product.isPresent()) {
@@ -295,8 +296,8 @@ public class ProductService {
 			  throw new Exception("Product doesn't exist with id: "+productId);
 		  }
 		  Product savedProduct=product.get();
-		  savedProduct.setDiscription(description);
-		  savedProduct.setAdditional(additional);
+		  savedProduct.setDiscription(productDto.getDescription());
+		  savedProduct.setAdditional(productDto.getAdditional());
 		  return productRepository.save(savedProduct);
 		  
 	   }
