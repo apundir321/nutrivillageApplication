@@ -187,21 +187,25 @@ public class Product {
 		this.defaultPrice = defaultPrice;
 	}
 
+	public String getAdditional() {
+		return additional;
+	}
+
 	public void setAdditional(String additional) {
 		this.additional = additional;
-	}
-
-	public void setdiscription(String discription) {
-		this.discription = discription;
-	}
-
-	public String getadditional() {
-		return additional;
 	}
 
 	public String getDiscription() {
 		return discription;
 	}
+
+	public void setDiscription(String discription) {
+		this.discription = discription;
+	}
+
+
+
+
 
 	
 	// public Inventory getInventory() {

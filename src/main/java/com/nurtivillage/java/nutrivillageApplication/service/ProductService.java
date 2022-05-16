@@ -19,6 +19,8 @@ import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.Variant;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
+	private final static Logger log=LogManager.getLogger(ProductService.class);
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -284,7 +287,23 @@ public class ProductService {
         return products;
     }
 
-
+   public Product updateDescription(Long productId,String description,String additional)throws Exception {
+	   try {
+		  Optional< Product >product=productRepository.findById(productId);
+		  if(!product.isPresent()) {
+			  log.error("Product doesn't exist with id: "+productId);
+			  throw new Exception("Product doesn't exist with id: "+productId);
+		  }
+		  Product savedProduct=product.get();
+		  savedProduct.setDiscription(description);
+		  savedProduct.setAdditional(additional);
+		  return productRepository.save(savedProduct);
+		  
+	   }
+	   catch(Exception e) {
+		   throw e;
+	   }
+   }
     // public List<Product> Filter
 
 

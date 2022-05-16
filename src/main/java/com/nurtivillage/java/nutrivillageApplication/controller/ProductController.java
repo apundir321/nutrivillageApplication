@@ -24,6 +24,8 @@ import com.nurtivillage.java.nutrivillageApplication.service.ProductService;
 import com.nurtivillage.java.nutrivillageApplication.service.ReviewService;
 import com.nurtivillage.java.nutrivillageApplication.service.VariantService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,6 +53,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 @RequestMapping(path = "/product")
 @Validated
 public class ProductController {
+	private final static Logger log=LogManager.getLogger(ProductController.class);
 	@Autowired
 	private ProductService productService;
 	@Autowired
@@ -293,5 +296,17 @@ public class ProductController {
 			ApiResponseService res = new ApiResponseService(e.getMessage(), false, Arrays.asList("error"));
 			return new ResponseEntity<ApiResponseService>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	@PutMapping("/{productId}/updateDescription")
+	public ResponseEntity<?> updateDescription(@PathVariable Long productId,@RequestParam String description,@RequestParam String additional)throws Exception{
+	try {log.info("Updating Product description --Start");
+		Product savedProduct=productService.updateDescription(productId, description, additional);
+		log.info("Updating Product description --End");
+		return new ResponseEntity<Product>(savedProduct,HttpStatus.OK);
+	}	
+	catch(Exception e) {
+		return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 	}
 }
