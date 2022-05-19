@@ -15,16 +15,25 @@ import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Offer;
 import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
 import com.nurtivillage.java.nutrivillageApplication.model.Product;
+import com.nurtivillage.java.nutrivillageApplication.model.ShippingAddress;
 import com.nurtivillage.java.nutrivillageApplication.model.Status;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
+import com.nurtivillage.java.nutrivillageApplication.model.Variant;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.Transient;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class OrderService {
 	private static final Logger log=LogManager.getLogger(OrderService.class);
     @Autowired
@@ -44,6 +53,9 @@ public class OrderService {
 
     @Autowired 
     public OfferService offerService;
+  @Value("${spring.mail.username}")
+  private String fromMail;
+   
     
     double totalAmount = 0;
 
@@ -61,12 +73,14 @@ public class OrderService {
         List<OrderDetails> orderAllItem = new ArrayList<>();
         cartItems.forEach((var)->{
             Cart cartItem = cartService.cartItemById(var.getId());
+            Variant variant=cartItem.getInventory().getVariant();
+            int price=cartItem.getInventory().getPrice();
             List<Offer> offer = offerService.getOffersByProduct(cartItem.getProduct().getId());
             if(offer.size() != 0){
-                OrderDetails orderItem = new OrderDetails(cartItem.getProduct(),order,cartItem.getQuantity(),cartItem.getVariant(),offer.get(0));
+                OrderDetails orderItem = new OrderDetails(cartItem.getProduct(),order,cartItem.getQuantity(),variant,offer.get(0),price);
                 orderAllItem.add(orderItem);
             }else{
-                OrderDetails orderItem = new OrderDetails(cartItem.getProduct(),order,cartItem.getQuantity(),cartItem.getVariant(),null);
+                OrderDetails orderItem = new OrderDetails(cartItem.getProduct(),order,cartItem.getQuantity(),variant,null,price);
                 orderAllItem.add(orderItem);
             }
         });
@@ -74,15 +88,15 @@ public class OrderService {
         cartService.cartClear();
         return orderAllItem;
     }
-    public OrderDetails createSingleOrderDetails(Long productId,int variantId,UserOrder order){//(List<Product> product,UserOrder order,List<Long> quantity){
+    public OrderDetails createSingleOrderDetails(Long productId,int variantId,int quantity,UserOrder order){//(List<Product> product,UserOrder order,List<Long> quantity){
        OrderDetails orderItem =null;
         Inventory inventory=inventoryService.getProductVariantInventory(productId, variantId);
            List<Offer> offer = offerService.getOffersByProduct(inventory.getProduct().getId());
             if(offer.size() != 0){
-               orderItem = new OrderDetails(inventory.getProduct(),order,1,inventory.getVariant(),offer.get(0));
+               orderItem = new OrderDetails(inventory.getProduct(),order,quantity,inventory.getVariant(),offer.get(0),inventory.getPrice());
                
             }else{
-                 orderItem = new OrderDetails(inventory.getProduct(),order,1,inventory.getVariant(),null);
+                 orderItem = new OrderDetails(inventory.getProduct(),order,quantity,inventory.getVariant(),null,inventory.getPrice());
               
             }
        orderDetailsRepository.save(orderItem);
@@ -244,6 +258,37 @@ public class OrderService {
     	}
     	catch(Exception e) {
     		log.error(e.getMessage());
+    		throw e;
+    	}
+    }
+    
+    public SimpleMailMessage sendMailToAdminForOrder(UserOrder order) {
+    	try {
+    		ShippingAddress address=order.getShippingAddress();
+    		final String subject="Order received";
+    		final String message="************ ORDER RECEIVED ************ \r\n # SHIPPING DETAILS # \r\n"
+    				+ "Name : "+address.getName()
+    				+"\r\n Country : "+address.getCountry()
+    				+"\r\n Street : "+address.getStreet()
+    				+"\r\n State : "+address.getState()
+    				+"\r\n City : "+address.getCity()
+    				+"\r\n Pincode : "+address.getPincode()
+    				+"\r\n Mobile : "+address.getMobile()
+    				+"\r\n Email : "+order.getUser().getEmail()
+    				+"\r\n \r\n"+
+    				"# ORDER DETAILS # "
+    				+"\r\n Order ID : "+order.getOrderNo()
+    				+"\r\n Order Amount : "+order.getAmount()
+    				+"\r\n Order Status : "+order.getStatus().toString();
+    		final SimpleMailMessage mail=new SimpleMailMessage();
+    		mail.setTo(fromMail);
+    		mail.setSubject(subject);
+    		mail.setFrom(fromMail);
+    		mail.setText(message);
+    		return mail;
+    	}
+    	catch(Exception e) {
+    		log.error("Error occured while sending mail to admin for order: "+e.getMessage());
     		throw e;
     	}
     }

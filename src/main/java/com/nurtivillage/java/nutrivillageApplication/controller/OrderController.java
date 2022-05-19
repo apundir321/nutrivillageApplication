@@ -23,9 +23,15 @@ import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.Transient;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +44,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping(path = "/order")
+@Transactional
 public class OrderController {
+	private final static Logger log=LogManager.getLogger(OrderController.class);
         @Autowired
         public OrderService orderService;
         @Autowired
@@ -47,6 +55,9 @@ public class OrderController {
         public OnlinePaymentService onlinePaymentService;
         private RazorpayClient razorpayClient;
         private RazorPayClientConfig razorpayClientConfig;
+        
+        @Autowired
+        private JavaMailSender mailSender;
         
         @Autowired
         public OrderController(RazorPayClientConfig razorpayClientConfig) throws RazorpayException{
@@ -95,6 +106,10 @@ public class OrderController {
                 }
                 UserOrder orderCreate = orderService.createOrder(order);
                 List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
+             log.info("Sending Mail To Admin for order received --Start");
+                SimpleMailMessage mail=orderService.sendMailToAdminForOrder(orderCreate);
+                mailSender.send(mail);
+                log.info("Sending Mail To Admin for order received --End");
                 if(!orderRequest.getPaymentMethod().equals("COD")){
                     Order orderRes = onlinePaymentService.createOrderOnRazorpay(orderCreate,this.razorpayClient);
                     onlinePaymentService.savePayment(orderRes.get("id"), orderCreate);
@@ -127,7 +142,11 @@ public class OrderController {
                     throw new Exception("Incorrect amount");
                 }
                 UserOrder orderCreate = orderService.createOrder(order);
-               OrderDetails data = orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderCreate);
+               OrderDetails data = orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderRequest.getQuantity(),orderCreate);
+               log.info("Sending Mail To Admin for order received --Start");
+               SimpleMailMessage mail=orderService.sendMailToAdminForOrder(orderCreate);
+               mailSender.send(mail);
+               log.info("Sending Mail To Admin for order received --End");
                 if(!orderRequest.getPaymentMethod().equals("COD")){
                     Order orderRes = onlinePaymentService.createOrderOnRazorpay(orderCreate,this.razorpayClient);
                     onlinePaymentService.savePayment(orderRes.get("id"), orderCreate);
@@ -222,7 +241,7 @@ public class OrderController {
         @PutMapping("/userOrderCancel")
         public ResponseEntity<ApiResponseService> userOrderCancel(@RequestBody StatusRequest statusRequest){
             try{
-                statusRequest.setStatus("canceled");
+                statusRequest.setStatus("cancelled");
                 UserOrder orderCreate = orderService.orderStatus(statusRequest);
                 ApiResponseService res = new ApiResponseService("orderStatus",true,Arrays.asList(orderCreate));
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
