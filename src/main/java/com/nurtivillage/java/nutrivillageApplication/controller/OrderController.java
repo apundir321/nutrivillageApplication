@@ -184,8 +184,8 @@ public class OrderController {
         @GetMapping("/detail/{id}")
         public ResponseEntity<ApiResponseService> orderDetail(@PathVariable Long id){
             try{
-                Optional<UserOrder> order = orderService.getOrder(id);
-                List<OrderDetails> orderDetails = orderService.findByUesrOrder(order.get());
+                UserOrder order = orderService.getOrder(id);
+                List<OrderDetails> orderDetails = orderService.findByUesrOrder(order);
                 
                 ApiResponseService res = new ApiResponseService("order detail",true,orderDetails);
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
@@ -268,6 +268,28 @@ public class OrderController {
         //     }
         // }
 
+        @GetMapping("/getOrderDetails/{orderDetailId}")
+        public ResponseEntity<?> getOrderDetails(@PathVariable Long orderDetailId){
+        	try {log.info("Fetching order details with id: "+orderDetailId+"--Start");
+        		OrderDetails orderDetails=orderService.getOrderDetail(orderDetailId);
+        		log.info("Fetching order details with id: "+orderDetailId+"--End");
+        		return new ResponseEntity<OrderDetails>(orderDetails,HttpStatus.OK);
+        	}
+        	catch(Exception e) {
+        		return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        	}
+        }
         
+        @GetMapping("/{orderId}")
+        public ResponseEntity<?> getUserOrder(@PathVariable Long orderId){
+        	try {log.info("Fetching user order with id: "+orderId+"--Start");
+        		UserOrder order=orderService.getOrder(orderId);
+        		log.info("Fetching user order with id: "+orderId+"--End");
+        		return new ResponseEntity<UserOrder>(order,HttpStatus.OK);
+        	}
+        	catch(Exception e) {
+        		return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        	}
+        }
 
 }

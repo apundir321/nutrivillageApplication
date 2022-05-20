@@ -104,9 +104,17 @@ public class OrderService {
         return orderItem;
     }
 
-    public Optional<OrderDetails> getOrderDetail(Long id){
+    public OrderDetails getOrderDetail(Long id) throws Exception{
+    	try {
         Optional<OrderDetails> orderDetails = orderDetailsRepository.findById(id);
-        return orderDetails;
+        if(orderDetails.isPresent()) {
+        return orderDetails.get();}
+        log.error("Order Details are not present with this id :"+id);
+        throw new Exception("Order Details are not present with this id :"+id);
+    	}
+    	catch(Exception e) {
+    		throw e;
+    	}
     }
 
     public List<OrderDetails> findByUesrOrder(UserOrder order) {
@@ -114,19 +122,33 @@ public class OrderService {
         return orderDetails;
     }
 
-    public Optional<UserOrder> getOrder(Long id) {
+    public UserOrder getOrder(Long id) throws Exception{
+    	try {
         Optional<UserOrder> order = orderRepository.findById(id);
-        return order;
+        if(order.isPresent()) {
+        	return order.get();
+        }
+        throw new Exception("User order not present with this id: "+id);
+    	}
+    	catch(Exception e) {
+    		throw e;
+    	}
     }
 
-    public UserOrder orderStatus(StatusRequest statusRequest) {
-        Optional<UserOrder> order = orderService.getOrder(statusRequest.getId());
-        UserOrder orderInfo = order.get();
+    public UserOrder orderStatus(StatusRequest statusRequest) throws Exception{
+    	try {
+        UserOrder orderInfo = orderService.getOrder(statusRequest.getId());
+        
         Status updateStatus = getStatus(statusRequest.getStatus());
         orderInfo.setStatus(updateStatus);
         orderInfo.setComment(statusRequest.getComment());
         UserOrder updatedOrder = orderRepository.save(orderInfo);
         return updatedOrder;
+    }
+    catch(Exception e) {
+    	throw e;
+    }
+    	
     }
 
     private Status getStatus(String status){
