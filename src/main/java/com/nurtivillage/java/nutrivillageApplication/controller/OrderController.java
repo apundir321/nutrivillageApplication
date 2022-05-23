@@ -241,7 +241,7 @@ public class OrderController {
         @PutMapping("/userOrderCancel")
         public ResponseEntity<ApiResponseService> userOrderCancel(@RequestBody StatusRequest statusRequest){
             try{
-                statusRequest.setStatus("cancelled");
+                statusRequest.setStatus("canceled");
                 UserOrder orderCreate = orderService.orderStatus(statusRequest);
                 ApiResponseService res = new ApiResponseService("orderStatus",true,Arrays.asList(orderCreate));
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
