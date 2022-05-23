@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -35,6 +36,7 @@ import com.nurtivillage.java.nutrivillageApplication.model.Role;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 import com.nurtivillage.java.nutrivillageApplication.validation.Name;
+import com.nutrivillage.java.nutrivillageApplication.properties.SocialLoginProperties;
 @EnableCaching
 @SpringBootApplication
 public class NutrivillageApplication {
@@ -83,5 +85,14 @@ public class NutrivillageApplication {
 	        bean.setShared(true);
 	        return bean;
 	    }
-
+	    
+	    @Bean
+	    public SocialLoginProperties socialLoginProperties() {
+	    	return new SocialLoginProperties();
+	    }
+         
+	    @Bean
+	    public RestTemplate restTemplate() {
+	        return new RestTemplate();
+	    }
 }

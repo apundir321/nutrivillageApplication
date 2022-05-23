@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.nurtivillage.java.nutrivillageApplication.dto.PasswordDto;
 import com.nurtivillage.java.nutrivillageApplication.dto.UserDto;
 import com.nurtivillage.java.nutrivillageApplication.error.UserAlreadyExistException;
 import com.nurtivillage.java.nutrivillageApplication.model.NewLocationToken;
@@ -40,6 +41,7 @@ public interface IUserService {
     Optional<User> getUserByID(long id);
 
     void changeUserPassword(User user, String password);
+    public String resetUserPassword(PasswordDto passwordDto) throws Exception;
 
     boolean checkIfValidOldPassword(User user, String password);
 
@@ -51,7 +53,7 @@ public interface IUserService {
     
     public List<User> getUserByRoleName(String roleName)throws Exception;
     
-    
+    public String sendMailForForgotPasswordToUser(String email) throws Exception;
     
     public List<UserProfile> getUserProfilesByRoleParams(Map<String, Object> searchCriteria)throws Exception;
 

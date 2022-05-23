@@ -7,12 +7,18 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +31,7 @@ import com.nurtivillage.java.nutrivillageApplication.dao.RoleRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserLocationRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.VerificationTokenRepository;
+import com.nurtivillage.java.nutrivillageApplication.dto.PasswordDto;
 import com.nurtivillage.java.nutrivillageApplication.dto.UserDto;
 import com.nurtivillage.java.nutrivillageApplication.error.UserAlreadyExistException;
 import com.nurtivillage.java.nutrivillageApplication.model.NewLocationToken;
@@ -34,11 +41,12 @@ import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserLocation;
 import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 import com.nurtivillage.java.nutrivillageApplication.model.VerificationToken;
+import com.nurtivillage.java.nutrivillageApplication.util.GenericResponse;
 
 @Service
 @Transactional
 public class UserService implements IUserService {
-
+private static final Logger log=LogManager.getLogger(UserService.class);
     @Autowired
     private UserRepository userRepository;
 
@@ -48,12 +56,19 @@ public class UserService implements IUserService {
     @Autowired
     private PasswordResetTokenRepository passwordTokenRepository;
 
+     @Autowired
+     private JavaMailSender mailSender;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private RoleRepository roleRepository;
-
+ 
+     @Value("${spring.mail.forgotPasswordUrl}")
+     private String forgotPasswordUrl;
+     
+     @Value("${spring.mail.username}")
+     private String fromMail;
 //    @Autowired
 //    private SessionRegistry sessionRegistry;
 
@@ -63,6 +78,8 @@ public class UserService implements IUserService {
 
     @Autowired
     private UserLocationRepository userLocationRepository;
+    
+    private final String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&";
 
     @Autowired
     private NewLocationTokenRepository newLocationTokenRepository;
@@ -350,5 +367,70 @@ public class UserService implements IUserService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public String sendMailForForgotPasswordToUser(String email) throws Exception{
+		try {
+		User user=userRepository.findByEmail(email);
+		if(user!=null && user.getForgotPasswordKey()==null) {
+			String token=generateRandomAlphaNumeric(9);
+			user.setForgotPasswordKey(token);
+			SimpleMailMessage mail=createMailForForgotPassword(user.getEmail(),token);
+			mailSender.send(mail);
+			return "Success";
+		}
+		else {
+			throw new Exception("User doesn't exists with this email address or forgot request already made");
+		}
+		}
+		catch(Exception e) {
+			throw e;
+		}
+	}
+	
+	public SimpleMailMessage createMailForForgotPassword(String email,String token) {
+		try {
+			String subject="Reset Password";
+			String message="Please click on the below link to reset the password for your nutri village account \r\n \r\n";
+		    String resetLink=forgotPasswordUrl+"?key="+token;
+		    SimpleMailMessage mail=new SimpleMailMessage();
+		    mail.setFrom(fromMail);
+		    mail.setTo(email);
+		    mail.setSubject(subject);
+		    mail.setText(message+resetLink);
+		    return mail;
+		}
+		catch(Exception e) {
+			throw e;
+		}
+	}
+    public String generateRandomAlphaNumeric(int length) {
+        Random rnd = new Random();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++)
+            sb.append(chars.charAt(rnd.nextInt(chars.length())));
+        return sb.toString();
+    }
+    @Override
+    public String resetUserPassword(PasswordDto passwordDto) throws Exception{
+    	try {
+//    		if(passwordDto.getToken()==null) {
+//    			log.error("key cannot be null");
+//    			throw new Exception("Key cannot be null");
+//    		}
+    		User user=userRepository.findByForgotPasswordKey(passwordDto.getToken());
+    		if(user==null) {
+			log.error("Provided key doesn't match with any user or key might be null");
+    			throw new Exception("Provided key doesn't match with any user or key might be null");
+    		}
+    		user.setForgotPasswordKey(null);
+    		changeUserPassword(user,passwordDto.getNewPassword());
+    		return "Password changed successfully";
+    		
+    		
+    	}
+    	catch(Exception e) {
+    		throw e;
+    	}
+    }
 
 }

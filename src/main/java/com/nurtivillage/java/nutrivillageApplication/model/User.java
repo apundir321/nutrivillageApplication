@@ -38,7 +38,8 @@ public class User {
     @JsonIgnore
     @Column(length = 60)
     private String password;
-
+     
+    private String forgotPasswordKey;
     private boolean enabled;
 
     private boolean isUsing2FA;
@@ -112,7 +113,15 @@ public class User {
         this.roles = roles;
     }
 
-    public boolean isEnabled() {
+    public String getForgotPasswordKey() {
+		return forgotPasswordKey;
+	}
+
+	public void setForgotPasswordKey(String forgotPasswordKey) {
+		this.forgotPasswordKey = forgotPasswordKey;
+	}
+
+	public boolean isEnabled() {
         return enabled;
     }
 

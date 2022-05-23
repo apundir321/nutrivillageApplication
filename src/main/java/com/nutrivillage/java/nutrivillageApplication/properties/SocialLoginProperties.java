@@ -27,6 +27,7 @@ public class SocialLoginProperties {
       private String redirect;
       private String state;
       private String authority;
+      private String callbackPageUrl;
 	public String getClientId() {
 		return clientId;
 	}
@@ -35,6 +36,12 @@ public class SocialLoginProperties {
 	}
 	public String getSecret() {
 		return secret;
+	}
+	public String getCallbackPageUrl() {
+		return callbackPageUrl;
+	}
+	public void setCallbackPageUrl(String callbackPageUrl) {
+		this.callbackPageUrl = callbackPageUrl;
 	}
 	public void setSecret(String secret) {
 		this.secret = secret;

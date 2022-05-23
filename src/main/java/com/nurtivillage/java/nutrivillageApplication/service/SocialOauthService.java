@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.codec.binary.Base64;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
@@ -39,6 +40,7 @@ import com.nutrivillage.java.nutrivillageApplication.properties.SocialLoginPrope
 
 @Service
 public class SocialOauthService {
+	private final static Logger log=LogManager.getLogger(SocialOauthService.class);
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 	@Autowired
@@ -64,20 +66,18 @@ public class SocialOauthService {
 	    }
 	   
 	   
-	    public ResponseService GoogleCallback(String code, String state) throws Exception {
+	    public String GoogleCallback(String code, String state) throws Exception {
 	        TokenData tokenData = null;
 	        try {
 	            tokenData = getGoogleIdTokenData(code, state);
 	            return authenticateUser(tokenData,SocialLoginProviderType.GMAIL);
 	        } catch (Exception e) {
-//	            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//	            params.add(ApplicationConstant.ERROR, "Error while google Login");
-//	            if (userType.equalsIgnoreCase("Interviewer")) {
-//	                return buildUrl(loginRedirectUrl + "/interviewer/signin", params);
-//	            } else {
-//	                return buildUrl(loginRedirectUrl + "/recruiter/signin", params);
-//	            }
-	        	throw e;
+
+	        	MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+	            params.add("Error", "Error while sign in from google");
+
+	        	log.error("Error occured while sign in with google: "+e.getMessage());
+	        	return buildUrl(socialLoginProperties.getGoogle().getCallbackPageUrl(),params);
 	        }
 	    }
 	    
@@ -100,16 +100,17 @@ public class SocialOauthService {
 	        return objectMapper.readValue(Base64.decodeBase64(tokenResponse.getBody().getId_token().split("\\.")[1]), TokenData.class);
 	    }
 	    
-	    private ResponseService authenticateUser(TokenData tokenData,SocialLoginProviderType authType) {
+	    private String authenticateUser(TokenData tokenData,SocialLoginProviderType authType) {
 	    	User user=userRepo.findByEmail(tokenData.getEmail());
 	    	if(user==null) {
 	    		user=registerSocialUser(tokenData);}
-	    		ResponseService response=createResponse(user);
-	    		return response;
+	    		return createResponse(user);
+	    		
 	    	
 	    	
 	    }
 	    private User registerSocialUser(TokenData tokenData) {
+	    	log.info("Registering new User with email: "+tokenData.getEmail());
 	    	User user=new User();
 	    	user.setFirstName(tokenData.getGiven_name());
 	    	user.setLastName(tokenData.getFamily_name());
@@ -119,6 +120,7 @@ public class SocialOauthService {
 	    	user=userRepo.save(user);
 	    	UserSocialLoginType userLoginType=new UserSocialLoginType(user,SocialLoginProviderType.GMAIL,tokenData.getSub());
 	    	userLoginRepo.save(userLoginType);
+	    	log.info("User Registered Successfully");
 	    	return user;
 	    }
 	    private String getHttpRequestBody(ImmutableMap<String, String> map) throws IOException {
@@ -140,15 +142,17 @@ public class SocialOauthService {
 	            sb.append(chars.charAt(rnd.nextInt(chars.length())));
 	        return sb.toString();
 	    }
-	    public ResponseService createResponse(User user) {
+	    public String createResponse(User user) {
 	    	String token=jwtTokenUtil.createToken(user.getEmail());
-	    	Map<String,Object> map=new HashMap<>();
-	    	map.put("id", user.getId());
-	    	map.put("token", token);
-	    	map.put("email", user.getEmail());
-	    	ResponseService rs=new ResponseService("Social Login",true,Arrays.asList(map));
-	    	return rs;
+	    	MultiValueMap<String,String> map=new LinkedMultiValueMap<>();
+	    	map.add("id", user.getId().toString());
+	    	map.add("token", token);
+	    	map.add("email", user.getEmail());
+	    	
+	    	return buildUrl(socialLoginProperties.getGoogle().getAccessTokenUrl(),map);
 	    }
-	 
+	    private String buildUrl(String baseUrl, MultiValueMap<String, String> params) {
+	        return URIBuilder.fromUri(baseUrl).queryParams(params).build().toString();
+	    }
 	    
 }

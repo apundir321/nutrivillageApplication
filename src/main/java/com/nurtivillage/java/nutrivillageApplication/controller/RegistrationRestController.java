@@ -14,12 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -136,6 +139,35 @@ public class RegistrationRestController {
         return null;
     }
 
+    
+    //Forgot Password
+    @GetMapping("/user/ForgotPassword")
+    public  ResponseEntity<?> userForgotPassword(@RequestParam String email) {
+    	try {
+    	String result=	userService.sendMailForForgotPasswordToUser(email);
+    	if(result.equals("Success")) {
+    	return new ResponseEntity<GenericResponse>( new GenericResponse("Mail Sent"),HttpStatus.OK);
+    	 	}
+    	else {
+    		throw new Exception("Error occured while sending mail");}
+    	}
+    	catch(Exception e) {
+    		return new ResponseEntity<String>(e.getMessage(),HttpStatus.OK);
+    	}
+    }
+    
+    
+    //Reset password after  Forgotting password
+    @PutMapping("/user/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordDto passwordDto){
+    	try {
+    		String result=userService.resetUserPassword(passwordDto);
+    	return new ResponseEntity<String>(result,HttpStatus.OK);
+    	}
+    	catch(Exception e) {
+    		return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
+    }
     // ============== NON-API ============
 
     private SimpleMailMessage constructResendVerificationTokenEmail(final String contextPath, final Locale locale, final VerificationToken newToken, final User user) {

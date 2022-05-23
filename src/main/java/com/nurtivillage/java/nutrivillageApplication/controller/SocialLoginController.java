@@ -1,8 +1,12 @@
 package com.nurtivillage.java.nutrivillageApplication.controller;
 
+import java.util.Map;
+
 import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +33,7 @@ public class SocialLoginController {
 	    }
 	   
 	   @GetMapping(value = "/google/callback")
-	    public ResponseService handleGoogleOauthResponse(@RequestParam(value = "error", defaultValue = "") String error,
+	    public RedirectView handleGoogleOauthResponse(@RequestParam(value = "error", defaultValue = "") String error,
 	                                                  @RequestParam(value = "code", defaultValue = "") String code,
 	                                                  @RequestParam(value = "state", defaultValue = "") String state,
 	                                                  @RequestParam(value = "error_description", defaultValue = "") String error_description,
@@ -37,8 +41,8 @@ public class SocialLoginController {
 	        if (error.length() > 0) {
 	            throw new AuthenticationException(error);
 	        }
-	        return socialOauthService.GoogleCallback(code, state);
+	      return new RedirectView(socialOauthService.GoogleCallback(code, state));
 	    }
 	   
-	 
+
 }
