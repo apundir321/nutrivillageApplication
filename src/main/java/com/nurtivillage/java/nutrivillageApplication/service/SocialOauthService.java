@@ -149,7 +149,7 @@ public class SocialOauthService {
 	    	map.add("token", token);
 	    	map.add("email", user.getEmail());
 	    	
-	    	return buildUrl(socialLoginProperties.getGoogle().getAccessTokenUrl(),map);
+	    	return buildUrl(socialLoginProperties.getGoogle().getCallbackPageUrl(),map);
 	    }
 	    private String buildUrl(String baseUrl, MultiValueMap<String, String> params) {
 	        return URIBuilder.fromUri(baseUrl).queryParams(params).build().toString();
