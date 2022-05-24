@@ -79,7 +79,7 @@ private static final Logger log=LogManager.getLogger(UserService.class);
     @Autowired
     private UserLocationRepository userLocationRepository;
     
-    private final String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&";
+    private final String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     @Autowired
     private NewLocationTokenRepository newLocationTokenRepository;
