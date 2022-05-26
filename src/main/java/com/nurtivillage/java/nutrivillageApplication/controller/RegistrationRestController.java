@@ -74,7 +74,7 @@ public class RegistrationRestController {
         boolean isRecruiter = request.getParameter("recruiter")==null?false:true;
         final User registered = userService.registerNewUserAccount(accountDto,isRecruiter);
 //        userService.addUserLocation(registered, getClientIP(request));
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
+       // eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
         return new GenericResponse("success");
     }
 
