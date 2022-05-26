@@ -371,7 +371,7 @@ private static final Logger log=LogManager.getLogger(UserService.class);
 	public String sendMailForForgotPasswordToUser(String email) throws Exception{
 		try {
 		User user=userRepository.findByEmail(email);
-		if(user!=null && user.getForgotPasswordKey()==null) {
+		if(user!=null) {
 			String token=generateRandomAlphaNumeric(9);
 			user.setForgotPasswordKey(token);
 			SimpleMailMessage mail=createMailForForgotPassword(user.getEmail(),token);
