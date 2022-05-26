@@ -53,7 +53,7 @@ public interface IUserService {
     
     public List<User> getUserByRoleName(String roleName)throws Exception;
     
-    public String sendMailForForgotPasswordToUser(String email) throws Exception;
+    public void sendMailForForgotPasswordToUser(String email) throws Exception;
     
     public List<UserProfile> getUserProfilesByRoleParams(Map<String, Object> searchCriteria)throws Exception;
 

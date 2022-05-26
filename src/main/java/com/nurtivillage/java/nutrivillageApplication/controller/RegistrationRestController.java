@@ -144,15 +144,12 @@ public class RegistrationRestController {
     @GetMapping("/user/ForgotPassword")
     public  ResponseEntity<?> userForgotPassword(@RequestParam String email) {
     	try {
-    	String result=	userService.sendMailForForgotPasswordToUser(email);
-    	if(result.equals("Success")) {
+    		userService.sendMailForForgotPasswordToUser(email);
     	return new ResponseEntity<GenericResponse>( new GenericResponse("Mail Sent"),HttpStatus.OK);
-    	 	}
-    	else {
-    		throw new Exception("Error occured while sending mail");}
     	}
-    	catch(Exception e) {
-    		return new ResponseEntity<String>(e.getMessage(),HttpStatus.OK);
+    	
+        	catch(Exception e) {
+    		return new ResponseEntity<GenericResponse>(new GenericResponse("Error occured while sending mail",e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
     	}
     }
     
@@ -162,10 +159,10 @@ public class RegistrationRestController {
     public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordDto passwordDto){
     	try {
     		String result=userService.resetUserPassword(passwordDto);
-    	return new ResponseEntity<String>(result,HttpStatus.OK);
+    	return new ResponseEntity<GenericResponse>(new GenericResponse(result),HttpStatus.OK);
     	}
     	catch(Exception e) {
-    		return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+    		return new ResponseEntity<GenericResponse>(new GenericResponse("Error occured while changing password",e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
     	}
     }
     // ============== NON-API ============

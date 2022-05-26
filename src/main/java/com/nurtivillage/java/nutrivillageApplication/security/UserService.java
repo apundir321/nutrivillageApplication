@@ -368,7 +368,7 @@ private static final Logger log=LogManager.getLogger(UserService.class);
 		return null;
 	}
 	@Override
-	public String sendMailForForgotPasswordToUser(String email) throws Exception{
+	public void sendMailForForgotPasswordToUser(String email) throws Exception{
 		try {
 		User user=userRepository.findByEmail(email);
 		if(user!=null) {
@@ -376,7 +376,6 @@ private static final Logger log=LogManager.getLogger(UserService.class);
 			user.setForgotPasswordKey(token);
 			SimpleMailMessage mail=createMailForForgotPassword(user.getEmail(),token);
 			mailSender.send(mail);
-			return "Success";
 		}
 		else {
 			throw new Exception("User doesn't exists with this email address or forgot request already made");
