@@ -18,6 +18,7 @@ public class ShippingAddress {
 	private String city;
 	private String pincode;
 	private String mobile;
+	private String email;
 	@OneToOne
 	private User user;
 	
@@ -84,6 +85,12 @@ public class ShippingAddress {
 		return "ShippingAddress [id=" + id + ", name=" + name + ", country=" + country + ", street=" + street
 				+ ", state=" + state + ", city=" + city + ", pincode=" + pincode + ", mobile=" + mobile + ", user="
 				+ user + "]";
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	

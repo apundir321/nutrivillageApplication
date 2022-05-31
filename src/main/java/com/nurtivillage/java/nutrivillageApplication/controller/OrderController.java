@@ -1,6 +1,7 @@
 package com.nurtivillage.java.nutrivillageApplication.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -162,6 +163,7 @@ public class OrderController {
                 return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } 
+        
         @PutMapping("/validatePayment")
         public ResponseEntity<ApiResponseService> updateOrder(@RequestBody Payment payment){
         	try {
@@ -180,6 +182,46 @@ public class OrderController {
 			
         	
         }
+        
+        // Guest Order- without login create order
+        @PostMapping("/guest")
+        public ResponseEntity<ApiResponseService> createGuestOrder(@RequestBody OrderRequest orderRequest){
+            try{
+                Long orderNO = orderService.getLastOrderNO();
+                double amount = orderRequest.getAmount();
+                User user = orderService.createGuestUser(orderRequest.getShippingAddress());
+               boolean inStock=orderService.checkQuantity(orderRequest.getProductId(), orderRequest.getVariantId(), orderRequest.getQuantity());
+               if(!inStock) {
+            	   throw new Exception("Not in Stock");
+               }
+               UserOrder order = new UserOrder(amount,user,orderNO+1,1,Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
+                //verify amount
+                boolean checker = orderService.checkAmount(orderRequest);
+                if(!checker){
+                    throw new Exception("Incorrect amount");
+                }
+                UserOrder orderCreate = orderService.createOrder(order);
+               OrderDetails data = orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderRequest.getQuantity(),orderCreate);
+               log.info("Sending Mail To Admin for order received --Start");
+               SimpleMailMessage mail=orderService.sendMailToAdminForOrder(orderCreate);
+               mailSender.send(mail);
+               log.info("Sending Mail To Admin for order received --End");
+               Map<String,String> guestInfo=orderService.guestInfo(user);
+                if(!orderRequest.getPaymentMethod().equals("COD")){
+                    Order orderRes = onlinePaymentService.createOrderOnRazorpay(orderCreate,this.razorpayClient);
+                    onlinePaymentService.savePayment(orderRes.get("id"), orderCreate);
+                    ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount"),guestInfo));
+                    return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+                }
+                System.out.print(data);
+                ApiResponseService res = new ApiResponseService("order placed",true,Arrays.asList(data,guestInfo));
+                return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
+            }catch(Exception e){
+                System.out.println(e);
+                ApiResponseService res = new ApiResponseService(e.getMessage(),false,Arrays.asList(e));
+                return new ResponseEntity<ApiResponseService>(res,HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } 
 
         @GetMapping("/detail/{id}")
         public ResponseEntity<ApiResponseService> orderDetail(@PathVariable Long id){
