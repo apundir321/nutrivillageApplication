@@ -10,6 +10,7 @@ import javax.websocket.server.PathParam;
 
 import com.nurtivillage.java.nutrivillageApplication.RazorPayClientConfig;
 import com.nurtivillage.java.nutrivillageApplication.Request.OrderRequest;
+import com.nurtivillage.java.nutrivillageApplication.dao.UserRepository;
 import com.nurtivillage.java.nutrivillageApplication.dto.StatusRequest;
 import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
 import com.nurtivillage.java.nutrivillageApplication.model.Payment;
@@ -59,6 +60,8 @@ public class OrderController {
         
         @Autowired
         private JavaMailSender mailSender;
+        @Autowired
+        private UserRepository userRepo;
         
         @Autowired
         public OrderController(RazorPayClientConfig razorpayClientConfig) throws RazorpayException{
@@ -189,7 +192,9 @@ public class OrderController {
             try{
                 Long orderNO = orderService.getLastOrderNO();
                 double amount = orderRequest.getAmount();
-                User user = orderService.createGuestUser(orderRequest.getShippingAddress());
+                User user=userRepo.findByEmail(orderRequest.getShippingAddress().getEmail());
+                  if(user==null) {
+                user = orderService.createGuestUser(orderRequest.getShippingAddress());}
                boolean inStock=orderService.checkQuantity(orderRequest.getProductId(), orderRequest.getVariantId(), orderRequest.getQuantity());
                if(!inStock) {
             	   throw new Exception("Not in Stock");
@@ -210,11 +215,11 @@ public class OrderController {
                 if(!orderRequest.getPaymentMethod().equals("COD")){
                     Order orderRes = onlinePaymentService.createOrderOnRazorpay(orderCreate,this.razorpayClient);
                     onlinePaymentService.savePayment(orderRes.get("id"), orderCreate);
-                    ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount"),guestInfo));
+                    ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount")),guestInfo);
                     return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
                 }
                 System.out.print(data);
-                ApiResponseService res = new ApiResponseService("order placed",true,Arrays.asList(data,guestInfo));
+                ApiResponseService res = new ApiResponseService("order placed",true,Arrays.asList(data),guestInfo);
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
             }catch(Exception e){
                 System.out.println(e);
