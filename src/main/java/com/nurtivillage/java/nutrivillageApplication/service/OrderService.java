@@ -183,7 +183,7 @@ public class OrderService {
 	public List<?> getUserOrder(User user) {
 		List<UserOrder> orderList = orderRepository.findByUser(user);
 		List<UserOrder> paidOrderList = null;
-		paidOrderList = orderList.stream().filter(o -> o.getPaymentStatus() != null).collect(Collectors.toList());
+		paidOrderList = orderList.stream().filter(o -> o.getPaymentStatus() != null || o.getPaymentMethod().equals("COD")).collect(Collectors.toList());
 		return paidOrderList;
 	}
 
