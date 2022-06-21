@@ -229,10 +229,11 @@ public class OrderService {
 			totalAmount = totalAmount + price;
 			if (discount != null) {
 				int number = Integer.parseInt(discount.getAmount());
-				number = number * cartItem.getQuantity();
-				if (discount.getDiscountType() == "PERCENT") {
+				
+				if (discount.getDiscountType().equals("PERCENT")) {
 					totalAmount = totalAmount - (totalAmount * number) / 100;
 				} else {
+					number = number * cartItem.getQuantity();
 					totalAmount = totalAmount - number;
 				}
 			}
@@ -267,10 +268,10 @@ public class OrderService {
 			totalAmount = totalAmount + productPrice;
 			if (discount != null) {
 				int number = Integer.parseInt(discount.getAmount());
-				number = number * orderRequest.getQuantity();
-				if (discount.getDiscountType() == "PERCENT") {
+				if (discount.getDiscountType().equals("PERCENT")) {
 					totalAmount = totalAmount - (totalAmount * number) / 100;
 				} else {
+					number = number * orderRequest.getQuantity();
 					totalAmount = totalAmount - number;
 				}
 
