@@ -23,6 +23,8 @@ public class UserDto {
     @NotNull
     @Size(min = 1)
     private String matchingPassword;
+    
+    private String phoneNo;
 
     @ValidEmail
     @NotNull
@@ -30,6 +32,7 @@ public class UserDto {
     private String email;
 
     private boolean isUsing2FA;
+     
 
     public String getEmail() {
         return email;
@@ -104,5 +107,13 @@ public class UserDto {
                 .append(role).append("]");
         return builder.toString();
     }
+
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
 
 }

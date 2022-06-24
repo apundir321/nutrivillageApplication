@@ -60,6 +60,9 @@ import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 import com.nurtivillage.java.nutrivillageApplication.security.IUserService;
 import com.nurtivillage.java.nutrivillageApplication.security.JwtUserDetailsService;
 import com.nurtivillage.java.nutrivillageApplication.service.AWSS3Service;
+import com.nurtivillage.java.nutrivillageApplication.service.EmailService;
+import com.nurtivillage.java.nutrivillageApplication.service.OTPService;
+import com.nurtivillage.java.nutrivillageApplication.service.OrderService;
 import com.nurtivillage.java.nutrivillageApplication.service.UserProfileService;
 import com.nurtivillage.java.nutrivillageApplication.util.GenericResponse;
 
@@ -81,9 +84,17 @@ public class UserController {
 	@Autowired
 	private UserProfileService userProfileService;
 	
+	@Autowired
+	private OTPService otpService;
 	
 	@Autowired
-	private AWSS3Service awsService; 
+	private EmailService emailService;
+	
+	@Autowired
+	private AWSS3Service awsService;
+
+	@Autowired
+	private OrderService orderService; 
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AccountCredentials authenticationRequest)
@@ -152,6 +163,20 @@ public class UserController {
 	}
 	
 	
+	@RequestMapping(value = "/findUserByPhone", method = RequestMethod.GET)
+	public ResponseEntity<?> findUserByPhone(@RequestParam String phone)
+			throws Exception {
+		User user = null;
+		try {
+			user = userProfileService.getUserByPhone(phone);
+			String otp = String.valueOf(otpService.generateOTP(user.getEmail()));
+			emailService.sendOtpMessage("anuragpundir641@gmail.com", "OTP -SpringBoot", otp);
+		} catch (Exception e) {
+			return new ResponseEntity<GenericResponse>(new GenericResponse("Exception in getting User="+e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<User>(user,HttpStatus.OK);
+	}
+	
 	@GetMapping("/secured")
 	public String getValue()
 	{
@@ -170,6 +195,7 @@ public class UserController {
 		return new ResponseEntity<User>(user,HttpStatus.OK);
 		
 	}
+	
 	
 	@RequestMapping(value = "/getUsers", method = RequestMethod.GET)
 	public ResponseEntity<?> getUsers()
@@ -393,5 +419,52 @@ public class UserController {
                 return MediaType.APPLICATION_OCTET_STREAM;
         }
     }
+	
+	@RequestMapping(value ="/validateOtp", method = RequestMethod.GET)
+	public ResponseEntity<?> validateOtp(@RequestParam("otpnum") int otpnum,@RequestParam("user") String username){
+		
+			final String SUCCESS = "Entered Otp is valid";
+			final String FAIL = "Entered Otp is NOT valid. Please Retry!";
+			try {
+			//Validate the Otp 
+			if(validateOtp( username,otpnum))
+			{
+				User user = userService.findUserByEmail(username);
+				Map<String,String> userInfo=orderService.guestInfo(user);
+				return new ResponseEntity<Map>(userInfo,HttpStatus.OK);
+			}else
+			{
+				return new ResponseEntity<String>(
+						"Otp Not Valid",
+						HttpStatus.NOT_ACCEPTABLE);
+			}
+			}catch (Exception e) {
+				return new ResponseEntity<String>(
+						"Exception in validating OTP with message="+e.getMessage(),
+						HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+	      }
+	
+	public boolean validateOtp(String username, int otpnum)
+	{
+		if(otpnum >= 0){
+			
+			  int serverOtp = otpService.getOtp(username);
+			    if(serverOtp > 0){
+			      if(otpnum == serverOtp){
+			          otpService.clearOTP(username);
+			
+	                  return true;
+	                } 
+			        else {
+	                    return false;
+	                   }
+	               }else {
+	              return false;
+	               }
+	             }else {
+	                return false;
+	         }
+	}
 
 }

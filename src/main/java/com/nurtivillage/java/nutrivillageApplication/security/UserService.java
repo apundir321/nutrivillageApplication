@@ -111,6 +111,7 @@ private static final Logger log=LogManager.getLogger(UserService.class);
         user.setLastName(accountDto.getLastName());
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setEmail(accountDto.getEmail());
+        user.setPhoneNo(accountDto.getPhoneNo());
         user.setUsing2FA(accountDto.isUsing2FA());	
         	profile = new UserProfile();
         	profile.setEmail(accountDto.getEmail());
