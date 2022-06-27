@@ -30,7 +30,7 @@ public class SMSService {
 
     public void sendSms(int otp,String phonenumber)
     {
-        Twilio.init("AC3e5e994d15adc30371436da827cbfa05", "bb5d7f94f7a6b8731fbd7d93f76c03ec");
+        Twilio.init("AC3e5e994d15adc30371436da827cbfa05", "eaade5f91ecf8877d99af844c8bce1aa");
         Message message = Message.creator(
                         new PhoneNumber("+91"+phonenumber),
                         new PhoneNumber("+16814994469"),
