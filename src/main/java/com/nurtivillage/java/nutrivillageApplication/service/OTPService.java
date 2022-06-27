@@ -23,6 +23,8 @@ public class OTPService {
 		});
 	}
 
+
+
 	public int generateOTP(String key) {
 		Random random = new Random();
 		int otp = 100000 + random.nextInt(900000);

@@ -13,20 +13,13 @@ public class EmailService {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+
+	@Autowired
+	private SMSService smsService;
 	
-	public void sendOtpMessage(String to, String subject, String message) throws MessagingException {
+	public void sendOtpMessage(int otp, String number) throws MessagingException {
 	
-		 MimeMessage msg = javaMailSender.createMimeMessage();
-
-	        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
-
-	        helper.setTo(to);
-
-	        helper.setSubject(subject);
-
-	        helper.setText(message, true);
-
-	        javaMailSender.send(msg);
+		smsService.sendSms(otp,number);
    }
 	
 }

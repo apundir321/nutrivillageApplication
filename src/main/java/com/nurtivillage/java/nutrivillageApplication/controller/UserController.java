@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nurtivillage.java.nutrivillageApplication.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -59,11 +60,6 @@ import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 import com.nurtivillage.java.nutrivillageApplication.security.IUserService;
 import com.nurtivillage.java.nutrivillageApplication.security.JwtUserDetailsService;
-import com.nurtivillage.java.nutrivillageApplication.service.AWSS3Service;
-import com.nurtivillage.java.nutrivillageApplication.service.EmailService;
-import com.nurtivillage.java.nutrivillageApplication.service.OTPService;
-import com.nurtivillage.java.nutrivillageApplication.service.OrderService;
-import com.nurtivillage.java.nutrivillageApplication.service.UserProfileService;
 import com.nurtivillage.java.nutrivillageApplication.util.GenericResponse;
 
 @RestController
@@ -94,7 +90,10 @@ public class UserController {
 	private AWSS3Service awsService;
 
 	@Autowired
-	private OrderService orderService; 
+	private OrderService orderService;
+
+	@Autowired
+	private SMSService smsService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AccountCredentials authenticationRequest)
@@ -169,8 +168,11 @@ public class UserController {
 		User user = null;
 		try {
 			user = userProfileService.getUserByPhone(phone);
-			String otp = String.valueOf(otpService.generateOTP(user.getEmail()));
-			emailService.sendOtpMessage("anuragpundir641@gmail.com", "OTP -SpringBoot", otp);
+			if(user==null){
+				return new ResponseEntity<GenericResponse>(new GenericResponse("User doesn't exists by this number"),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			String otp = String.valueOf(smsService.generateOTP(user.getEmail()));
+			emailService.sendOtpMessage(Integer.parseInt(otp),user.getPhoneNo());
 		} catch (Exception e) {
 			return new ResponseEntity<GenericResponse>(new GenericResponse("Exception in getting User="+e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -325,8 +327,8 @@ public class UserController {
 	
 	
 	
-	
-	
+
+
 	@RequestMapping(value = "/updateProfilePic", method = RequestMethod.POST)
 	public ResponseEntity<?> updateProfilePic(@RequestPart(value= "file" ,required = true) final MultipartFile multipartFile,@RequestParam String userId)
 			throws Exception {
@@ -449,11 +451,10 @@ public class UserController {
 	{
 		if(otpnum >= 0){
 			
-			  int serverOtp = otpService.getOtp(username);
+			  int serverOtp = smsService.getOtp(username);
 			    if(serverOtp > 0){
 			      if(otpnum == serverOtp){
-			          otpService.clearOTP(username);
-			
+			          smsService.clearOTP(username);
 	                  return true;
 	                } 
 			        else {

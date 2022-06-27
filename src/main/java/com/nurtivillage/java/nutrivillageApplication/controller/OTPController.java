@@ -27,21 +27,6 @@ public class OTPController {
 	@Autowired
 	public EmailService emailService;
 
-	@GetMapping("/generateOtp")
-	public String generateOTP() throws MessagingException {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String username = auth.getName();
-		int otp = otpService.generateOTP(username);
-		// Generate The Template to send OTP
-
-		String message = String.valueOf(otp);
-
-		emailService.sendOtpMessage("anuragpundir641@gmail.com", "OTP -SpringBoot", message);
-
-		return message;
-	}
-
 	@RequestMapping(value = "/validateOtp", method = RequestMethod.GET)
 	public @ResponseBody String validateOtp(@RequestParam("otpnum") int otpnum) {
 
