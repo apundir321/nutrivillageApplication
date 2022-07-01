@@ -158,7 +158,9 @@ public class RegistrationRestController {
     @PutMapping("/user/changePassword")
     public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordDto passwordDto){
     	try {
+    		LOGGER.info("changing password -- Start");
     		String result=userService.resetUserPassword(passwordDto);
+    		LOGGER.info("changing password -- End");
     	return new ResponseEntity<GenericResponse>(new GenericResponse(result),HttpStatus.OK);
     	}
     	catch(Exception e) {
