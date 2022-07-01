@@ -25,9 +25,7 @@ public class UserProfileService {
 
 	@Autowired
 	UserProfileRepository userProfileRepository;
-	
-	
-	
+		
 
 	public UserProfile updateUserProfile(String userId, UserProfile profile) throws Exception {
 		try {
@@ -142,6 +140,29 @@ public class UserProfileService {
 			else
 			{
 				throw new GenericException("Didn't find any user by this Id");
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new GenericException(e.getMessage());
+		}
+	}
+
+	public User getUserByPhone(String phoneNo) throws Exception{
+		try {
+			Optional<User> user = Optional.of(userRepository.findByPhoneNo(phoneNo));
+			if(user.isPresent())
+			{
+				User savedUser = user.get();
+				if(savedUser==null)
+				{
+					throw new GenericException("No user found by this phone no.");
+				}
+				return savedUser;
+			}
+			else
+			{
+				throw new GenericException("Didn't find any user by this phone no.");
 			}
 			
 		} catch (Exception e) {

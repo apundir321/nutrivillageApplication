@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nurtivillage.java.nutrivillageApplication.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -59,8 +60,6 @@ import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 import com.nurtivillage.java.nutrivillageApplication.security.IUserService;
 import com.nurtivillage.java.nutrivillageApplication.security.JwtUserDetailsService;
-import com.nurtivillage.java.nutrivillageApplication.service.AWSS3Service;
-import com.nurtivillage.java.nutrivillageApplication.service.UserProfileService;
 import com.nurtivillage.java.nutrivillageApplication.util.GenericResponse;
 
 @RestController
@@ -81,9 +80,20 @@ public class UserController {
 	@Autowired
 	private UserProfileService userProfileService;
 	
+	@Autowired
+	private OTPService otpService;
 	
 	@Autowired
-	private AWSS3Service awsService; 
+	private EmailService emailService;
+	
+	@Autowired
+	private AWSS3Service awsService;
+
+	@Autowired
+	private OrderService orderService;
+
+	@Autowired
+	private SMSService smsService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AccountCredentials authenticationRequest)
@@ -152,6 +162,23 @@ public class UserController {
 	}
 	
 	
+	@RequestMapping(value = "/findUserByPhone", method = RequestMethod.GET)
+	public ResponseEntity<?> findUserByPhone(@RequestParam String phone)
+			throws Exception {
+		User user = null;
+		try {
+			user = userProfileService.getUserByPhone(phone);
+			if(user==null){
+				return new ResponseEntity<GenericResponse>(new GenericResponse("User doesn't exists by this number"),HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			String otp = String.valueOf(smsService.generateOTP(user.getEmail()));
+			emailService.sendOtpMessage(Integer.parseInt(otp),user.getPhoneNo());
+		} catch (Exception e) {
+			return new ResponseEntity<GenericResponse>(new GenericResponse("Exception in getting User="+e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<User>(user,HttpStatus.OK);
+	}
+	
 	@GetMapping("/secured")
 	public String getValue()
 	{
@@ -170,6 +197,7 @@ public class UserController {
 		return new ResponseEntity<User>(user,HttpStatus.OK);
 		
 	}
+	
 	
 	@RequestMapping(value = "/getUsers", method = RequestMethod.GET)
 	public ResponseEntity<?> getUsers()
@@ -299,8 +327,8 @@ public class UserController {
 	
 	
 	
-	
-	
+
+
 	@RequestMapping(value = "/updateProfilePic", method = RequestMethod.POST)
 	public ResponseEntity<?> updateProfilePic(@RequestPart(value= "file" ,required = true) final MultipartFile multipartFile,@RequestParam String userId)
 			throws Exception {
@@ -393,5 +421,51 @@ public class UserController {
                 return MediaType.APPLICATION_OCTET_STREAM;
         }
     }
+	
+	@RequestMapping(value ="/validateOtp", method = RequestMethod.GET)
+	public ResponseEntity<?> validateOtp(@RequestParam("otpnum") int otpnum,@RequestParam("user") String username){
+		
+			final String SUCCESS = "Entered Otp is valid";
+			final String FAIL = "Entered Otp is NOT valid. Please Retry!";
+			try {
+			//Validate the Otp 
+			if(validateOtp( username,otpnum))
+			{
+				User user = userService.findUserByEmail(username);
+				Map<String,String> userInfo=orderService.guestInfo(user);
+				return new ResponseEntity<Map>(userInfo,HttpStatus.OK);
+			}else
+			{
+				return new ResponseEntity<String>(
+						"Otp Not Valid",
+						HttpStatus.NOT_ACCEPTABLE);
+			}
+			}catch (Exception e) {
+				return new ResponseEntity<String>(
+						"Exception in validating OTP with message="+e.getMessage(),
+						HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+	      }
+	
+	public boolean validateOtp(String username, int otpnum)
+	{
+		if(otpnum >= 0){
+			
+			  int serverOtp = smsService.getOtp(username);
+			    if(serverOtp > 0){
+			      if(otpnum == serverOtp){
+			          smsService.clearOTP(username);
+	                  return true;
+	                } 
+			        else {
+	                    return false;
+	                   }
+	               }else {
+	              return false;
+	               }
+	             }else {
+	                return false;
+	         }
+	}
 
 }
