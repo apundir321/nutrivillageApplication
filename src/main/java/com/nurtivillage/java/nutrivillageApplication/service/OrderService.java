@@ -309,6 +309,7 @@ public class OrderService {
 		}
 	}
 
+	// sending mail to owner
 	public SimpleMailMessage sendMailToAdminForOrder(UserOrder order) {
 		try {
 			ShippingAddress address = order.getShippingAddress();
@@ -322,6 +323,33 @@ public class OrderService {
 					+ "\r\n Order Status : " + order.getStatus().toString() + "\r\n Payment Method : "+ order.getPaymentMethod();
 			final SimpleMailMessage mail = new SimpleMailMessage();
 			mail.setTo(fromMail);
+			mail.setSubject(subject);
+			mail.setFrom(fromMail);
+			mail.setText(message);
+			return mail;
+		} catch (Exception e) {
+			log.error("Error occured while sending mail to admin for order: " + e.getMessage());
+			throw e;
+		}
+	}
+	
+	
+	//sending mail to buyer
+	public SimpleMailMessage sendMailToBuyerForOrder(UserOrder order) {
+		try {
+			ShippingAddress address = order.getShippingAddress();
+			final String subject = "Order placed";
+			final String message = "************ ORDER PLACED ************ \r\n \r\n Thank you for"
+					+ " ordering from Nutri Village. \r\n Your order "+order.getOrderNo()+" has been placed.\r\n"
+							+ " # SHIPPING DETAILS # \r\n" + "Name : "
+					+ address.getName() + "\r\n Country : " + address.getCountry() + "\r\n Street : "
+					+ address.getStreet() + "\r\n State : " + address.getState() + "\r\n City : " + address.getCity()
+					+ "\r\n Pincode : " + address.getPincode() + "\r\n Mobile : " + address.getMobile()
+					+ "\r\n Email : " + order.getUser().getEmail() + "\r\n \r\n" + "# ORDER DETAILS # "
+					+ "\r\n Order ID : " + order.getOrderNo() + "\r\n Order Amount : " + order.getAmount()
+					+ "\r\n Order Status : " + order.getStatus().toString() + "\r\n Payment Method : "+ order.getPaymentMethod();
+			final SimpleMailMessage mail = new SimpleMailMessage();
+			mail.setTo(order.getUser().getEmail());
 			mail.setSubject(subject);
 			mail.setFrom(fromMail);
 			mail.setText(message);

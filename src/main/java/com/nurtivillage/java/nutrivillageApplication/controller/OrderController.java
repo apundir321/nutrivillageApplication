@@ -111,9 +111,14 @@ public class OrderController {
                 UserOrder orderCreate = orderService.createOrder(order);
                 List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
              log.info("Sending Mail To Admin for order received --Start");
-                SimpleMailMessage mail=orderService.sendMailToAdminForOrder(orderCreate);
-                mailSender.send(mail);
+                SimpleMailMessage mailAdmin=orderService.sendMailToAdminForOrder(orderCreate);
+                mailSender.send(mailAdmin);
                 log.info("Sending Mail To Admin for order received --End");
+                
+                log.info("Sending Mail To buyer for order received --Start");
+                SimpleMailMessage mailBuyer=orderService.sendMailToBuyerForOrder(orderCreate);
+                mailSender.send(mailBuyer);
+                log.info("Sending Mail To buyer for order received --End");
                 if(!orderRequest.getPaymentMethod().equals("COD")){
                     Order orderRes = onlinePaymentService.createOrderOnRazorpay(orderCreate,this.razorpayClient);
                     onlinePaymentService.savePayment(orderRes.get("id"), orderCreate);
@@ -151,6 +156,12 @@ public class OrderController {
                SimpleMailMessage mail=orderService.sendMailToAdminForOrder(orderCreate);
                mailSender.send(mail);
                log.info("Sending Mail To Admin for order received --End");
+               
+               log.info("Sending Mail To buyer for order received --Start");
+               SimpleMailMessage mailBuyer=orderService.sendMailToBuyerForOrder(orderCreate);
+               mailSender.send(mailBuyer);
+               log.info("Sending Mail To buyer for order received --End");
+               
                 if(!orderRequest.getPaymentMethod().equals("COD")){
                     Order orderRes = onlinePaymentService.createOrderOnRazorpay(orderCreate,this.razorpayClient);
                     onlinePaymentService.savePayment(orderRes.get("id"), orderCreate);
@@ -211,6 +222,12 @@ public class OrderController {
                SimpleMailMessage mail=orderService.sendMailToAdminForOrder(orderCreate);
                mailSender.send(mail);
                log.info("Sending Mail To Admin for order received --End");
+               
+               log.info("Sending Mail To buyer for order received --Start");
+               SimpleMailMessage mailBuyer=orderService.sendMailToBuyerForOrder(orderCreate);
+               mailSender.send(mailBuyer);
+               log.info("Sending Mail To buyer for order received --End");
+               
                Map<String,String> guestInfo=orderService.guestInfo(user);
                 if(!orderRequest.getPaymentMethod().equals("COD")){
                     Order orderRes = onlinePaymentService.createOrderOnRazorpay(orderCreate,this.razorpayClient);
