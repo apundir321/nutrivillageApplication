@@ -116,8 +116,8 @@ public class OrderController {
                 log.info("Sending Mail To Admin for order received --End");
                 
                 log.info("Sending Mail To buyer for order received --Start");
-                SimpleMailMessage mailBuyer=orderService.sendMailToBuyerForOrder(orderCreate);
-                mailSender.send(mailBuyer);
+               orderService.sendMailToBuyerForOrder(orderCreate);
+//                mailSender.send(mailBuyer);
                 log.info("Sending Mail To buyer for order received --End");
                 if(!orderRequest.getPaymentMethod().equals("COD")){
                     Order orderRes = onlinePaymentService.createOrderOnRazorpay(orderCreate,this.razorpayClient);
@@ -158,8 +158,8 @@ public class OrderController {
                log.info("Sending Mail To Admin for order received --End");
                
                log.info("Sending Mail To buyer for order received --Start");
-               SimpleMailMessage mailBuyer=orderService.sendMailToBuyerForOrder(orderCreate);
-               mailSender.send(mailBuyer);
+               orderService.sendMailToBuyerForOrder(orderCreate);
+//               mailSender.send(mailBuyer);
                log.info("Sending Mail To buyer for order received --End");
                
                 if(!orderRequest.getPaymentMethod().equals("COD")){
@@ -224,8 +224,8 @@ public class OrderController {
                log.info("Sending Mail To Admin for order received --End");
                
                log.info("Sending Mail To buyer for order received --Start");
-               SimpleMailMessage mailBuyer=orderService.sendMailToBuyerForOrder(orderCreate);
-               mailSender.send(mailBuyer);
+               orderService.sendMailToBuyerForOrder(orderCreate);
+//               mailSender.send(mailBuyer);
                log.info("Sending Mail To buyer for order received --End");
                
                Map<String,String> guestInfo=orderService.guestInfo(user);

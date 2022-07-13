@@ -5,11 +5,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collector;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.nurtivillage.java.nutrivillageApplication.Request.OrderRequest;
-import com.nurtivillage.java.nutrivillageApplication.dao.OfferRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.OrderDetailsRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.OrderRepository;
 import com.nurtivillage.java.nutrivillageApplication.dao.UserProfileRepository;
@@ -20,24 +38,12 @@ import com.nurtivillage.java.nutrivillageApplication.model.Cart;
 import com.nurtivillage.java.nutrivillageApplication.model.Inventory;
 import com.nurtivillage.java.nutrivillageApplication.model.Offer;
 import com.nurtivillage.java.nutrivillageApplication.model.OrderDetails;
-import com.nurtivillage.java.nutrivillageApplication.model.Product;
 import com.nurtivillage.java.nutrivillageApplication.model.ShippingAddress;
 import com.nurtivillage.java.nutrivillageApplication.model.Status;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 import com.nurtivillage.java.nutrivillageApplication.model.UserOrder;
 import com.nurtivillage.java.nutrivillageApplication.model.UserProfile;
 import com.nurtivillage.java.nutrivillageApplication.model.Variant;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.Transient;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -335,11 +341,58 @@ public class OrderService {
 	
 	
 	//sending mail to buyer
-	public SimpleMailMessage sendMailToBuyerForOrder(UserOrder order) {
+	public void sendMailToBuyerForOrder(UserOrder order) {
 		try {
 			ShippingAddress address = order.getShippingAddress();
 			final String subject = "Order placed";
-			final String message = "************ ORDER PLACED ************ \r\n \r\n Thank you for"
+			final String emailMessage="<p style=\"text-align: center;\"><span style=\"font-size: 8pt;\"><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"http://localhost:4200/assets/images/logo_nutri_update.png\" width=\"93\" height=\"93\"></span>***Ordered Recieved****</p>\r\n"
+					+ "<p style=\"text-align: left;\">Shipping Details</p>\r\n"
+					+ "<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\r\n"
+					+ "<tbody>\r\n"
+					+ "<tr>\r\n"
+					+ "<td style=\"width: 11.9584%;\"><span style=\"font-size: 10pt;\">Name</span></td>\r\n"
+					+ "<td style=\"width: 11.9584%;\"><span style=\"font-size: 10pt;\">Country</span></td>\r\n"
+					+ "<td style=\"width: 11.9584%;\"><span style=\"font-size: 10pt;\">Street</span></td>\r\n"
+					+ "<td style=\"width: 11.9584%;\"><span style=\"font-size: 10pt;\">State</span></td>\r\n"
+					+ "<td style=\"width: 11.9584%;\"><span style=\"font-size: 10pt;\">City</span></td>\r\n"
+					+ "<td style=\"width: 11.9584%;\"><span style=\"font-size: 10pt;\">Pincode</span></td>\r\n"
+					+ "<td style=\"width: 11.9584%;\"><span style=\"font-size: 10pt;\">Mobile</span></td>\r\n"
+					+ "<td style=\"width: 11.9584%;\"><span style=\"font-size: 10pt;\">Email</span></td>\r\n"
+					+ "</tr>\r\n"
+					+ "<tr>\r\n"
+					+ "<td style=\"width: 11.9584%;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 11.9584%;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 11.9584%;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 11.9584%;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 11.9584%;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 11.9584%;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 11.9584%;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 11.9584%;\">&nbsp;</td>\r\n"
+					+ "</tr>\r\n"
+					+ "</tbody>\r\n"
+					+ "</table>\r\n"
+					+ "<p>Order Details</p>\r\n"
+					+ "<table style=\"border-collapse: collapse; width: 100%; height: 36px;\" border=\"1\">\r\n"
+					+ "<tbody>\r\n"
+					+ "<tr style=\"height: 18px;\">\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\"><span style=\"font-size: 10pt;\">Product Name</span></td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\"><span style=\"font-size: 10pt;\">Quantity</span></td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\"><span style=\"font-size: 10pt;\">OrderId</span></td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\"><span style=\"font-size: 10pt;\">Order Amount</span></td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\"><span style=\"font-size: 10pt;\">Order Status</span></td>\r\n"
+					+ "<td style=\"width: 16.1105%; height: 18px;\"><span style=\"font-size: 10pt;\">Payment Method</span></td>\r\n"
+					+ "</tr>\r\n"
+					+ "<tr style=\"height: 18px;\">\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\">&nbsp;</td>\r\n"
+					+ "<td style=\"width: 16.1105%; height: 18px;\">&nbsp;</td>\r\n"
+					+ "</tr>\r\n"
+					+ "</tbody>\r\n"
+					+ "</table>";
+			final String message1 = "************ ORDER PLACED ************ \r\n \r\n Thank you for"
 					+ " ordering from Nutri Village. \r\n Your order "+order.getOrderNo()+" has been placed.\r\n"
 							+ " # SHIPPING DETAILS # \r\n" + "Name : "
 					+ address.getName() + "\r\n Country : " + address.getCountry() + "\r\n Street : "
@@ -348,12 +401,59 @@ public class OrderService {
 					+ "\r\n Email : " + order.getUser().getEmail() + "\r\n \r\n" + "# ORDER DETAILS # "
 					+ "\r\n Order ID : " + order.getOrderNo() + "\r\n Order Amount : " + order.getAmount()
 					+ "\r\n Order Status : " + order.getStatus().toString() + "\r\n Payment Method : "+ order.getPaymentMethod();
-			final SimpleMailMessage mail = new SimpleMailMessage();
-			mail.setTo(order.getUser().getEmail());
-			mail.setSubject(subject);
-			mail.setFrom(fromMail);
-			mail.setText(message);
-			return mail;
+			   
+
+			      // Sender's email ID needs to be mentioned
+			      String from = "villagenutri@gmail.com";
+			      final String username = "villagenutri@gmail.com";//change accordingly
+			      final String password = "urnlctxobrdulgmq";//change accordingly
+
+			      // Assuming you are sending email through relay.jangosmtp.net
+			      String host = "smtp.gmail.com";
+
+			      Properties props = new Properties();
+			      props.put("mail.smtp.auth", "true");
+			      props.put("mail.smtp.starttls.enable", "true");
+			      props.put("mail.smtp.host", host);
+			      props.put("mail.smtp.port", "587");
+
+			      // Get the Session object.
+			      Session session = Session.getInstance(props,
+			         new javax.mail.Authenticator() {
+			            protected PasswordAuthentication getPasswordAuthentication() {
+			               return new PasswordAuthentication(username, password);
+			            }
+				});
+
+			      try {
+			            // Create a default MimeMessage object.
+			            Message message = new MimeMessage(session);
+
+			   	   // Set From: header field of the header.
+				   message.setFrom(new InternetAddress(from));
+
+				   // Set To: header field of the header.
+				   message.setRecipients(Message.RecipientType.TO,
+			              InternetAddress.parse(order.getUser().getEmail()));
+
+				   // Set Subject: header field
+				   message.setSubject("Testing Subject");
+
+				   // Send the actual HTML message, as big as you like
+				   message.setContent(
+			             emailMessage,
+			             "text/html");
+
+				   // Send message
+				   Transport.send(message);
+
+				   System.out.println("Sent message successfully....");
+
+			      } catch (MessagingException e) {
+				   e.printStackTrace();
+				   throw new RuntimeException(e);
+			      }
+			
 		} catch (Exception e) {
 			log.error("Error occured while sending mail to admin for order: " + e.getMessage());
 			throw e;
@@ -410,5 +510,61 @@ public class OrderService {
 			throw e;
 		}
 	}
+		public static void main(String[] args) {
+		      // Recipient's email ID needs to be mentioned.
+		      String to = "anuragpundir641@gmail.com";
+
+		      // Sender's email ID needs to be mentioned
+		      String from = "villagenutri@gmail.com";
+		      final String username = "villagenutri@gmail.com";//change accordingly
+		      final String password = "urnlctxobrdulgmq";//change accordingly
+
+		      // Assuming you are sending email through relay.jangosmtp.net
+		      String host = "smtp.gmail.com";
+
+		      Properties props = new Properties();
+		      props.put("mail.smtp.auth", "true");
+		      props.put("mail.smtp.starttls.enable", "true");
+		      props.put("mail.smtp.host", host);
+		      props.put("mail.smtp.port", "587");
+
+		      // Get the Session object.
+		      Session session = Session.getInstance(props,
+		         new javax.mail.Authenticator() {
+		            protected PasswordAuthentication getPasswordAuthentication() {
+		               return new PasswordAuthentication(username, password);
+		            }
+			});
+
+		      try {
+		            // Create a default MimeMessage object.
+		            Message message = new MimeMessage(session);
+
+		   	   // Set From: header field of the header.
+			   message.setFrom(new InternetAddress(from));
+
+			   // Set To: header field of the header.
+			   message.setRecipients(Message.RecipientType.TO,
+		              InternetAddress.parse(to));
+
+			   // Set Subject: header field
+			   message.setSubject("Testing Subject");
+
+			   // Send the actual HTML message, as big as you like
+			   message.setContent(
+		              "<h1>This is actual message embedded in HTML tags</h1>",
+		             "text/html");
+
+			   // Send message
+			   Transport.send(message);
+
+			   System.out.println("Sent message successfully....");
+
+		      } catch (MessagingException e) {
+			   e.printStackTrace();
+			   throw new RuntimeException(e);
+		      }
+		   }
+	
 
 }
