@@ -7,7 +7,7 @@
     <diskStore path="java.io.tmpdir" />
 
     <cache name="productCache"
-           maxEntriesLocalHeap="10000"
+           maxEntriesLocalHeap="5000"
            maxEntriesLocalDisk="10000"
            eternal="true"
            diskSpoolBufferSizeMB="20"
@@ -17,7 +17,7 @@
         <persistence strategy="localTempSwap" />
     </cache>
       <cache name="categoryCache"
-           maxEntriesLocalHeap="10000"
+           maxEntriesLocalHeap="5000"
            maxEntriesLocalDisk="10000"
            eternal="true"
            diskSpoolBufferSizeMB="20"
