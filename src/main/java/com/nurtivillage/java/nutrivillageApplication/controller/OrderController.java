@@ -111,8 +111,8 @@ public class OrderController {
                 UserOrder orderCreate = orderService.createOrder(order);
                 List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
              log.info("Sending Mail To Admin for order received --Start");
-                SimpleMailMessage mailAdmin=orderService.sendMailToAdminForOrder(orderCreate);
-                mailSender.send(mailAdmin);
+                orderService.sendMailToAdminForOrder(orderCreate);
+//                mailSender.send(mailAdmin);
                 log.info("Sending Mail To Admin for order received --End");
                 
                 log.info("Sending Mail To buyer for order received --Start");
@@ -153,8 +153,8 @@ public class OrderController {
                 UserOrder orderCreate = orderService.createOrder(order);
                OrderDetails data = orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderRequest.getQuantity(),orderCreate);
                log.info("Sending Mail To Admin for order received --Start");
-               SimpleMailMessage mail=orderService.sendMailToAdminForOrder(orderCreate);
-               mailSender.send(mail);
+               orderService.sendMailToAdminForOrder(orderCreate);
+//               mailSender.send(mail);
                log.info("Sending Mail To Admin for order received --End");
                
                log.info("Sending Mail To buyer for order received --Start");
@@ -219,8 +219,8 @@ public class OrderController {
                 UserOrder orderCreate = orderService.createOrder(order);
                OrderDetails data = orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderRequest.getQuantity(),orderCreate);
                log.info("Sending Mail To Admin for order received --Start");
-               SimpleMailMessage mail=orderService.sendMailToAdminForOrder(orderCreate);
-               mailSender.send(mail);
+               orderService.sendMailToAdminForOrder(orderCreate);
+//               mailSender.send(mail);
                log.info("Sending Mail To Admin for order received --End");
                
                log.info("Sending Mail To buyer for order received --Start");

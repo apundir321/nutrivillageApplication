@@ -316,27 +316,146 @@ public class OrderService {
 	}
 
 	// sending mail to owner
-	public SimpleMailMessage sendMailToAdminForOrder(UserOrder order) {
+	public void sendMailToAdminForOrder(UserOrder order) {
 		try {
 			ShippingAddress address = order.getShippingAddress();
-			final String subject = "Order received";
-			final String message = "************ ORDER RECEIVED ************ \r\n # SHIPPING DETAILS # \r\n" + "Name : "
+			
+			List<OrderDetails> orderDetails = orderDetailsRepository.findByUesrOrder(order);
+			final String subject = "Order placed";
+			String emailMessage="<p style=\"text-align: center;\"><span style=\"font-size: 8pt;\"><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"https://nutrivillage.in/assets/images/logo_nutri_update.png\" width=\"93\" height=\"93\"></span>**Ordered Recieved*</p>\r\n"
+					+ "<p style=\"text-align: left;\">Shipping Details</p>\r\n"
+					+ "<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\r\n"
+					+ "<tbody>\r\n"
+					+ "<tr>\r\n"
+					+ "<td style=\"width: 49.375%;\"><span style=\"font-size: 10pt;\">Name</span></td>\r\n"
+					+ "<td style=\"width: 49.375%;\">"+address.getName()+"</td>\r\n"
+					+ "</tr>\r\n"
+					+ "<tr>\r\n"
+					+ "<td style=\"width: 49.375%;\"><span style=\"font-size: 10pt;\">Country</span></td>\r\n"
+					+ "<td style=\"width: 49.375%;\">"+address.getCountry()+"</td>\r\n"
+					+ "</tr>\r\n"
+					+ "<tr>\r\n"
+					+ "<td style=\"width: 49.375%;\"><span style=\"font-size: 10pt;\">Street</span></td>\r\n"
+					+ "<td style=\"width: 49.375%;\">"+address.getStreet()+"</td>\r\n"
+					+ "</tr>\r\n"
+					+ "<tr>\r\n"
+					+ "<td style=\"width: 49.375%;\"><span style=\"font-size: 10pt;\">State</span></td>\r\n"
+					+ "<td style=\"width: 49.375%;\">"+address.getState()+"</td>\r\n"
+					+ "</tr>\r\n"
+					+ "<tr>\r\n"
+					+ "<td style=\"width: 49.375%;\"><span style=\"font-size: 10pt;\">City</span></td>\r\n"
+					+ "<td style=\"width: 49.375%;\">"+address.getCity()+"</td>\r\n"
+					+ "</tr>\r\n"
+					+ "<tr>\r\n"
+					+ "<td style=\"width: 49.375%;\"><span style=\"font-size: 10pt;\">Pincode</span></td>\r\n"
+					+ "<td style=\"width: 49.375%;\">"+address.getPincode()+"</td>\r\n"
+					+ "</tr>\r\n"
+					+ "<tr>\r\n"
+					+ "<td style=\"width: 49.375%;\"><span style=\"font-size: 10pt;\">Mobile</span></td>\r\n"
+					+ "<td style=\"width: 49.375%;\">"+address.getMobile()+"</td>\r\n"
+					+ "</tr>\r\n"
+					+ "<tr>\r\n"
+					+ "<td style=\"width: 49.375%;\"><span style=\"font-size: 10pt;\">Email</span></td>\r\n"
+					+ "<td style=\"width: 49.375%;\">"+address.getEmail()+"</td>\r\n"
+					+ "</tr>\r\n"
+					+ "</tbody>\r\n"
+					+ "</table>\r\n"
+					+ "<p>Order Details</p>\r\n"
+					+ "<table style=\"border-collapse: collapse; width: 100%; height: 36px;\" border=\"1\">\r\n"
+					+ "<tbody>\r\n"
+					+ "<tr style=\"height: 18px;\">\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\"><span style=\"font-size: 10pt;\">Product Name</span></td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\"><span style=\"font-size: 10pt;\">Quantity</span></td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\"><span style=\"font-size: 10pt;\">OrderId</span></td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\"><span style=\"font-size: 10pt;\">Order Amount</span></td>\r\n"
+					+ "<td style=\"width: 16.0993%; height: 18px;\"><span style=\"font-size: 10pt;\">Order Status</span></td>\r\n"
+					+ "<td style=\"width: 16.1105%; height: 18px;\"><span style=\"font-size: 10pt;\">Payment Method</span></td>\r\n"
+					+ "</tr>\r\n";
+					
+				
+				for(OrderDetails detail : orderDetails) {
+					emailMessage += ""
+							+ "<tr style=\"height: 18px;\">\r\n"
+							+ "<td style=\"width: 16.0993%; height: 18px;\">"+detail.getProduct().getName()+"</td>\r\n"
+							+ "<td style=\"width: 16.0993%; height: 18px;\">"+detail.getQuantity()+"</td>\r\n"
+							+ "<td style=\"width: 16.0993%; height: 18px;\">"+detail.getUesrOrder().getOrderNo()+"</td>\r\n"
+							+ "<td style=\"width: 16.0993%; height: 18px;\">"+detail.getPrice()+"</td>\r\n"
+							+ "<td style=\"width: 16.0993%; height: 18px;\">"+detail.getUesrOrder().getStatus()+"</td>\r\n"
+							+ "<td style=\"width: 16.1105%; height: 18px;\">"+detail.getUesrOrder().getPaymentMethod()+"</td>\r\n"
+							+ "</tr>\r\n";
+							
+				}
+				emailMessage +=  "</tbody>\r\n"
+						+ "</table>";
+					
+				
+			final String message1 = "************ ORDER PLACED ************ \r\n \r\n Thank you for"
+					+ " ordering from Nutri Village. \r\n Your order "+order.getOrderNo()+" has been placed.\r\n"
+							+ " # SHIPPING DETAILS # \r\n" + "Name : "
 					+ address.getName() + "\r\n Country : " + address.getCountry() + "\r\n Street : "
 					+ address.getStreet() + "\r\n State : " + address.getState() + "\r\n City : " + address.getCity()
 					+ "\r\n Pincode : " + address.getPincode() + "\r\n Mobile : " + address.getMobile()
 					+ "\r\n Email : " + order.getUser().getEmail() + "\r\n \r\n" + "# ORDER DETAILS # "
 					+ "\r\n Order ID : " + order.getOrderNo() + "\r\n Order Amount : " + order.getAmount()
 					+ "\r\n Order Status : " + order.getStatus().toString() + "\r\n Payment Method : "+ order.getPaymentMethod();
-			final SimpleMailMessage mail = new SimpleMailMessage();
-			mail.setTo(fromMail);
-			mail.setSubject(subject);
-			mail.setFrom(fromMail);
-			mail.setText(message);
-			return mail;
+			   
+
+			      // Sender's email ID needs to be mentioned
+			      String from = "villagenutri@gmail.com";
+			      final String username = "villagenutri@gmail.com";//change accordingly
+			      final String password = "urnlctxobrdulgmq";//change accordingly
+
+			      // Assuming you are sending email through relay.jangosmtp.net
+			      String host = "smtp.gmail.com";
+
+			      Properties props = new Properties();
+			      props.put("mail.smtp.auth", "true");
+			      props.put("mail.smtp.starttls.enable", "true");
+			      props.put("mail.smtp.host", host);
+			      props.put("mail.smtp.port", "587");
+
+			      // Get the Session object.
+			      Session session = Session.getInstance(props,
+			         new javax.mail.Authenticator() {
+			            protected PasswordAuthentication getPasswordAuthentication() {
+			               return new PasswordAuthentication(username, password);
+			            }
+				});
+
+			      try {
+			            // Create a default MimeMessage object.
+			            Message message = new MimeMessage(session);
+
+			   	   // Set From: header field of the header.
+				   message.setFrom(new InternetAddress(from));
+
+				   // Set To: header field of the header.
+				   message.setRecipients(Message.RecipientType.TO,
+			              InternetAddress.parse(order.getUser().getEmail()));
+
+				   // Set Subject: header field
+				   message.setSubject("Order Recieved");
+
+				   // Send the actual HTML message, as big as you like
+				   message.setContent(
+			             emailMessage,
+			             "text/html");
+
+				   // Send message
+				   Transport.send(message);
+
+				   System.out.println("Sent message successfully....");
+
+			      } catch (MessagingException e) {
+				   e.printStackTrace();
+				   throw new RuntimeException(e);
+			      }
+			
 		} catch (Exception e) {
 			log.error("Error occured while sending mail to admin for order: " + e.getMessage());
 			throw e;
 		}
+
 	}
 	
 	
@@ -407,10 +526,11 @@ public class OrderService {
 							+ "<td style=\"width: 16.0993%; height: 18px;\">"+detail.getPrice()+"</td>\r\n"
 							+ "<td style=\"width: 16.0993%; height: 18px;\">"+detail.getUesrOrder().getStatus()+"</td>\r\n"
 							+ "<td style=\"width: 16.1105%; height: 18px;\">"+detail.getUesrOrder().getPaymentMethod()+"</td>\r\n"
-							+ "</tr>\r\n"
-							+ "</tbody>\r\n"
-							+ "</table>";
+							+ "</tr>\r\n";
+							
 				}
+				emailMessage +=  "</tbody>\r\n"
+						+ "</table>";
 					
 				
 			final String message1 = "************ ORDER PLACED ************ \r\n \r\n Thank you for"
@@ -458,7 +578,7 @@ public class OrderService {
 			              InternetAddress.parse(order.getUser().getEmail()));
 
 				   // Set Subject: header field
-				   message.setSubject("Testing Subject");
+				   message.setSubject("Order Recieved");
 
 				   // Send the actual HTML message, as big as you like
 				   message.setContent(
