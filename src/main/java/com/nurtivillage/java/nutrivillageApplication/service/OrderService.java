@@ -431,7 +431,7 @@ public class OrderService {
 
 				   // Set To: header field of the header.
 				   message.setRecipients(Message.RecipientType.TO,
-			              InternetAddress.parse(order.getUser().getEmail()));
+			              InternetAddress.parse("villagenutri@gmail.com"));
 
 				   // Set Subject: header field
 				   message.setSubject("Order Recieved");
