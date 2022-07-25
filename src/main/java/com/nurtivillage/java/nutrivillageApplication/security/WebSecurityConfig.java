@@ -77,6 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         .antMatchers("/registrationAccountConfirm").permitAll()
         .antMatchers(HttpMethod.GET,"/findUserByPhone").permitAll()
         .antMatchers(HttpMethod.GET,"/validateOtp").permitAll()
+        .antMatchers("/product/deleteimage/**").permitAll()
         .antMatchers("/badUser").permitAll()
         
         .anyRequest().authenticated()
