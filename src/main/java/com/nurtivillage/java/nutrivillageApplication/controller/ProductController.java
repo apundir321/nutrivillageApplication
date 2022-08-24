@@ -214,6 +214,7 @@ public class ProductController {
 			ApiResponseService res = new ApiResponseService("file upload successfully", true, Arrays.asList(url));
 			return new ResponseEntity<ApiResponseService>(res, HttpStatus.OK);
 		} catch (Exception e) {
+			System.out.println(e);
 			ApiResponseService res = new ApiResponseService("file not uploaded. something went worng", true,
 					Arrays.asList("error"));
 			return new ResponseEntity<ApiResponseService>(res, HttpStatus.INTERNAL_SERVER_ERROR);
