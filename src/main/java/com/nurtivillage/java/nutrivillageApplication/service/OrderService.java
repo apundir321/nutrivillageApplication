@@ -317,7 +317,6 @@ public class OrderService {
 	}
 
 	// sending mail to owner
-	@Async
 	public void sendMailToAdminForOrder(UserOrder order) {
 		try {
 			ShippingAddress address = order.getShippingAddress();
@@ -462,7 +461,7 @@ public class OrderService {
 	
 	
 	//sending mail to buyer
-	@Async
+	
 	public void sendMailToBuyerForOrder(UserOrder order) {
 		try {
 			ShippingAddress address = order.getShippingAddress();
