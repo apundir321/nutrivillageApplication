@@ -140,16 +140,16 @@ public class OrderController {
                 Long orderNO = orderService.getLastOrderNO();
                 double amount = orderRequest.getAmount();
                 User user = userService.userDetails();
-               boolean inStock=orderService.checkQuantity(orderRequest.getProductId(), orderRequest.getVariantId(), orderRequest.getQuantity());
-               if(!inStock) {
-            	   throw new Exception("Not in Stock");
-               }
+//               boolean inStock=orderService.checkQuantity(orderRequest.getProductId(), orderRequest.getVariantId(), orderRequest.getQuantity());
+//               if(!inStock) {
+//            	   throw new Exception("Not in Stock");
+//               }
                UserOrder order = new UserOrder(amount,user,orderNO+1,1,Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
                 //verify amount
-                boolean checker = orderService.checkAmount(orderRequest);
-                if(!checker){
-                    throw new Exception("Incorrect amount");
-                }
+//                boolean checker = orderService.checkAmount(orderRequest);
+//                if(!checker){
+//                    throw new Exception("Incorrect amount");
+//                }
                 UserOrder orderCreate = orderService.createOrder(order);
                OrderDetails data = orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderRequest.getQuantity(),orderCreate);
                log.info("Sending Mail To Admin for order received --Start");
@@ -206,16 +206,16 @@ public class OrderController {
                 User user=userRepo.findByEmail(orderRequest.getShippingAddress().getEmail());
                   if(user==null) {
                 user = orderService.createGuestUser(orderRequest.getShippingAddress());}
-               boolean inStock=orderService.checkQuantity(orderRequest.getProductId(), orderRequest.getVariantId(), orderRequest.getQuantity());
-               if(!inStock) {
-            	   throw new Exception("Not in Stock");
-               }
+//               boolean inStock=orderService.checkQuantity(orderRequest.getProductId(), orderRequest.getVariantId(), orderRequest.getQuantity());
+//               if(!inStock) {
+//            	   throw new Exception("Not in Stock");
+//               }
                UserOrder order = new UserOrder(amount,user,orderNO+1,1,Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
                 //verify amount
-                boolean checker = orderService.checkAmount(orderRequest);
-                if(!checker){
-                    throw new Exception("Incorrect amount");
-                }
+//                boolean checker = orderService.checkAmount(orderRequest);
+//                if(!checker){
+//                    throw new Exception("Incorrect amount");
+//                }
                 UserOrder orderCreate = orderService.createOrder(order);
                OrderDetails data = orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderRequest.getQuantity(),orderCreate);
                log.info("Sending Mail To Admin for order received --Start");

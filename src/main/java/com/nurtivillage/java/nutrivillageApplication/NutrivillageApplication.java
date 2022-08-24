@@ -21,6 +21,7 @@ import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -39,6 +40,7 @@ import com.nurtivillage.java.nutrivillageApplication.validation.Name;
 import com.nutrivillage.java.nutrivillageApplication.properties.SocialLoginProperties;
 @EnableCaching
 @SpringBootApplication
+@EnableAsync
 public class NutrivillageApplication {
 
 	@Autowired

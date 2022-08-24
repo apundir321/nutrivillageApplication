@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -316,6 +317,7 @@ public class OrderService {
 	}
 
 	// sending mail to owner
+	@Async
 	public void sendMailToAdminForOrder(UserOrder order) {
 		try {
 			ShippingAddress address = order.getShippingAddress();
@@ -460,6 +462,7 @@ public class OrderService {
 	
 	
 	//sending mail to buyer
+	@Async
 	public void sendMailToBuyerForOrder(UserOrder order) {
 		try {
 			ShippingAddress address = order.getShippingAddress();
