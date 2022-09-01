@@ -242,7 +242,7 @@ public class ProductService {
 
 	public List<Product> searchProduct(String str) {
 		try {
-			List<Product> products = this.productRepository.findBynameContains(str);
+			List<Product> products = this.productRepository.findBynameContainsAndDeletedAtIsNull(str);
 			if (products.size() == 0) {
 //				return products;
 				Category category = null;
