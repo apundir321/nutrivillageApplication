@@ -1,6 +1,7 @@
 package com.nurtivillage.java.nutrivillageApplication.model;
 
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 
 @Entity
-public class Product {
+public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -64,7 +65,7 @@ public class Product {
 		return id;
 	}
 
-	@ManyToMany(fetch=FetchType.LAZY,cascade = CascadeType.MERGE)
+	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private List<Variant> variants;
 
 	@Transient

@@ -35,7 +35,7 @@ public class UserOrder {
     @JoinColumn(name = "shipping_Ad_id")
     private ShippingAddress shippingAddress;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private Long orderNo;
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -59,9 +59,12 @@ public class UserOrder {
     
     public UserOrder(){}
 
-    public UserOrder(double amount,User user,Long orderNO,int itemNO,Status status,ShippingAddress shippingAddress,String paymentMethod){
+    public UserOrder(double amount,User user,int itemNO,Status status,ShippingAddress shippingAddress,String paymentMethod){
         this.amount = amount;
-        this.orderNo = orderNO;
+        long leftLimit = 1L;
+        long rightLimit = 10000L;
+        long generatedLong = leftLimit + (long) (Math.random() * (rightLimit - leftLimit));
+        this.orderNo = generatedLong;
         this.user = user;
         this.itemNO = itemNO;
         this.status = status;

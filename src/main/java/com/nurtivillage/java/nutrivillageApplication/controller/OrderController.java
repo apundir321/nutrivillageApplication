@@ -99,10 +99,10 @@ public class OrderController {
         @PostMapping("/create")
         public ResponseEntity<ApiResponseService> createOrder(@RequestBody OrderRequest orderRequest){
             try{
-                Long orderNO = orderService.getLastOrderNO();
+//                Long orderNO = orderService.getLastOrderNO();
                 double amount = orderRequest.getAmount();
                 User user = userService.userDetails();
-                UserOrder order = new UserOrder(amount,user,orderNO+1,orderRequest.getCartItem().size(),Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
+                UserOrder order = new UserOrder(amount,user,orderRequest.getCartItem().size(),Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
                 //varify amount
                 boolean checker = orderService.amountVarify(amount,orderRequest.getCartItem());
                 if(!checker){
@@ -137,28 +137,23 @@ public class OrderController {
         @PostMapping("/product")
         public ResponseEntity<ApiResponseService> createSingleProductOrder(@RequestBody OrderRequest orderRequest){
             try{
-                Long orderNO = orderService.getLastOrderNO();
+//                Long orderNO = orderService.getLastOrderNO();
                 double amount = orderRequest.getAmount();
                 User user = userService.userDetails();
 //               boolean inStock=orderService.checkQuantity(orderRequest.getProductId(), orderRequest.getVariantId(), orderRequest.getQuantity());
 //               if(!inStock) {
 //            	   throw new Exception("Not in Stock");
 //               }
-               UserOrder order = new UserOrder(amount,user,orderNO+1,1,Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
+               UserOrder order = new UserOrder(amount,user,1,Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
                 //verify amount
 //                boolean checker = orderService.checkAmount(orderRequest);
 //                if(!checker){
 //                    throw new Exception("Incorrect amount");
 //                }
                 UserOrder orderCreate = orderService.createOrder(order);
-               OrderDetails data = orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderRequest.getQuantity(),orderCreate);
-               log.info("Sending Mail To Admin for order received --Start");
-               orderService.sendMailToAdminForOrder(orderCreate);
-//               mailSender.send(mail);
-               log.info("Sending Mail To Admin for order received --End");
-               
-               log.info("Sending Mail To buyer for order received --Start");
-               orderService.sendMailToBuyerForOrder(orderCreate);
+//               OrderDetails data =
+                       orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderRequest.getQuantity(),orderCreate);
+
 //               mailSender.send(mailBuyer);
                log.info("Sending Mail To buyer for order received --End");
                
@@ -168,8 +163,8 @@ public class OrderController {
                     ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount")));
                     return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
                 }
-                System.out.print(data);
-                ApiResponseService res = new ApiResponseService("order placed",true,Arrays.asList(data));
+//                System.out.print(data);
+                ApiResponseService res = new ApiResponseService("order placed",true,null);
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
             }catch(Exception e){
                 System.out.println(e);
@@ -201,7 +196,7 @@ public class OrderController {
         @PostMapping("/guest")
         public ResponseEntity<ApiResponseService> createGuestOrder(@RequestBody OrderRequest orderRequest){
             try{
-                Long orderNO = orderService.getLastOrderNO();
+//                Long orderNO = orderService.getLastOrderNO();
                 double amount = orderRequest.getAmount();
                 User user=userRepo.findByEmail(orderRequest.getShippingAddress().getEmail());
                   if(user==null) {
@@ -210,14 +205,15 @@ public class OrderController {
 //               if(!inStock) {
 //            	   throw new Exception("Not in Stock");
 //               }
-               UserOrder order = new UserOrder(amount,user,orderNO+1,1,Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
+               UserOrder order = new UserOrder(amount,user,1,Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
                 //verify amount
 //                boolean checker = orderService.checkAmount(orderRequest);
 //                if(!checker){
 //                    throw new Exception("Incorrect amount");
 //                }
                 UserOrder orderCreate = orderService.createOrder(order);
-               OrderDetails data = orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderRequest.getQuantity(),orderCreate);
+//               OrderDetails data =
+                       orderService.createSingleOrderDetails(orderRequest.getProductId(),orderRequest.getVariantId(),orderRequest.getQuantity(),orderCreate);
                log.info("Sending Mail To Admin for order received --Start");
                orderService.sendMailToAdminForOrder(orderCreate);
 //               mailSender.send(mail);
@@ -235,8 +231,8 @@ public class OrderController {
                     ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount")),guestInfo);
                     return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
                 }
-                System.out.print(data);
-                ApiResponseService res = new ApiResponseService("order placed",true,Arrays.asList(data),guestInfo);
+//                System.out.print(data);
+                ApiResponseService res = new ApiResponseService("order placed",true,null,guestInfo);
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
             }catch(Exception e){
                 System.out.println(e);

@@ -6,9 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.io.Serializable;
 
 @Entity
-public class ProductImage {
+public class ProductImage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;

@@ -56,8 +56,8 @@ public class OrderService {
 	@Autowired
 	public OrderDetailsRepository orderDetailsRepository;
 
-	@Autowired
-	public OrderService orderService;
+//	@Autowired
+//	public OrderService orderService;
 
 	@Autowired
 	public CartService cartService;
@@ -117,25 +117,33 @@ public class OrderService {
 		return orderAllItem;
 	}
 
-	public OrderDetails createSingleOrderDetails(Long productId, int variantId, int quantity, UserOrder order) {// (List<Product>
+	@Async
+	public void createSingleOrderDetails(Long productId, int variantId, int quantity, UserOrder order) {// (List<Product>
 																												// product,UserOrder
 																												// order,List<Long>
 																												// quantity){
 		OrderDetails orderItem = null;
 		Inventory inventory = inventoryService.getProductVariantInventory(productId, variantId);
-		List<Offer> offer = offerService.getOffersByProduct(inventory.getProduct().getId());
-		if (offer.size() != 0) {
-			orderItem = new OrderDetails(inventory.getProduct(), order, quantity, inventory.getVariant(), offer.get(0),
-					inventory.getPrice());
-
-		} else {
+//		List<Offer> offer = offerService.getOffersByProduct(inventory.getProduct().getId());
+//		if (offer.size() != 0) {
+//			orderItem = new OrderDetails(inventory.getProduct(), order, quantity, inventory.getVariant(), offer.get(0),
+//					inventory.getPrice());
+//
+//		} else {
 			orderItem = new OrderDetails(inventory.getProduct(), order, quantity, inventory.getVariant(), null,
 					inventory.getPrice());
 
-		}
+//		}
 		orderDetailsRepository.save(orderItem);
+		log.info("Sending Mail To Admin for order received --Start");
+		sendMailToAdminForOrder(order);
+//               mailSender.send(mail);
+		log.info("Sending Mail To Admin for order received --End");
 
-		return orderItem;
+		log.info("Sending Mail To buyer for order received --Start");
+		sendMailToBuyerForOrder(order);
+
+//		return orderItem;
 	}
 
 	public OrderDetails getOrderDetail(Long id) throws Exception {
@@ -170,7 +178,7 @@ public class OrderService {
 
 	public UserOrder orderStatus(StatusRequest statusRequest) throws Exception {
 		try {
-			UserOrder orderInfo = orderService.getOrder(statusRequest.getId());
+			UserOrder orderInfo = getOrder(statusRequest.getId());
 
 			Status updateStatus = getStatus(statusRequest.getStatus());
 			orderInfo.setStatus(updateStatus);
@@ -317,6 +325,7 @@ public class OrderService {
 	}
 
 	// sending mail to owner
+	@Async
 	public void sendMailToAdminForOrder(UserOrder order) {
 		try {
 			ShippingAddress address = order.getShippingAddress();
@@ -461,7 +470,7 @@ public class OrderService {
 	
 	
 	//sending mail to buyer
-	
+	@Async
 	public void sendMailToBuyerForOrder(UserOrder order) {
 		try {
 			ShippingAddress address = order.getShippingAddress();
