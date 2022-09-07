@@ -104,12 +104,12 @@ public class OrderController {
                 User user = userService.userDetails();
                 UserOrder order = new UserOrder(amount,user,orderRequest.getCartItem().size(),Status.ordered,orderRequest.getShippingAddress(),orderRequest.getPaymentMethod());
                 //varify amount
-                boolean checker = orderService.amountVarify(amount,orderRequest.getCartItem());
-                if(!checker){
-                    throw new Exception("amount not varify");
-                }
+//                boolean checker = orderService.amountVarify(amount,orderRequest.getCartItem());
+//                if(!checker){
+//                    throw new Exception("amount not varify");
+//                }
                 UserOrder orderCreate = orderService.createOrder(order);
-                List<OrderDetails> data = orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
+                orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
              log.info("Sending Mail To Admin for order received --Start");
                 orderService.sendMailToAdminForOrder(orderCreate);
 //                mailSender.send(mailAdmin);
@@ -125,8 +125,8 @@ public class OrderController {
                     ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount")));
                     return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
                 }
-                System.out.print(data);
-                ApiResponseService res = new ApiResponseService("order placed",true,data);
+
+                ApiResponseService res = new ApiResponseService("order placed",true,null);
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
             }catch(Exception e){
                 System.out.println(e);

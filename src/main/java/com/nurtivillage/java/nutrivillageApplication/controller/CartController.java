@@ -65,7 +65,7 @@ public class CartController {
             if(inventory.getQuantity() < cart.getQuantity()){
                 throw new Exception("out of stock");
             }
-            Cart cartItem = cartService.insertCart(cart);
+            cartService.insertCart(cart);
             ApiResponseService res = new ApiResponseService("Cart item insert",true,Arrays.asList(cart));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {
@@ -79,7 +79,7 @@ public class CartController {
         try {
             Cart getCartItem = cartService.cartItemById(cart.getId());
             getCartItem.setQuantity(cart.getQuantity());
-            Cart cartItem = cartService.insertCart(getCartItem);
+            cartService.insertCart(getCartItem);
             ApiResponseService res = new ApiResponseService("Cart item insert",true,Arrays.asList(cart));
             return new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
         } catch (Exception e) {

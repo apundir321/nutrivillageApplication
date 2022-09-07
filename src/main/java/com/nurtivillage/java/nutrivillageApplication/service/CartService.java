@@ -10,6 +10,7 @@ import com.nurtivillage.java.nutrivillageApplication.model.Cart;
 import com.nurtivillage.java.nutrivillageApplication.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,10 +44,11 @@ public class CartService {
         }
     }
 
-    public Cart insertCart(Cart cart){
+
+    @Async
+    public void insertCart(Cart cart){
         try {
-            Cart cartItem = cartRepository.save(cart);
-            return cartItem;
+            cartRepository.save(cart);
         } catch (Exception e) {
             throw e;
         }

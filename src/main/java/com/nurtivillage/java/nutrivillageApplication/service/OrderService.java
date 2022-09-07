@@ -92,7 +92,8 @@ public class OrderService {
 		return orderCreate;
 	}
 
-	public List<OrderDetails> createOrderDetails(List<Cart> cartItems, UserOrder order) {// (List<Product>
+	@Async
+	public void createOrderDetails(List<Cart> cartItems, UserOrder order) {// (List<Product>
 																							// product,UserOrder
 																							// order,List<Long>
 																							// quantity){
@@ -101,20 +102,19 @@ public class OrderService {
 			Cart cartItem = cartService.cartItemById(var.getId());
 			Variant variant = cartItem.getInventory().getVariant();
 			int price = cartItem.getInventory().getPrice();
-			List<Offer> offer = offerService.getOffersByProduct(cartItem.getProduct().getId());
-			if (offer.size() != 0) {
-				OrderDetails orderItem = new OrderDetails(cartItem.getProduct(), order, cartItem.getQuantity(), variant,
-						offer.get(0), price);
-				orderAllItem.add(orderItem);
-			} else {
+//			List<Offer> offer = offerService.getOffersByProduct(cartItem.getProduct().getId());
+//			if (offer.size() != 0) {
+//				OrderDetails orderItem = new OrderDetails(cartItem.getProduct(), order, cartItem.getQuantity(), variant,
+//						offer.get(0), price);
+//				orderAllItem.add(orderItem);
+//			} else {
 				OrderDetails orderItem = new OrderDetails(cartItem.getProduct(), order, cartItem.getQuantity(), variant,
 						null, price);
 				orderAllItem.add(orderItem);
-			}
+//			}
 		});
 		orderDetailsRepository.saveAll(orderAllItem);
 		cartService.cartClear();
-		return orderAllItem;
 	}
 
 	@Async
