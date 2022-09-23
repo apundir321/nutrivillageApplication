@@ -110,13 +110,7 @@ public class OrderController {
 //                }
                 UserOrder orderCreate = orderService.createOrder(order);
                 orderService.createOrderDetails(orderRequest.getCartItem(),orderCreate);
-             log.info("Sending Mail To Admin for order received --Start");
-                orderService.sendMailToAdminForOrder(orderCreate);
-//                mailSender.send(mailAdmin);
-                log.info("Sending Mail To Admin for order received --End");
-                
-                log.info("Sending Mail To buyer for order received --Start");
-               orderService.sendMailToBuyerForOrder(orderCreate);
+
 //                mailSender.send(mailBuyer);
                 log.info("Sending Mail To buyer for order received --End");
                 if(!orderRequest.getPaymentMethod().equals("COD")){
@@ -163,7 +157,6 @@ public class OrderController {
                     ApiResponseService res = new ApiResponseService("make payment",true,Arrays.asList(orderRes.get("id"),orderRes.get("amount")));
                     return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
                 }
-//                System.out.print(data);
                 ApiResponseService res = new ApiResponseService("order placed",true,null);
                 return  new ResponseEntity<ApiResponseService>(res,HttpStatus.OK);
             }catch(Exception e){

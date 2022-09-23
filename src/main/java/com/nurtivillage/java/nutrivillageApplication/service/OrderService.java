@@ -114,6 +114,13 @@ public class OrderService {
 //			}
 		});
 		orderDetailsRepository.saveAll(orderAllItem);
+		log.info("Sending Mail To Admin for order received --Start");
+		sendMailToAdminForOrder(order);
+//                mailSender.send(mailAdmin);
+		log.info("Sending Mail To Admin for order received --End");
+
+		log.info("Sending Mail To buyer for order received --Start");
+		sendMailToBuyerForOrder(order);
 		cartService.cartClear();
 	}
 
